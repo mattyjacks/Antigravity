@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Panoramic Plumbing</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Styles & Scripts -->
+    <link rel="stylesheet" href="styles.css">
+    <script src="components.js" defer></script>
+</head>
+
+<body>
+
+    <!-- Unified Header -->
+    <site-header active="contact"></site-header>
+
+    <main>
+        <div class="page-header">
+            <div>
+                <h1>Contact Us</h1>
+                <p>Reach Out Today</p>
+            </div>
+        </div>
+
+        <section>
+            <div class="contact-container">
+
+                <div class="contact-info animate-on-scroll slide-in-left">
+                    <h2 class="mb-2">Get In Touch</h2>
+                    <p class="mb-2">We are Solution Providers! Feel free to contact us with any questions, requests for
+                        estimates, or emergency service calls.</p>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h4>Address</h4>
+                            <p>673 Bell Street #22<br>Manchester, NH 03103</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div>
+                            <h4>Phone</h4>
+                            <p><a href="tel:6036009969">(603) 600-9969</a></p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4>Email</h4>
+                            <p><a href="mailto:panoramicplumbingnh@gmail.com">panoramicplumbingnh@gmail.com</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form animate-on-scroll slide-in-right delay-100">
+                    <h2 class="mb-2">Send a Message</h2>
+                    <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Demo Form Submitted!');">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" class="form-control" placeholder="Phone Number">
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" placeholder="How can we help you?" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Inquiry</button>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Unified Footer -->
+    <site-footer></site-footer>
+
+</body>
+
+</html>
