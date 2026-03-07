@@ -646,6 +646,72 @@ textarea.form-control {
     resize: vertical;
 }
 
+/* Glowing Orbs Backdrop */
+body::before, body::after {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 60vw;
+    height: 60vw;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(247, 127, 0, 0.05) 0%, rgba(247, 127, 0, 0) 70%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: -10;
+    filter: blur(100px);
+    animation: orbPulse 8s infinite alternate;
+}
+
+body::after {
+    top: 20%;
+    left: 20%;
+    width: 40vw;
+    height: 40vw;
+    background: radial-gradient(circle, rgba(19, 49, 92, 0.05) 0%, rgba(19, 49, 92, 0) 70%);
+    animation: orbPulse 10s infinite alternate-reverse;
+}
+
+@keyframes orbPulse {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+    100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+}
+
+/* Marquee */
+.marquee-container {
+    width: 100%;
+    overflow: hidden;
+    background: var(--primary-color);
+    color: var(--text-light);
+    padding: 15px 0;
+    position: relative;
+    border-top: 2px solid var(--accent-color);
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.marquee-content {
+    display: flex;
+    white-space: nowrap;
+    animation: scrollMarquee 20s linear infinite;
+    gap: 30px;
+}
+
+.marquee-content span {
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.marquee-content .dot {
+    color: var(--accent-color);
+}
+
+@keyframes scrollMarquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); } /* Requires duplicated content in HTML to work smoothly */
+}
+
 /* Utilities */
 .text-center {
     text-align: center;
