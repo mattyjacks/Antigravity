@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViralLoop AI - Advanced Social Media Posting & Viral Idea Generator</title>
+    <meta name="description" content="Boost your brand using our state-of-the-art AI viral video ideas generator and scheduling assistant.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a onclick="navigateTo('home')" class="logo" style="cursor: pointer;">
+                <div class="logo-icon"></div>
+                ViralLoop<span>AI</span>
+            </a>
+            <nav>
+                <a onclick="navigateTo('home')" class="nav-link active" id="link-home">Home</a>
+                <a onclick="navigateTo('demo')" class="nav-link" id="link-demo">Demo Workspace</a>
+                <a onclick="navigateTo('contact')" class="nav-link" id="link-contact">Contact</a>
+                <a onclick="navigateTo('privacy')" class="nav-link" id="link-privacy">Privacy</a>
+            </nav>
+            <button onclick="navigateTo('demo')" class="cta-button">
+                Try Demo ⚡
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Homepage Section -->
+        <section id="page-home" class="page-section active">
+            <div class="hero">
+                <div class="hero-text">
+                    <h1>Streamline Your Growth With <span class="gradient-text">Viral Video AI</span></h1>
+                    <p>Stop guessing what the algorithm wants. Instantly generate high-engagement hook lines, structural video scripts, and optimize your posting schedule across TikTok, Reels, and Shorts using predictive modeling.</p>
+                    <div class="hero-buttons">
+                        <button onclick="navigateTo('demo')" class="cta-button">Open AI Workspace 🚀</button>
+                        <button onclick="navigateTo('contact')" class="secondary-button">Request Enterprise Info</button>
+                    </div>
+                </div>
+                <div class="showcase-container">
+                    <div class="showcase-glow"></div>
+                    <div class="glass-panel hero-card">
+                        <div class="hero-card-header">
+                            <div class="hero-card-user">
+                                <div class="user-avatar">AI</div>
+                                <div class="user-info">
+                                    <h4>ViralLoop Engine</h4>
+                                    <p>Ready to generate</p>
+                                </div>
+                            </div>
+                            <span class="idea-badge">Active Engine</span>
+                        </div>
+                        <div class="hero-card-body">
+                            <span class="idea-badge" style="background: rgba(124, 58, 237, 0.15); color: var(--primary);">Idea Concept</span>
+                            <h3>The "No-Code SaaS Cheat Code"</h3>
+                            <p>"Use this hidden AI tool to launch a fully-functioning software application in under 30 minutes without typing a single line of code..."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div class="features-section">
+                <div class="section-header">
+                    <h2>Engineered for Viral Velocity</h2>
+                    <p>Our dashboard unites creativity and deployment to maximize engagement on every post.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="glass-panel feature-card">
+                        <div class="feature-icon">💡</div>
+                        <h3>AI Concept Creator</h3>
+                        <p>Generate highly targetable hook concepts and script guidelines designed around psychological retention triggers.</p>
+                    </div>
+                    <div class="glass-panel feature-card">
+                        <div class="feature-icon">📈</div>
+                        <h3>Algorithm Optimizer</h3>
+                        <p>Receive hashtags and platform-specific audio guidance tailored to maximize TikTok, Reels, and Shorts placement.</p>
+                    </div>
+                    <div class="glass-panel feature-card">
+                        <div class="feature-icon">📅</div>
+                        <h3>Multi-Feed Scheduler</h3>
+                        <p>Plan out weeks of content in advance. Organize draft boards and automatically publish during your peak viral window.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Demo / Workspace Section -->
+        <section id="page-demo" class="page-section">
+            <div class="demo-layout">
+                <!-- Sidebar Form Controls -->
+                <div class="glass-panel demo-sidebar">
+                    <h3 class="sidebar-title">⚡ AI Prompt Hub</h3>
+                    <div class="form-group">
+                        <label for="video-niche">Video Niche / Topic</label>
+                        <input type="text" id="video-niche" class="form-input" placeholder="e.g. Coding Tips, Cooking Hacks, Finance">
+                    </div>
+                    <div class="form-group">
+                        <label>Target Social Platform</label>
+                        <div class="platform-selector">
+                            <div class="platform-option selected" onclick="selectPlatform(this, 'TikTok')">TikTok</div>
+                            <div class="platform-option" onclick="selectPlatform(this, 'Instagram Reels')">Reels</div>
+                            <div class="platform-option" onclick="selectPlatform(this, 'YouTube Shorts')">Shorts</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="video-tone">Video Vibe / Style</label>
+                        <select id="video-tone" class="form-select">
+                            <option value="energetic">High Energy & Hype</option>
+                            <option value="educational">Educational & Structured</option>
+                            <option value="storytelling">Deep Storytelling & Mystery</option>
+                            <option value="comedy">Humorous & Casual</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="target-audience">Target Audience Description</label>
+                        <textarea id="target-audience" class="form-textarea" rows="3" placeholder="e.g. College students learning to code, busy moms wanting quick meals"></textarea>
+                    </div>
+                    <button class="cta-button generate-btn" onclick="generateViralIdeas()">
+                        Generate Ideas Spark ✨
+                    </button>
+                </div>
+
+                <!-- Main Demo View Area -->
+                <div class="demo-content">
+                    <div class="tab-nav">
+                        <button class="tab-btn active" id="tab-ideas" onclick="switchDemoTab('ideas')">Viral Ideas Panel</button>
+                        <button class="tab-btn" id="tab-schedule" onclick="switchDemoTab('schedule')">Visual Feed Scheduler</button>
+                    </div>
+
+                    <!-- Panel: AI Ideas Output -->
+                    <div id="panel-ideas" class="tab-panel active">
+                        <div id="ideas-output-container" class="ideas-container">
+                            <div class="glass-panel empty-state">
+                                <div class="empty-icon">🤖</div>
+                                <h3>Workspace Ready</h3>
+                                <p>Fill in the configuration panel on the left and click "Generate Ideas Spark" to preview viral concepts.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel: Feed Scheduler -->
+                    <div id="panel-schedule" class="tab-panel">
+                        <div class="scheduler-grid" id="scheduled-posts-grid">
+                            <!-- Dynamically populated or default empty state -->
+                            <div class="glass-panel empty-state" style="grid-column: 1 / -1;">
+                                <div class="empty-icon">📅</div>
+                                <h3>No Posts Scheduled Yet</h3>
+                                <p>Generate video ideas in the workspace and click "Schedule Video Draft" to place them in your queue.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="page-contact" class="page-section">
+            <div class="contact-container">
+                <div class="contact-header">
+                    <h2>Get in Touch</h2>
+                    <p>Have questions about ViralLoop AI or enterprise API offerings? Send us a message.</p>
+                </div>
+                <div class="glass-panel contact-panel">
+                    <form onsubmit="handleContactSubmit(event)">
+                        <div class="form-group">
+                            <label for="contact-name">Your Name</label>
+                            <input type="text" id="contact-name" class="form-input" required placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-email">Email Address</label>
+                            <input type="email" id="contact-email" class="form-input" required placeholder="john@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-message">Message Details</label>
+                            <textarea id="contact-message" class="form-textarea" rows="5" required placeholder="Tell us about your brand or questions..."></textarea>
+                        </div>
+                        <button type="submit" class="cta-button" style="width: 100%; justify-content: center;">
+                            Send Secure Message ✉️
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Privacy Section -->
+        <section id="page-privacy" class="page-section">
+            <div class="glass-panel policy-container">
+                <div class="contact-header" style="text-align: left; margin-bottom: 2rem;">
+                    <h2>Privacy Policy</h2>
+                    <p>Last updated: July 2026</p>
+                </div>
+                <div class="policy-content">
+                    <p>Welcome to ViralLoop AI. We take your privacy very seriously and are dedicated to maintaining the trust of our users. This privacy policy explains how our application functions with respect to your accounts and content.</p>
+                    
+                    <h2>1. Data Collection & Simulation</h2>
+                    <p>Currently, this website operates as a functional technical demonstration workspace. Any inputs you enter, including video niches, target audiences, and prompts, are processed strictly inside your browser environment to generate simulated responses. We do not store or transmit this data to external database servers.</p>
+                    
+                    <h2>2. Social Media Accounts</h2>
+                    <p>When you eventually connect social media channels to our API, we only request permissions necessary to queue, preview, and post contents at your selected intervals. We do not inspect messages or external metrics outside of your publication data.</p>
+                    
+                    <h2>3. Cookies and Local Storage</h2>
+                    <p>We may use local storage to temporarily save the posts you schedule during this mock demo session, allowing you to preview the scheduling calendar. This data can be cleared at any time by refreshing or clearing browser data.</p>
+                    
+                    <h2>4. Updates to This Policy</h2>
+                    <p>We will occasionally update this Privacy Policy. Users will be notified of changes via layout announcements on our homepage.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 ViralLoop AI. Designed with 💖 for creative publishers.</p>
+            <div class="footer-links">
+                <a onclick="navigateTo('home')" class="footer-link">Home</a>
+                <a onclick="navigateTo('demo')" class="footer-link">Demo</a>
+                <a onclick="navigateTo('contact')" class="footer-link">Contact</a>
+                <a onclick="navigateTo('privacy')" class="footer-link">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Component -->
+    <div id="toast" class="toast">Action completed successfully!</div>
+
+    <script>
+        // Track platform selection state
+        let selectedPlatform = 'TikTok';
+        let scheduledPosts = [];
+
+        function navigateTo(pageId) {
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            // Remove active class from nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show current section
+            const targetSection = document.getElementById('page-' + pageId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                window.scrollTo(0, 0);
+            }
+
+            // Update nav active link
+            const targetLink = document.getElementById('link-' + pageId);
+            if (targetLink) {
+                targetLink.classList.add('active');
+            }
+        }
+
+        function selectPlatform(element, platform) {
+            document.querySelectorAll('.platform-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedPlatform = platform;
+        }
+
+        function switchDemoTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+
+            document.getElementById('tab-' + tabId).classList.add('active');
+            document.getElementById('panel-' + tabId).classList.add('active');
+        }
+
+        // Mock ideas library mapped to topics
+        const mockDatabase = {
+            coding: [
+                {
+                    title: "The 3-Second VS Code Shortcut that feels illegal",
+                    desc: "Demonstrate a highly useful but rarely known editor shortcut. Hook triggers curiosity and solves a daily pain point for developers.",
+                    hook: "If you use VS Code, stop scrolling right now. This one shortcut is going to save you hours of typing.",
+                    hashtags: "#coding #programming #vscode #developerhacks #webdev"
+                },
+                {
+                    title: "How I built a full SaaS app in 12 hours using this workflow",
+                    desc: "An educational workflow breakdown showing how modern builders construct startups using AI, API connections, and simple hostings.",
+                    hook: "Everyone is talking about AI, but no one is showing you how to actually make money with it in a day. Let's build a SaaS together.",
+                    hashtags: "#indiehackers #saas #sidehustle #buildinpublic #nocode"
+                }
+            ],
+            cooking: [
+                {
+                    title: "The restaurant secret to crispy potatoes every single time",
+                    desc: "A short, fast-paced recipe showing one secret boil/bake ingredient that completely changes food texture.",
+                    hook: "This is why your potatoes never get crispy at home. Restaurants use this one simple baking powder trick...",
+                    hashtags: "#cookinghacks #recipesoftiktok #crispypotatoes #chefhacks #easyrecipe"
+                },
+                {
+                    title: "5-Minute Breakfast Prep for lazy mornings",
+                    desc: "Visual assembly of highly aesthetic, high-protein overnight breakfast pots designed for busy audiences.",
+                    hook: "Stop skipping breakfast. This takes 5 minutes to prep on Sunday and gives you energy all week.",
+                    hashtags: "#breakfastprep #mealprep #healthyrecipes #easycooking #morningroutine"
+                }
+            ],
+            default: [
+                {
+                    title: "The Golden Ratio Rule of Hook writing",
+                    desc: "A conceptual guide explaining why retaining viewers in the first 3 seconds of a short form video is critical.",
+                    hook: "Here's the exact psychology trick that top creators use to get millions of views on simple topics...",
+                    hashtags: "#creatortips #viralhacks #contentstrategy #socialmediagrowth"
+                },
+                {
+                    title: "3 Tools that will automate 90% of your workflow",
+                    desc: "A rapid list-style compilation of highly interactive productivity automation tools.",
+                    hook: "If you're still doing repetitive tasks manually in 2026, you're losing money. Here are three tools that do the work for you.",
+                    hashtags: "#productivityhacks #workflows #automation #worksmarter"
+                }
+            ]
+        };
+
+        function generateViralIdeas() {
+            const nicheInput = document.getElementById('video-niche').value.trim();
+            const toneSelect = document.getElementById('video-tone').value;
+            const container = document.getElementById('ideas-output-container');
+
+            // Show Loading State
+            container.innerHTML = `
+                <div class="glass-panel empty-state">
+                    <div class="loader-spinner"></div>
+                    <h3>Generating Creative Spark...</h3>
+                    <p>ViralLoop AI is analyzing current trending metrics on ${selectedPlatform}...</p>
+                </div>
+            `;
+
+            // Simulate AI Delay
+            setTimeout(() => {
+                // Determine appropriate mock list
+                let ideas = mockDatabase.default;
+                const normalizedInput = nicheInput.toLowerCase();
+                if (normalizedInput.includes('code') || normalizedInput.includes('program') || normalizedInput.includes('tech') || normalizedInput.includes('dev')) {
+                    ideas = mockDatabase.coding;
+                } else if (normalizedInput.includes('cook') || normalizedInput.includes('food') || normalizedInput.includes('recipe') || normalizedInput.includes('eat')) {
+                    ideas = mockDatabase.cooking;
+                }
+
+                // Render Ideas
+                container.innerHTML = '';
+                ideas.forEach((idea, index) => {
+                    const id = `idea-${Date.now()}-${index}`;
+                    const card = document.createElement('div');
+                    card.className = 'glass-panel idea-card';
+                    card.id = id;
+                    card.innerHTML = `
+                        <div class="idea-main">
+                            <span class="idea-badge">${selectedPlatform} Concept</span>
+                            <h3>${idea.title}</h3>
+                            <p class="idea-description">${idea.desc}</p>
+                            <div class="idea-meta">
+                                <span class="meta-badge high-conf">🔥 98% Retain Potential</span>
+                                <span class="meta-badge">Style: ${toneSelect}</span>
+                                <span class="meta-badge">Target: Short Form</span>
+                            </div>
+                            <div class="hero-card-body" style="margin-top: 1.25rem;">
+                                <p style="font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem;">🔥 Opening Hook Script:</p>
+                                <p>"${idea.hook}"</p>
+                                <p class="hashtag" style="margin-top: 0.75rem;">${idea.hashtags}</p>
+                            </div>
+                        </div>
+                        <div class="idea-actions">
+                            <button class="cta-button action-btn" onclick="scheduleIdea('${idea.title.replace(/'/g, "\\'")}', '${selectedPlatform}')">
+                                Schedule Video Draft
+                            </button>
+                            <button class="secondary-button action-btn" onclick="copyHookText('${idea.hook.replace(/'/g, "\\'")}')">
+                                Copy Hook Script
+                            </button>
+                            <button class="secondary-button action-btn" style="border-color: rgba(244, 63, 94, 0.3); color: var(--accent);" onclick="dismissCard('${id}')">
+                                Dismiss Idea
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+                showToast("AI Concepts Generated Successfully!");
+            }, 1200);
+        }
+
+        function dismissCard(cardId) {
+            const card = document.getElementById(cardId);
+            if (card) {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    card.remove();
+                    // If no cards left, show empty state
+                    const container = document.getElementById('ideas-output-container');
+                    if (container.children.length === 0) {
+                        container.innerHTML = `
+                            <div class="glass-panel empty-state">
+                                <div class="empty-icon">🤖</div>
+                                <h3>Workspace Cleared</h3>
+                                <p>Configure new options and click "Generate Ideas Spark" to start over.</p>
+                            </div>
+                        `;
+                    }
+                }, 300);
+            }
+        }
+
+        function copyHookText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("Copied script hook to clipboard!");
+            });
+        }
+
+        function scheduleIdea(title, platform) {
+            const postDate = new Date();
+            postDate.setDate(postDate.getDate() + (scheduledPosts.length + 1));
+            
+            const post = {
+                title: title,
+                platform: platform,
+                date: postDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+            };
+
+            scheduledPosts.push(post);
+            updateSchedulerGrid();
+            showToast(`Draft scheduled for ${post.date}!`);
+        }
+
+        function updateSchedulerGrid() {
+            const grid = document.getElementById('scheduled-posts-grid');
+            if (scheduledPosts.length === 0) {
+                grid.innerHTML = `
+                    <div class="glass-panel empty-state" style="grid-column: 1 / -1;">
+                        <div class="empty-icon">📅</div>
+                        <h3>No Posts Scheduled Yet</h3>
+                        <p>Generate video ideas in the workspace and click "Schedule Video Draft" to place them in your queue.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = '';
+            scheduledPosts.forEach(post => {
+                const card = document.createElement('div');
+                card.className = 'schedule-card';
+                card.innerHTML = `
+                    <div class="card-media-mock"></div>
+                    <div class="card-info">
+                        <h4>${post.title}</h4>
+                        <p>Platform Queue: ${post.platform}</p>
+                        <div class="card-date">
+                            <span>Ready to Post</span>
+                            <span>${post.date}</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            showToast("Message sent! Our team will contact you shortly.");
+            event.target.reset();
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

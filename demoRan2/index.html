@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViralAI - AI-Powered Social Media Video Idea Generator</title>
+    <meta name="description" content="Unlock hyper-growth with ViralAI. Create viral video ideas, write full video scripts, and auto-schedule posts using advanced artificial intelligence.">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Homepage specific styles */
+        .hero {
+            padding: 8rem 0 6rem 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 4rem;
+            max-width: 900px;
+            margin: 0 auto 1.5rem auto;
+            background: linear-gradient(135deg, #fff 30%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2.5rem auto;
+        }
+
+        .hero-ctas {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 4rem;
+        }
+
+        /* Feature grid */
+        .features-section {
+            padding: 6rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .feature-card:nth-child(2) .feature-icon {
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--secondary);
+            border-color: rgba(6, 182, 212, 0.2);
+        }
+
+        .feature-card:nth-child(3) .feature-icon {
+            background: rgba(236, 72, 153, 0.1);
+            color: var(--accent);
+            border-color: rgba(236, 72, 153, 0.2);
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Mockup showcase */
+        .mockup-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            border-radius: 24px;
+            padding: 10px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(6, 182, 212, 0.3) 100%);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .mockup-inner {
+            background: #0b0822;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            aspect-ratio: 16/9;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mockup-header {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 0.8rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mockup-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .mockup-dot:nth-child(1) { background: #ef4444; }
+        .mockup-dot:nth-child(2) { background: #eab308; }
+        .mockup-dot:nth-child(3) { background: #22c55e; }
+
+        .mockup-content {
+            flex: 1;
+            display: flex;
+            padding: 1.5rem;
+            gap: 1.5rem;
+        }
+
+        .mockup-sidebar {
+            width: 200px;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .mockup-menu-item {
+            height: 32px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.02);
+            width: 80%;
+        }
+
+        .mockup-menu-item.active {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.2) 0%, transparent 100%);
+            border-left: 2px solid var(--primary);
+            width: 90%;
+        }
+
+        .mockup-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mockup-bar {
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .mockup-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .mockup-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .mockup-line {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .mockup-line.short { width: 60%; }
+        .mockup-line.medium { width: 80%; }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .hero-ctas {
+                flex-direction: column;
+                align-items: center;
+            }
+            .hero-ctas .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            .mockup-container {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span>⚡</span> ViralAI
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="demo.html">Interactive Demo</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+            </ul>
+            <a href="demo.html" class="nav-cta">Try Demo Free</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <span class="badge">Introducing ViralAI 2.0</span>
+            <h1 class="hero-title">Create <span>Viral Videos</span> Using AI. Instantly.</h1>
+            <p class="hero-subtitle">Generate hyper-engaging video hooks, complete video outlines/scripts, and find optimal posting schedules backed by millions of data points.</p>
+            <div class="hero-ctas">
+                <a href="demo.html" class="btn btn-primary">Start Generating Now ⚡</a>
+                <a href="#features" class="btn btn-secondary">Learn How it Works</a>
+            </div>
+
+            <!-- Beautiful Tech Demo Mockup -->
+            <div class="mockup-container">
+                <div class="mockup-inner">
+                    <div class="mockup-header">
+                        <div class="mockup-dot"></div>
+                        <div class="mockup-dot"></div>
+                        <div class="mockup-dot"></div>
+                        <span style="font-size: 0.75rem; color: var(--text-secondary); margin-left: 1rem; font-family: var(--font-mono)">viral-dashboard_v2.1.app</span>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="mockup-sidebar">
+                            <div class="mockup-menu-item active"></div>
+                            <div class="mockup-menu-item"></div>
+                            <div class="mockup-menu-item"></div>
+                            <div class="mockup-menu-item"></div>
+                        </div>
+                        <div class="mockup-main">
+                            <div class="mockup-bar">
+                                <span style="font-size: 0.8rem; color: var(--text-secondary);">Query: "Next-gen tech startups"</span>
+                            </div>
+                            <div class="mockup-cards-grid">
+                                <div class="mockup-card">
+                                    <div>
+                                        <div class="mockup-line medium" style="background: var(--primary);"></div>
+                                        <div class="mockup-line"></div>
+                                        <div class="mockup-line short"></div>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <span style="font-size: 0.7rem; color: var(--success); font-weight: 700;">Virality: 94%</span>
+                                        <div style="width: 40px; height: 16px; background: rgba(255,255,255,0.05); border-radius: 4px;"></div>
+                                    </div>
+                                </div>
+                                <div class="mockup-card">
+                                    <div>
+                                        <div class="mockup-line medium" style="background: var(--secondary);"></div>
+                                        <div class="mockup-line"></div>
+                                        <div class="mockup-line short"></div>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <span style="font-size: 0.7rem; color: var(--success); font-weight: 700;">Virality: 89%</span>
+                                        <div style="width: 40px; height: 16px; background: rgba(255,255,255,0.05); border-radius: 4px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features-section">
+            <div class="section-header">
+                <h2 class="section-title">Engineered for Hyper-Growth</h2>
+                <p class="section-subtitle">Stop guessing what the algorithm wants. Let AI analyze current trends and write your content.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="glass-card feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3>Viral Idea Engine</h3>
+                    <p>Scrapes real-time trending templates, video structures, and topics to craft unique concepts suited to your target niche.</p>
+                </div>
+                <div class="glass-card feature-card">
+                    <div class="feature-icon">✍️</div>
+                    <h3>Script Generation</h3>
+                    <p>Get complete scene-by-scene script writing with visual directives, hook variations, calls-to-action, and voice directions.</p>
+                </div>
+                <div class="glass-card feature-card">
+                    <div class="feature-icon">📅</div>
+                    <h3>Predictive Scheduler</h3>
+                    <p>Calculates optimal posting windows per platform using actual follower activity patterns to maximize organic reach.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="index.html" class="logo" style="margin-bottom: 1.5rem;">
+                        <span>⚡</span> ViralAI
+                    </a>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; max-width: 300px;">
+                        The ultimate AI assistant for video creators and content marketers. Optimize your content for the algorithms.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="demo.html">Interactive Demo</a></li>
+                        <li><a href="#features">Features</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <ul>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#">YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ViralAI Inc. All rights reserved. Created with ❤️.</p>
+                <div style="display: flex; gap: 1.5rem;">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

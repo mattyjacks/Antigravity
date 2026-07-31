@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViralAI - Contact Us</title>
+    <meta name="description" content="Get in touch with the ViralAI team for support, feature requests, or enterprise inquiries.">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 4rem;
+            margin-top: 4rem;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .contact-layout {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .contact-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            flex-shrink: 0;
+        }
+
+        .contact-method h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .contact-method p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Contact form specific styles */
+        .form-container {
+            position: relative;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 576px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .success-message {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            text-align: center;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span>⚡</span> ViralAI
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="demo.html">Interactive Demo</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+            </ul>
+            <a href="demo.html" class="nav-cta">Try Demo Free</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="contact-layout">
+            <!-- Left Info Panel -->
+            <div class="contact-info">
+                <div>
+                    <span class="badge">Get in Touch</span>
+                    <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Let's Chat About Your Content Strategy</h2>
+                    <p style="color: var(--text-secondary);">Have questions about our AI models, custom features, or agency packages? Drop us a line and we'll get back to you within 24 hours.</p>
+                </div>
+
+                <div class="contact-method">
+                    <div class="contact-icon">📧</div>
+                    <div>
+                        <h4>Email Us</h4>
+                        <p>support@viralai-demo.com</p>
+                    </div>
+                </div>
+
+                <div class="contact-method">
+                    <div class="contact-icon">🌍</div>
+                    <div>
+                        <h4>HQ Location</h4>
+                        <p>San Francisco, CA</p>
+                    </div>
+                </div>
+
+                <div class="contact-method">
+                    <div class="contact-icon">📈</div>
+                    <div>
+                        <h4>Enterprise Customizations</h4>
+                        <p>enterprise@viralai-demo.com</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Form Panel -->
+            <div class="glass-card form-container">
+                <form id="contact-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="name">First Name</label>
+                            <input type="text" class="form-control" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="lastname">Last Name</label>
+                            <input type="text" class="form-control" id="lastname" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label" for="email">Email Address</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label" for="message">Message</label>
+                            <textarea class="form-control" id="message" required placeholder="Tell us how we can help..."></textarea>
+                        </div>
+                        <div class="form-group full-width" style="margin-top: 1rem;">
+                            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">Send Message 🚀</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Form Success State -->
+                <div class="success-message" id="form-success">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Message Received!</h3>
+                    <p style="color: var(--text-secondary); max-width: 300px; margin: 0 auto 1.5rem auto;">Thanks for reaching out. A team member will respond shortly.</p>
+                    <button class="btn btn-secondary" id="reset-form-btn">Send Another Message</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 ViralAI Inc. All rights reserved. Created with ❤️.</p>
+                <div style="display: flex; gap: 1.5rem;">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const form = document.getElementById('contact-form');
+        const success = document.getElementById('form-success');
+        const resetBtn = document.getElementById('reset-form-btn');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            form.style.display = 'none';
+            success.style.display = 'flex';
+        });
+
+        resetBtn.addEventListener('click', () => {
+            form.reset();
+            success.style.display = 'none';
+            form.style.display = 'block';
+        });
+    </script>
+</body>
+</html>

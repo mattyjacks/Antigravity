@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Video Idea Generator - ViralVibe AI Tech Demo</title>
+    <meta name="description" content="Try the ViralVibe AI interactive dashboard demo. Enter your topic niche, platform, and tone, and watch the AI brainstorm viral video hooks and content layouts.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <span class="logo-icon"></span>
+            ViralVibe AI
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="demo.html" class="active">Demo Dashboard</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="privacy.html">Privacy</a></li>
+            <li><a href="demo.html" class="btn-cta">Try Demo Free</a></li>
+        </ul>
+    </nav>
+
+    <div class="container" style="max-width: 1300px;">
+        <div style="margin-bottom: 2rem;">
+            <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem;">AI Studio Dashboard</h1>
+            <p style="color: var(--text-muted);">Configure parameters below to simulate generating high-retention video outlines.</p>
+        </div>
+
+        <div class="dashboard-layout">
+            <!-- Sidebar Panel Controls -->
+            <aside class="glass-card sidebar-controls" style="padding: 1.75rem;">
+                <h3>🤖 Video Parameters</h3>
+                
+                <div class="form-group">
+                    <label for="niche-keyword">Niche & Keywords</label>
+                    <input type="text" id="niche-keyword" placeholder="e.g. crypto hacks, pottery business, productivity hacks..." value="Digital Marketing Hacks">
+                </div>
+
+                <div class="form-group">
+                    <label for="platform-select">Target Platform</label>
+                    <select id="platform-select">
+                        <option value="tiktok">TikTok Video</option>
+                        <option value="reels">Instagram Reels</option>
+                        <option value="shorts">YouTube Shorts</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tone-select">Creativity Tone</label>
+                    <select id="tone-select">
+                        <option value="hype">Energetic & Hype</option>
+                        <option value="educational">Informative & Clear</option>
+                        <option value="controversial">Intriguing & Bold</option>
+                        <option value="funny">Humorous & Relaxed</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; text-transform: none; font-size: 0.9rem; cursor: pointer;">
+                        <input type="checkbox" checked style="width: auto;">
+                        Optimize hook for fast retention
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; text-transform: none; font-size: 0.9rem; cursor: pointer;">
+                        <input type="checkbox" checked style="width: auto;">
+                        Include estimated virality rating
+                    </label>
+                </div>
+
+                <button id="btn-generate" class="btn-generate">
+                    🪄 Generate Viral Concepts
+                </button>
+            </aside>
+
+            <!-- Results Output Panel -->
+            <main class="glass-card results-area" style="padding: 2rem;">
+                <!-- Placeholder State -->
+                <div id="placeholder-view" class="placeholder-view">
+                    <div class="placeholder-icon">🔮</div>
+                    <h3 style="margin-bottom: 0.5rem; font-size: 1.4rem; color: #fff;">Ready to Ideate</h3>
+                    <p style="font-size: 0.95rem; max-width: 450px; margin: 0 auto;">Customize the creative parameters on the left and click "Generate" to simulate artificial intelligence processing viral video suggestions.</p>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loading-view" class="loading-view">
+                    <div class="spinner"></div>
+                    <h3 style="color: #fff;">Simulating ViralVibe Engine...</h3>
+                    <div id="loading-steps" class="loading-steps">🔍 Running algorithmic trend-match tests...</div>
+                </div>
+
+                <!-- Generated Results List -->
+                <div id="results-list" class="results-list">
+                    <!-- Cards will be populated by script.js -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scheduling Dialog Modal -->
+    <div id="schedule-modal" class="modal-overlay">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h3 style="font-size: 1.3rem; font-weight: 700; color: #fff;">📅 Schedule Auto-Post</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="schedule-form">
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Selected Video Outline</div>
+                    <div id="modal-post-title" style="font-weight: 600; color: var(--secondary); margin-top: 0.25rem;">Video Title</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="post-date">Publish Date</label>
+                    <input type="date" id="post-date" required value="2026-08-01">
+                </div>
+
+                <div class="form-group">
+                    <label for="post-time">Publish Time (EST)</label>
+                    <input type="time" id="post-time" required value="12:00">
+                </div>
+
+                <div class="form-group">
+                    <label for="modal-platforms">Post to Accounts</label>
+                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                        <label style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.9rem; text-transform: none; cursor: pointer;">
+                            <input type="checkbox" checked style="width: auto;"> TikTok
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.9rem; text-transform: none; cursor: pointer;">
+                            <input type="checkbox" checked style="width: auto;"> Instagram
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.9rem; text-transform: none; cursor: pointer;">
+                            <input type="checkbox" style="width: auto;"> YouTube
+                        </label>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="btn-secondary modal-close" style="padding: 0.5rem 1.25rem; font-size: 0.9rem;">Cancel</button>
+                    <button type="submit" class="btn-cta" style="padding: 0.5rem 1.25rem; font-size: 0.9rem;">Confirm Schedule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <a href="index.html" class="logo" style="font-size: 1.2rem;">
+                <span class="logo-icon" style="width: 22px; height: 22px;"></span>
+                ViralVibe AI
+            </a>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="demo.html">Demo</a>
+                <a href="contact.html">Contact</a>
+                <a href="privacy.html">Privacy Policy</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2026 ViralVibe AI. Built with premium aesthetics.
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

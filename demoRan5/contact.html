@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - ViralVibe AI</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .contact-success {
+            display: none;
+            text-align: center;
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius-md);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-glow">ViralVibe</span>AI
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="demo.html">Demo Tool</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+            </ul>
+            <a href="demo.html" class="btn-demo-nav">Try Demo</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="contact-container">
+            <div class="contact-header">
+                <h1>Get In Touch</h1>
+                <p>Have questions about integration, custom models, or enterprise capabilities? Drop us a line.</p>
+            </div>
+
+            <form id="contactForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" class="form-control" placeholder="Jane Doe" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="jane@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" class="form-control" rows="5" placeholder="How can our AI help you?" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn-primary" style="width: 100%;">Send Message</button>
+            </form>
+
+            <div class="contact-success" id="successMessage">
+                ✓ Thank you! Your message has been sent successfully.
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <a href="index.html" class="footer-logo"><span class="logo-glow">ViralVibe</span>AI</a>
+            <ul class="footer-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="demo.html">Demo Tool</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // Simple mockup validation and submission effect
+            const form = document.getElementById('contactForm');
+            const success = document.getElementById('successMessage');
+            
+            form.style.display = 'none';
+            success.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
