@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Beauty & Cosmetics | Zai Essentials</title>
+    <meta name="description" content="Shop Zai's organic clean beauty range. Safe, non-toxic skincare products and botanical cosmetics.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                Zai <span>Essentials</span>
+            </a>
+            <button class="menu-toggle" aria-label="Toggle Menu">☰</button>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="essentials.html">Essentials</a></li>
+                    <li><a href="health.html">Health</a></li>
+                    <li><a href="beauty.html" class="active">Beauty</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-icon" aria-label="View Cart">
+                    🛒
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Catalog Page Container -->
+    <main class="container">
+        <div class="section-title" style="text-align: left; margin-bottom: 2rem;">
+            <h2>Clean Beauty & Cosmetics</h2>
+            <p>Pure, toxin-free formulas, natural seed oils, and botanical extracts that reveal your glow.</p>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="catalog-controls">
+            <div>Showing 6 premium products</div>
+            <div class="filter-group">
+                <label for="sort-products" style="font-weight: 500; color: var(--color-forest);">Sort By:</label>
+                <select id="sort-products" class="filter-select">
+                    <option value="default">Default Alphabetical</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card" data-id="bty-01" data-name="Hydrating Rose Water Mist" data-price="22.00" data-category="Beauty">
+                <div class="product-image-container">
+                    <span class="product-tag">Calming</span>
+                    <img src="images/category_beauty.png" alt="Hydrating Rose Water Mist">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Beauty</span>
+                    <h3 class="product-title">Hydrating Bulgarian Rose Water Mist</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$22.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card" data-id="bty-02" data-name="Organic Marula Facial Oil" data-price="36.00" data-category="Beauty">
+                <div class="product-image-container">
+                    <span class="product-tag">Best Seller</span>
+                    <img src="images/category_beauty.png" alt="Organic Marula Facial Oil">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Beauty</span>
+                    <h3 class="product-title">Pure Cold-Pressed Marula Facial Oil</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$36.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card" data-id="bty-03" data-name="Vitamin C Brightening Serum" data-price="42.00" data-category="Beauty">
+                <div class="product-image-container">
+                    <img src="images/category_beauty.png" alt="Vitamin C Brightening Serum">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Beauty</span>
+                    <h3 class="product-title">Vitamin C + Ferulic Acid Glow Serum</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$42.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card" data-id="bty-04" data-name="Mineral Sunscreen SPF 30" data-price="26.00" data-category="Beauty">
+                <div class="product-image-container">
+                    <img src="images/category_beauty.png" alt="Mineral Sunscreen SPF 30">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Beauty</span>
+                    <h3 class="product-title">Non-Nano Zinc Mineral Sunscreen</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$26.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card" data-id="bty-05" data-name="Botanical Detox Clay Mask" data-price="24.00" data-category="Beauty">
+                <div class="product-image-container">
+                    <span class="product-tag">New</span>
+                    <img src="images/category_beauty.png" alt="Botanical Detox Clay Mask">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Beauty</span>
+                    <h3 class="product-title">French Green Clay Detox Face Mask</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$24.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card" data-id="bty-06" data-name="Organic Lavender Lip Balm Set" data-price="12.00" data-category="Beauty">
+                <div class="product-image-container">
+                    <img src="images/category_beauty.png" alt="Organic Lavender Lip Balm Set">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Beauty</span>
+                    <h3 class="product-title">Nourishing Shea Butter Lip Balm Set</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$12.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <h3>Zai Essentials</h3>
+                <p>Elevating daily routines through curated, high-end organic products. Pure ingredients, ethical practices, and premium quality.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Catalog</h4>
+                <ul>
+                    <li><a href="essentials.html">Daily Essentials</a></li>
+                    <li><a href="health.html">Wellness & Health</a></li>
+                    <li><a href="beauty.html">Organic Beauty</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="about.html">Our Story</a></li>
+                    <li><a href="contact.html">Support / FAQS</a></li>
+                    <li><a href="contact.html">Careers</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li>hello@zaiessentials.com</li>
+                    <li>+1 (555) 019-2834</li>
+                    <li>New York, NY</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Zai Essentials. All rights reserved.</p>
+            <p>Designed for Conscious Consumers.</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

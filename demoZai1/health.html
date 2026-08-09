@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health & Wellness Products | Zai Essentials</title>
+    <meta name="description" content="Shop Zai's organic health and wellness products. Sourced premium herbal powders, teas, and capsule extracts.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                Zai <span>Essentials</span>
+            </a>
+            <button class="menu-toggle" aria-label="Toggle Menu">☰</button>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="essentials.html">Essentials</a></li>
+                    <li><a href="health.html" class="active">Health</a></li>
+                    <li><a href="beauty.html">Beauty</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-icon" aria-label="View Cart">
+                    🛒
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Catalog Page Container -->
+    <main class="container">
+        <div class="section-title" style="text-align: left; margin-bottom: 2rem;">
+            <h2>Health & Wellness</h2>
+            <p>Elevate your body's energy and peace with natural, sustainably sourced vitamins, roots, and organic teas.</p>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="catalog-controls">
+            <div>Showing 6 premium products</div>
+            <div class="filter-group">
+                <label for="sort-products" style="font-weight: 500; color: var(--color-forest);">Sort By:</label>
+                <select id="sort-products" class="filter-select">
+                    <option value="default">Default Alphabetical</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card" data-id="hlth-01" data-name="Reishi Mushroom Powder" data-price="28.00" data-category="Health">
+                <div class="product-image-container">
+                    <span class="product-tag">Superfood</span>
+                    <img src="images/category_health.png" alt="Reishi Mushroom Powder">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Health</span>
+                    <h3 class="product-title">Reishi Mushroom Powder (Extract)</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$28.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card" data-id="hlth-02" data-name="Organic Herbal Wellness Tea" data-price="18.50" data-category="Health">
+                <div class="product-image-container">
+                    <img src="images/category_health.png" alt="Organic Herbal Wellness Tea">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Health</span>
+                    <h3 class="product-title">Organic Herbal Calm Blend Tea</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$18.50</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card" data-id="hlth-03" data-name="Ashwagandha Root Capsules" data-price="24.00" data-category="Health">
+                <div class="product-image-container">
+                    <span class="product-tag">Adaptogen</span>
+                    <img src="images/category_health.png" alt="Ashwagandha Root Capsules">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Health</span>
+                    <h3 class="product-title">Organic Ashwagandha Capsules</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$24.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card" data-id="hlth-04" data-name="Cold-Pressed Black Seed Oil" data-price="32.00" data-category="Health">
+                <div class="product-image-container">
+                    <img src="images/category_health.png" alt="Cold-Pressed Black Seed Oil">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Health</span>
+                    <h3 class="product-title">Cold-Pressed Black Seed Oil (100ml)</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$32.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card" data-id="hlth-05" data-name="Raw Lavender Honey Jar" data-price="16.00" data-category="Health">
+                <div class="product-image-container">
+                    <img src="images/category_health.png" alt="Raw Lavender Honey Jar">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Health</span>
+                    <h3 class="product-title">Raw Lavender Infused Honey</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$16.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card" data-id="hlth-06" data-name="Organic Elderberry Syrup" data-price="22.00" data-category="Health">
+                <div class="product-image-container">
+                    <span class="product-tag">Immunity</span>
+                    <img src="images/category_health.png" alt="Organic Elderberry Syrup">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Health</span>
+                    <h3 class="product-title">Organic Elderberry Support Syrup</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$22.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <h3>Zai Essentials</h3>
+                <p>Elevating daily routines through curated, high-end organic products. Pure ingredients, ethical practices, and premium quality.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Catalog</h4>
+                <ul>
+                    <li><a href="essentials.html">Daily Essentials</a></li>
+                    <li><a href="health.html">Wellness & Health</a></li>
+                    <li><a href="beauty.html">Organic Beauty</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="about.html">Our Story</a></li>
+                    <li><a href="contact.html">Support / FAQS</a></li>
+                    <li><a href="contact.html">Careers</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li>hello@zaiessentials.com</li>
+                    <li>+1 (555) 019-2834</li>
+                    <li>New York, NY</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Zai Essentials. All rights reserved.</p>
+            <p>Designed for Conscious Consumers.</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

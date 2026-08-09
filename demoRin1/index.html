@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Rin 2.0 - Ultimate focus environment, ambient soundscape synthesizer, guided breathing tool, interactive visualizer, and task manager.">
+  <title>Rin // Premium Focus Workspace</title>
+  
+  <!-- Font Imports -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-space">
+  <!-- Glowing Background Decorative Orbs -->
+  <div class="glow-container">
+    <div class="glow-orb orb-1" id="orb-1"></div>
+    <div class="glow-orb orb-2" id="orb-2"></div>
+    <div class="glow-orb orb-3" id="orb-3"></div>
+  </div>
+
+  <!-- Interactive Background Canvas Visualizer -->
+  <canvas id="visualizer-canvas" class="background-canvas"></canvas>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <span class="logo-dot"></span>
+        <h1>rin <span class="logo-badge">2.0</span></h1>
+      </div>
+      <div class="navigation-tabs">
+        <button class="nav-tab active" data-target="soundscape" aria-controls="soundscape-panel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5v14M22 9v6M7 5v14M2 9v6"/></svg>
+          <span>Soundscape</span>
+        </button>
+        <button class="nav-tab" data-target="tasks" aria-controls="tasks-panel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span>Focus Tasks</span>
+        </button>
+        <button class="nav-tab" data-target="breath" aria-controls="breath-panel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/></svg>
+          <span>Breath Space</span>
+        </button>
+        <button class="nav-tab" data-target="stats" aria-controls="stats-panel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span>Analytics</span>
+        </button>
+        <button class="nav-tab" data-target="settings" aria-controls="settings-panel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Settings</span>
+        </button>
+      </div>
+      <div class="header-actions">
+        <button id="keyboard-shortcuts-btn" title="Keyboard Shortcuts" class="icon-btn" aria-label="Keyboard Shortcuts">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"/><line x1="6" y1="8" x2="6" y2="8"/><line x1="10" y1="8" x2="10" y2="8"/><line x1="14" y1="8" x2="14" y2="8"/><line x1="18" y1="8" x2="18" y2="8"/><line x1="6" y1="12" x2="6" y2="12"/><line x1="10" y1="12" x2="10" y2="12"/><line x1="14" y1="12" x2="14" y2="12"/><line x1="18" y1="12" x2="18" y2="12"/><line x1="7" y1="16" x2="17" y2="16"/></svg>
+        </button>
+        <button id="fullscreen-btn" title="Distraction-Free Fullscreen" class="icon-btn" aria-label="Toggle Fullscreen">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        </button>
+        <button id="theme-btn" title="Visual Style themes" class="icon-btn" aria-label="Change Color Theme">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="14.31" y1="8" x2="20.05" y2="17.94"/><line x1="9.69" y1="8" x2="21.17" y2="8"/><line x1="7.38" y1="12" x2="13.12" y2="2.06"/><line x1="9.69" y1="16" x2="3.95" y2="6.06"/><line x1="14.31" y1="16" x2="2.83" y2="16"/><line x1="16.62" y1="12" x2="10.88" y2="21.94"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace Layout -->
+    <main class="workspace-grid">
+      
+      <!-- LEFT SECTION: Central Timer Panel (Always Visible) -->
+      <section class="panel timer-panel">
+        <div class="panel-header">
+          <div class="panel-title-area">
+            <h2>Focus Center</h2>
+            <span class="status-indicator-dot"></span>
+          </div>
+          <span class="session-counter-badge" id="session-count-top">Session #1</span>
+        </div>
+        
+        <!-- Timer Progress Ring -->
+        <div class="timer-display-container">
+          <svg class="timer-progress-ring" width="280" height="280">
+            <defs>
+              <linearGradient id="timer-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="var(--accent)" />
+                <stop offset="100%" stop-color="var(--accent-glow)" />
+              </linearGradient>
+            </defs>
+            <circle class="ring-bg" cx="140" cy="140" r="128" />
+            <circle class="ring-fill" id="timer-progress" cx="140" cy="140" r="128" style="stroke: url(#timer-grad);" />
+          </svg>
+          <div class="timer-content-text">
+            <div id="timer-time">25:00</div>
+            <div id="timer-label">FOCUS SESSION</div>
+          </div>
+        </div>
+
+        <!-- Preset Fast Selection -->
+        <div class="timer-presets-container">
+          <button class="preset-btn active" data-duration="1500" data-label="FOCUS SESSION">Focus</button>
+          <button class="preset-btn" data-duration="300" data-label="SHORT BREAK">Break</button>
+          <button class="preset-btn" data-duration="900" data-label="LONG REST">Rest</button>
+          <button class="preset-btn" data-duration="60" data-label="TEST RUN">1 Min</button>
+        </div>
+
+        <!-- Action Controls -->
+        <div class="timer-action-buttons">
+          <button id="timer-play-btn" class="primary-btn pulse-glow">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Start Focus</span>
+          </button>
+          <button id="timer-reset-btn" class="secondary-btn" title="Reset Timer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          </button>
+        </div>
+
+        <!-- Custom Timer Selector Form -->
+        <div class="custom-timer-form">
+          <label for="custom-min-input">Duration (minutes):</label>
+          <div class="input-spinner">
+            <input type="number" id="custom-min-input" min="1" max="180" value="25">
+            <button id="apply-custom-timer-btn" class="text-link-btn">Set</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT SECTION: Tabbed Dashboard Panels -->
+      <div class="dashboard-panels-container">
+        
+        <!-- Tab 1: Soundscape Mixer -->
+        <section id="soundscape-panel" class="panel tab-panel active">
+          <div class="panel-header">
+            <div class="panel-title-area">
+              <h2>Acoustic Environment</h2>
+              <span class="active-count-tag" id="active-sounds-tag">0 playing</span>
+            </div>
+            <div class="mixer-global-actions">
+              <button id="save-preset-trigger" class="text-link-btn">Save Mix</button>
+              <span class="action-separator">|</span>
+              <button id="master-mute-btn" class="text-link-btn">Mute All</button>
+            </div>
+          </div>
+
+          <!-- Presets Quick Loader -->
+          <div class="preset-saver-drawer" id="preset-drawer">
+            <div class="preset-input-row">
+              <input type="text" id="new-preset-name" placeholder="Mix name (e.g. Rainy Cafe)" maxlength="16">
+              <button id="save-preset-confirm-btn" class="primary-btn-mini">Save</button>
+            </div>
+            <div class="preset-list" id="saved-presets-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <div class="mixer-cards-grid">
+            <!-- Rain Sound Card -->
+            <div class="sound-card" id="sound-rain" data-sound="rain">
+              <div class="sound-card-header">
+                <div class="sound-card-icon-title">
+                  <span class="sound-icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 17.58A5 5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.25"/><line x1="8" y1="16" x2="8" y2="22"/><line x1="12" y1="18" x2="12" y2="24"/><line x1="16" y1="16" x2="16" y2="22"/></svg>
+                  </span>
+                  <div>
+                    <h3>Rain Shower</h3>
+                    <span class="sound-card-desc">Warm procedural rainfall</span>
+                  </div>
+                </div>
+                <button class="sound-card-switch" aria-label="Toggle Rain">
+                  <span class="switch-knob"></span>
+                </button>
+              </div>
+              <div class="sound-card-controls">
+                <div class="control-row">
+                  <span class="control-label">Volume</span>
+                  <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="0.5">
+                </div>
+                <!-- Custom param slider -->
+                <div class="control-row secondary-control">
+                  <span class="control-label">Intensity</span>
+                  <input type="range" class="param-slider" data-param="intensity" min="0.1" max="2.0" step="0.1" value="1.0">
+                </div>
+              </div>
+            </div>
+
+            <!-- Ocean Waves Card -->
+            <div class="sound-card" id="sound-waves" data-sound="waves">
+              <div class="sound-card-header">
+                <div class="sound-card-icon-title">
+                  <span class="sound-icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10s3-2 6-2 6 2 8 2 6-2 6-2M2 14s3-2 6-2 6 2 8 2 6-2 6-2M2 18s3-2 6-2 6 2 8 2 6-2 6-2"/></svg>
+                  </span>
+                  <div>
+                    <h3>Ocean Tide</h3>
+                    <span class="sound-card-desc">LFO sweeping deep tides</span>
+                  </div>
+                </div>
+                <button class="sound-card-switch" aria-label="Toggle Ocean Waves">
+                  <span class="switch-knob"></span>
+                </button>
+              </div>
+              <div class="sound-card-controls">
+                <div class="control-row">
+                  <span class="control-label">Volume</span>
+                  <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="0.5">
+                </div>
+                <div class="control-row secondary-control">
+                  <span class="control-label">Interval</span>
+                  <input type="range" class="param-slider" data-param="period" min="4" max="20" step="0.5" value="10">
+                </div>
+              </div>
+            </div>
+
+            <!-- Space Drone Card -->
+            <div class="sound-card" id="sound-drone" data-sound="drone">
+              <div class="sound-card-header">
+                <div class="sound-card-icon-title">
+                  <span class="sound-icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5v14M22 9v6M7 5v14M2 9v6"/></svg>
+                  </span>
+                  <div>
+                    <h3>Cosmic Drone</h3>
+                    <span class="sound-card-desc">Basso detuned synthesizer pads</span>
+                  </div>
+                </div>
+                <button class="sound-card-switch" aria-label="Toggle Cosmic Drone">
+                  <span class="switch-knob"></span>
+                </button>
+              </div>
+              <div class="sound-card-controls">
+                <div class="control-row">
+                  <span class="control-label">Volume</span>
+                  <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="0.5">
+                </div>
+                <div class="control-row secondary-control">
+                  <span class="control-label">Base Pitch</span>
+                  <input type="range" class="param-slider" data-param="pitch" min="40" max="120" step="1" value="73">
+                </div>
+              </div>
+            </div>
+
+            <!-- Focus Waves Binaural Card -->
+            <div class="sound-card" id="sound-binaural" data-sound="binaural">
+              <div class="sound-card-header">
+                <div class="sound-card-icon-title">
+                  <span class="sound-icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                  </span>
+                  <div>
+                    <h3>Binaural Beats</h3>
+                    <span class="sound-card-desc">Dual channel phase beat focus</span>
+                  </div>
+                </div>
+                <button class="sound-card-switch" aria-label="Toggle Binaural Waves">
+                  <span class="switch-knob"></span>
+                </button>
+              </div>
+              <div class="sound-card-controls">
+                <div class="control-row">
+                  <span class="control-label">Volume</span>
+                  <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="0.3">
+                </div>
+                <div class="control-row secondary-control">
+                  <span class="control-label">Beat (Hz)</span>
+                  <input type="range" class="param-slider" data-param="frequency" min="2" max="30" step="0.5" value="6">
+                </div>
+              </div>
+            </div>
+
+            <!-- Campfire Crackle Card -->
+            <div class="sound-card" id="sound-campfire" data-sound="campfire">
+              <div class="sound-card-header">
+                <div class="sound-card-icon-title">
+                  <span class="sound-icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 22h20L12 2z"/><path d="M12 18a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+                  </span>
+                  <div>
+                    <h3>Campfire</h3>
+                    <span class="sound-card-desc">Synthesized wood snaps & rumble</span>
+                  </div>
+                </div>
+                <button class="sound-card-switch" aria-label="Toggle Campfire">
+                  <span class="switch-knob"></span>
+                </button>
+              </div>
+              <div class="sound-card-controls">
+                <div class="control-row">
+                  <span class="control-label">Volume</span>
+                  <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="0.4">
+                </div>
+                <div class="control-row secondary-control">
+                  <span class="control-label">Crackle Rate</span>
+                  <input type="range" class="param-slider" data-param="crackle" min="0.1" max="3.0" step="0.1" value="1.0">
+                </div>
+              </div>
+            </div>
+
+            <!-- Cafe Ambience Card -->
+            <div class="sound-card" id="sound-cafe" data-sound="cafe">
+              <div class="sound-card-header">
+                <div class="sound-card-icon-title">
+                  <span class="sound-icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                  </span>
+                  <div>
+                    <h3>Cafe Murmur</h3>
+                    <span class="sound-card-desc">Simulated background room hum</span>
+                  </div>
+                </div>
+                <button class="sound-card-switch" aria-label="Toggle Cafe Ambience">
+                  <span class="switch-knob"></span>
+                </button>
+              </div>
+              <div class="sound-card-controls">
+                <div class="control-row">
+                  <span class="control-label">Volume</span>
+                  <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="0.3">
+                </div>
+                <div class="control-row secondary-control">
+                  <span class="control-label">Chatter Level</span>
+                  <input type="range" class="param-slider" data-param="chatter" min="0.2" max="2.0" step="0.1" value="1.0">
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 2: Focus Task Manager -->
+        <section id="tasks-panel" class="panel tab-panel">
+          <div class="panel-header">
+            <h2>Focus Tasks</h2>
+            <span class="task-count-indicator" id="task-completed-ratio">0/0 completed</span>
+          </div>
+          
+          <div class="task-input-section">
+            <form id="todo-form" class="todo-form">
+              <input type="text" id="todo-input" placeholder="What will you focus on next?" required max="120">
+              <select id="todo-priority" aria-label="Priority level">
+                <option value="low">Low Priority</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+              </select>
+              <button type="submit" class="primary-btn-mini">Add Task</button>
+            </form>
+          </div>
+
+          <div class="task-filter-row">
+            <button class="filter-tab active" data-filter="all">All</button>
+            <button class="filter-tab" data-filter="active">Active</button>
+            <button class="filter-tab" data-filter="completed">Completed</button>
+            <button id="clear-completed-tasks" class="text-link-btn pull-right">Clear Completed</button>
+          </div>
+
+          <div class="todo-list-container">
+            <ul id="todo-list" class="todo-list">
+              <!-- Dynamically populated list -->
+              <li class="empty-list-placeholder">No focus tasks. Plan your study sessions here.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Tab 3: Breath Space Guided Tool -->
+        <section id="breath-panel" class="panel tab-panel">
+          <div class="panel-header">
+            <h2>Mindful Breathing</h2>
+            <span class="breath-cycle-counter" id="breath-cycles">Cycle #0</span>
+          </div>
+
+          <div class="breath-tool-container">
+            <!-- Breathing Guide Ring Graphic -->
+            <div class="breath-visual-space">
+              <div class="breath-guide-circle" id="breath-circle">
+                <div class="breath-circle-inner"></div>
+              </div>
+              <div class="breath-instruction-text" id="breath-instruction">Click Start to Breathe</div>
+            </div>
+
+            <div class="breath-controls">
+              <button id="breath-start-btn" class="primary-btn">Start Box Breath</button>
+              <div class="breath-modes">
+                <button class="breath-mode-btn active" data-inhale="4" data-hold1="4" data-exhale="4" data-hold2="4">Box (4s-4s-4s-4s)</button>
+                <button class="breath-mode-btn" data-inhale="4" data-hold1="7" data-exhale="8" data-hold2="0">Relax (4s-7s-8s)</button>
+                <button class="breath-mode-btn" data-inhale="5" data-hold1="0" data-exhale="5" data-hold2="0">Coherence (5s-5s)</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 4: Analytics and History -->
+        <section id="stats-panel" class="panel tab-panel">
+          <div class="panel-header">
+            <h2>Analytics Dashboard</h2>
+            <button id="reset-stats-btn" class="text-link-btn">Reset Data</button>
+          </div>
+
+          <div class="stats-metric-cards-grid">
+            <div class="metric-card">
+              <div class="metric-val" id="stat-total-minutes">0</div>
+              <div class="metric-label">Focus Minutes Today</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-val" id="stat-sessions-count">0</div>
+              <div class="metric-label">Completed Sessions</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-val" id="stat-tasks-count">0</div>
+              <div class="metric-label">Tasks Finished</div>
+            </div>
+          </div>
+
+          <div class="session-log-section">
+            <h3>Focus Log History</h3>
+            <div class="log-table-wrapper">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th>Date/Time</th>
+                    <th>Type</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="stats-log-tbody">
+                  <tr>
+                    <td colspan="4" class="empty-table-placeholder">No focus logs recorded yet. Complete a session to begin tracking.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 5: Settings & Customizer -->
+        <section id="settings-panel" class="panel tab-panel">
+          <div class="panel-header">
+            <h2>System Preferences</h2>
+          </div>
+
+          <div class="settings-sections-list">
+            <div class="setting-item-row">
+              <div class="setting-info">
+                <h3>Visualizer Mode</h3>
+                <span class="setting-desc">Choose background audio visualizer rendering style</span>
+              </div>
+              <select id="visualizer-style-select" class="custom-select">
+                <option value="particles" selected>Reactive Starfield Particles</option>
+                <option value="wave">Digital Oscilloscope Waveform</option>
+                <option value="bars">Circular Frequency Ring</option>
+                <option value="none">None (Save GPU/CPU cycles)</option>
+              </select>
+            </div>
+
+            <div class="setting-item-row">
+              <div class="setting-info">
+                <h3>Keyboard Clicks Synth</h3>
+                <span class="setting-desc">Play mechanical keyboard click sound on typing</span>
+              </div>
+              <button class="sound-card-switch" id="keyboard-click-toggle" aria-label="Toggle Keyboard Clicks">
+                <span class="switch-knob"></span>
+              </button>
+            </div>
+
+            <div class="setting-item-row">
+              <div class="setting-info">
+                <h3>Timer Alert Sound</h3>
+                <span class="setting-desc">Procedural synthesizer chime type at timer finish</span>
+              </div>
+              <select id="timer-sound-select" class="custom-select">
+                <option value="major" selected>Arpeggiated Major Triad (Uplifting)</option>
+                <option value="zen">Deep Tibetan Meditation Bell</option>
+                <option value="retro">8-bit Arcade Ring Tone</option>
+              </select>
+            </div>
+
+            <div class="setting-item-row">
+              <div class="setting-info">
+                <h3>Auto-start Next Session</h3>
+                <span class="setting-desc">Automatically begin break or focus intervals</span>
+              </div>
+              <button class="sound-card-switch" id="autostart-toggle" aria-label="Toggle Autostart">
+                <span class="switch-knob"></span>
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-left">
+        <p>&copy; 2026 Rin Focus Systems. Crafted with procedural Web Audio synthetics.</p>
+      </div>
+      <div class="footer-right">
+        <div class="theme-selector-panel-inline" id="theme-selector-panel">
+          <button class="theme-option space active" data-theme="space">Deep Space</button>
+          <button class="theme-option aurora" data-theme="aurora">Aurora</button>
+          <button class="theme-option sunset" data-theme="sunset">Sunset Cosmic</button>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Keyboard Shortcuts Modal Dialog -->
+  <div class="modal-backdrop hidden" id="shortcuts-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2>Workspace Keyboard Shortcuts</h2>
+        <button id="close-modal-btn" class="icon-btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="shortcut-list-grid">
+          <div class="shortcut-item"><kbd>Space</kbd> <span>Play / Pause Focus Timer</span></div>
+          <div class="shortcut-item"><kbd>R</kbd> <span>Reset Focus Timer</span></div>
+          <div class="shortcut-item"><kbd>M</kbd> <span>Mute / Unmute All Audio</span></div>
+          <div class="shortcut-item"><kbd>F</kbd> <span>Toggle Fullscreen Focus Mode</span></div>
+          <div class="shortcut-item"><kbd>1</kbd> <span>Toggle Rain Sound</span></div>
+          <div class="shortcut-item"><kbd>2</kbd> <span>Toggle Ocean Waves Sound</span></div>
+          <div class="shortcut-item"><kbd>3</kbd> <span>Toggle Cosmic Drone Sound</span></div>
+          <div class="shortcut-item"><kbd>4</kbd> <span>Toggle Binaural Focus Beats</span></div>
+          <div class="shortcut-item"><kbd>5</kbd> <span>Toggle Campfire Sound</span></div>
+          <div class="shortcut-item"><kbd>6</kbd> <span>Toggle Cafe Ambience Sound</span></div>
+          <div class="shortcut-item"><kbd>T</kbd> <span>Cycle Visual Colors Theme</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>

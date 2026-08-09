@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esther | Admin, Operations & Social Media Specialist</title>
+    <meta name="description" content="Professional administrative, operations, and social media specialist based in Nigeria. Offering elegant, efficient solutions hourly ($15/hr) or project-based.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #0a110c;
+            --bg-secondary: #121e16;
+            --bg-tertiary: #192a1f;
+            --accent-gold: #dcb26e;
+            --accent-gold-hover: #c99f5c;
+            --text-main: #f4f1eb;
+            --text-muted: #a2b0a6;
+            --border-color: rgba(220, 178, 110, 0.15);
+            --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Utilities */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            padding: 8rem 0;
+            position: relative;
+        }
+        @keyframes glitter-rainbow {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes sparkle-animation {
+            0%, 100% {
+                text-shadow: 
+                    0 0 2px rgba(255, 255, 255, 0.6),
+                    0 0 8px rgba(255, 121, 198, 0.5),
+                    0 0 15px rgba(255, 110, 199, 0.3);
+            }
+            50% {
+                text-shadow: 
+                    0 0 4px rgba(255, 255, 255, 0.9),
+                    0 0 14px rgba(255, 146, 219, 0.8),
+                    0 0 25px rgba(243, 160, 255, 0.6),
+                    0 0 8px rgba(255, 255, 255, 0.4);
+            }
+        }
+
+        .logo, h1, .section-header h2, .accent-text, .display-price, .contact-form-container h3, .rates-config h3 {
+            background: linear-gradient(
+                90deg,
+                #ff79c6 0%,
+                #ff92db 20%,
+                #ff6ec7 40%,
+                #f3a0ff 60%,
+                #ffffff 80%,
+                #ff79c6 100%
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            animation: glitter-rainbow 4s linear infinite, sparkle-animation 2.5s ease-in-out infinite alternate;
+            display: inline-block;
+        }
+
+        .accent-text {
+            font-family: 'Syne', sans-serif;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(10, 17, 12, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(244, 241, 235, 0.05);
+            padding: 1.5rem 0;
+            transition: var(--transition-smooth);
+        }
+
+        nav.scrolled {
+            padding: 1rem 0;
+            background: rgba(10, 17, 12, 0.9);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--accent-gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-gold);
+        }
+
+        .cta-btn {
+            background: transparent;
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            padding: 0.6rem 1.4rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .cta-btn:hover {
+            background: var(--accent-gold);
+            color: var(--bg-primary);
+            box-shadow: 0 4px 20px rgba(220, 178, 110, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 8rem;
+            background: radial-gradient(circle at 80% 20%, rgba(220, 178, 110, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 10% 80%, rgba(80, 200, 120, 0.05) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            max-width: 750px;
+        }
+
+        .badge {
+            background: rgba(220, 178, 110, 0.1);
+            color: var(--accent-gold);
+            border: 1px solid var(--border-color);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 4rem;
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+        }
+
+        .hero-desc {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-gold);
+            color: var(--bg-primary);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            display: inline-block;
+            border: 1px solid var(--accent-gold);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-gold-hover);
+            border-color: var(--accent-gold-hover);
+            box-shadow: 0 8px 30px rgba(220, 178, 110, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-main);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            display: inline-block;
+            border: 1px solid rgba(244, 241, 235, 0.2);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+            transform: translateY(-2px);
+        }
+
+        /* Services Section */
+        .section-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 5rem auto;
+        }
+
+        .section-header h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--bg-secondary);
+            border: 1px solid rgba(244, 241, 235, 0.03);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(220, 178, 110, 0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: var(--transition-smooth);
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--border-color);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(220, 178, 110, 0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+        }
+
+        .service-card h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-features {
+            list-style: none;
+        }
+
+        .service-features li {
+            font-size: 0.9rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--text-main);
+        }
+
+        .service-features li::before {
+            content: '✓';
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        /* Interactive Rates Section */
+        .rates-container {
+            background: var(--bg-secondary);
+            border: 1px solid rgba(244, 241, 235, 0.05);
+            border-radius: 32px;
+            padding: 4rem;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media (max-width: 992px) {
+            .rates-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                padding: 2.5rem;
+            }
+        }
+
+        .rates-config h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .rate-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            background: var(--bg-tertiary);
+            padding: 0.4rem;
+            border-radius: 50px;
+            border: 1px solid rgba(244, 241, 235, 0.05);
+        }
+
+        .rate-tab {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition-smooth);
+        }
+
+        .rate-tab.active {
+            background: var(--accent-gold);
+            color: var(--bg-primary);
+        }
+
+        .calculator-panel {
+            display: none;
+        }
+
+        .calculator-panel.active {
+            display: block;
+        }
+
+        .slider-group {
+            margin-bottom: 2rem;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .slider-header span {
+            color: var(--accent-gold);
+        }
+
+        .custom-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 5px;
+            background: var(--bg-tertiary);
+            outline: none;
+        }
+
+        .custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-gold);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .custom-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(220, 178, 110, 0.5);
+        }
+
+        .package-select-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .package-option {
+            background: var(--bg-tertiary);
+            border: 1px solid rgba(244, 241, 235, 0.05);
+            padding: 1.2rem;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .package-option:hover, .package-option.selected {
+            border-color: var(--accent-gold);
+            background: rgba(220, 178, 110, 0.05);
+        }
+
+        .package-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .package-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .package-price {
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .rates-display {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 350px;
+        }
+
+        .display-label {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .display-price {
+            font-family: 'Syne', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+        }
+
+        .display-details {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        /* Contact Section */
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        @media (max-width: 992px) {
+            .contact-layout {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+            }
+        }
+
+        .contact-portrait-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .portrait-frame {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 32px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            aspect-ratio: 1 / 1;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .portrait-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-smooth);
+        }
+
+        .portrait-frame:hover .portrait-img {
+            transform: scale(1.03);
+        }
+
+        .portrait-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem;
+            background: linear-gradient(to top, rgba(10, 17, 12, 0.95) 0%, transparent 100%);
+            text-align: center;
+        }
+
+        .portrait-overlay h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .portrait-overlay p {
+            font-size: 0.85rem;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.2rem;
+        }
+
+        .contact-form-container h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-form-container > p {
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+        }
+
+        .contact-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 600px) {
+            .contact-form {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .form-input {
+            background: var(--bg-secondary);
+            border: 1px solid rgba(244, 241, 235, 0.1);
+            color: var(--text-main);
+            padding: 1rem;
+            border-radius: 12px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 10px rgba(220, 178, 110, 0.1);
+        }
+
+        .submit-btn {
+            background: var(--accent-gold);
+            color: var(--bg-primary);
+            border: none;
+            padding: 1.2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-gold-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(220, 178, 110, 0.3);
+        }
+
+        /* Toast message */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--accent-gold);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            color: var(--text-main);
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transform: translateY(150%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        .toast-icon {
+            color: var(--accent-gold);
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(244, 241, 235, 0.05);
+            padding: 4rem 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer p {
+            margin-bottom: 1rem;
+        }
+
+        .footer-socials {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .footer-socials a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .footer-socials a:hover {
+            color: var(--accent-gold);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">ESTHER<span>.</span></a>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#rates">Rates</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#contact" class="cta-btn">Hire Me</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="about">
+        <div class="container">
+            <div class="hero-content">
+                <span class="badge">Based in Nigeria</span>
+                <h1>Streamline Your Operations. Elevate Your Brand.</h1>
+                <p class="hero-desc">
+                    Hi, I'm Esther. I specialize in providing premium administrative support, organizing operational workflows, and creating high-impact social media strategies to scale your business.
+                </p>
+                <div class="hero-btns">
+                    <a href="#contact" class="btn-primary">Get in Touch</a>
+                    <a href="#rates" class="btn-secondary">View Services & Rates</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Services Section -->
+    <section class="section" id="services">
+        <div class="container">
+            <div class="section-header">
+                <span class="accent-text">Expertise</span>
+                <h2>What I Do Best</h2>
+                <p style="color: var(--text-muted); margin-top: 1rem;">Seamless operational control and creative strategy designed to give you your time back.</p>
+            </div>
+            
+            <div class="services-grid">
+                <!-- Administrative Support -->
+                <div class="service-card">
+                    <div class="service-icon">✦</div>
+                    <h3>Administrative Support</h3>
+                    <p>High-level assistant support keeping your daily workflow completely organized and stress-free.</p>
+                    <ul class="service-features">
+                        <li>Calendar & Email Management</li>
+                        <li>Client & Vendor Liaison</li>
+                        <li>Document & Presentation Design</li>
+                        <li>Travel Coordination & Planning</li>
+                    </ul>
+                </div>
+
+                <!-- Operations Management -->
+                <div class="service-card">
+                    <div class="service-icon">⚙</div>
+                    <h3>Operations Management</h3>
+                    <p>Optimizing tools, mapping tasks, and building processes to make your business run like clockwork.</p>
+                    <ul class="service-features">
+                        <li>Project Management setup (Asana/Trello)</li>
+                        <li>Standard Operating Procedures (SOPs)</li>
+                        <li>Team Coordination & Tracking</li>
+                        <li>Workflow Automation (Zapier/Make)</li>
+                    </ul>
+                </div>
+
+                <!-- Social Media Specialist -->
+                <div class="service-card">
+                    <div class="service-icon">◈</div>
+                    <h3>Social Media Strategy</h3>
+                    <p>Growing your online presence with highly engaging visuals, copywriting, and growth plans.</p>
+                    <ul class="service-features">
+                        <li>Content Planning & Scheduling</li>
+                        <li>Copywriting & Asset Creation</li>
+                        <li>Community Engagement</li>
+                        <li>Analytics & Performance Audits</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Rates Section -->
+    <section class="section" id="rates" style="background: rgba(18, 30, 22, 0.3);">
+        <div class="container">
+            <div class="section-header">
+                <span class="accent-text">Pricing</span>
+                <h2>Flexible Rates For Your Needs</h2>
+                <p style="color: var(--text-muted); margin-top: 1rem;">Choose between dedicated hourly support or well-defined project-based packages.</p>
+            </div>
+
+            <div class="rates-container">
+                <!-- Configuration panel -->
+                <div class="rates-config">
+                    <h3>Estimate Your Project</h3>
+                    <div class="rate-tabs">
+                        <button class="rate-tab active" onclick="switchTab('hourly')">Hourly Support</button>
+                        <button class="rate-tab" onclick="switchTab('fixed')">Fixed-Price Packages</button>
+                    </div>
+
+                    <!-- Hourly Panel -->
+                    <div id="hourly-panel" class="calculator-panel active">
+                        <div class="slider-group">
+                            <div class="slider-header">
+                                <label for="hours-slider">Hours per week</label>
+                                <span><span id="hours-display-val">10</span> hours</span>
+                            </div>
+                            <input type="range" id="hours-slider" class="custom-slider" min="5" max="40" step="5" value="10" oninput="updateHourlyEstimate()">
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 0.95rem;">
+                            Ideal for ongoing admin & operations. Esther charges a flat, competitive rate of <strong>$15/hr</strong>. Includes weekly timesheet tracking and dedicated availability.
+                        </p>
+                    </div>
+
+                    <!-- Fixed Price Panel -->
+                    <div id="fixed-panel" class="calculator-panel">
+                        <div class="package-select-grid">
+                            <div class="package-option selected" onclick="selectPackage(this, 350, 'Social Media Setup & Audit')">
+                                <div class="package-info">
+                                    <h4>Social Media Setup & Audit</h4>
+                                    <p>Account styling, 30-day strategy draft, content calendar design</p>
+                                </div>
+                                <div class="package-price">$350</div>
+                            </div>
+                            <div class="package-option" onclick="selectPackage(this, 600, 'Operations Overhaul')">
+                                <div class="package-info">
+                                    <h4>Operations & SOP Blueprint</h4>
+                                    <p>Workflow mapping, custom Notion/Asana workspace setup, Zapier automations</p>
+                                </div>
+                                <div class="package-price">$600</div>
+                            </div>
+                            <div class="package-option" onclick="selectPackage(this, 1200, 'Monthly Social & Ops Retainer')">
+                                <div class="package-info">
+                                    <h4>Full Launch Setup Package</h4>
+                                    <p>Comprehensive operational setup, standard branding suite, and full launching plan</p>
+                                </div>
+                                <div class="package-price">$1,200</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Display Card -->
+                <div class="rates-display">
+                    <span class="display-label" id="calc-label">Monthly Cost</span>
+                    <div class="display-price" id="calc-price">$600</div>
+                    <div class="display-details" id="calc-details">Based on 10 hours/week at $15/hr</div>
+                    <a href="#contact" class="btn-primary" id="calc-cta">Book Hourly Package</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section" id="contact">
+        <div class="container">
+            <div class="contact-layout">
+                <!-- Portrait side -->
+                <div class="contact-portrait-wrapper">
+                    <div class="portrait-frame">
+                        <img src="esther.png" alt="Esther Portrait" class="portrait-img">
+                        <div class="portrait-overlay">
+                            <h4>Esther</h4>
+                            <p>Admin & Operations Specialist</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form side -->
+                <div class="contact-form-container">
+                    <h3>Let's build something exceptional together</h3>
+                    <p>Send me a message about your project requirements and I will get back to you within 24 hours.</p>
+                    
+                    <form class="contact-form" id="contactForm" onsubmit="handleFormSubmit(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="name">Your Name</label>
+                            <input type="text" id="name" class="form-input" placeholder="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email Address</label>
+                            <input type="email" id="email" class="form-input" placeholder="email@example.com" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label" for="project-type">Project Requirement</label>
+                            <input type="text" id="project-type" class="form-input" placeholder="e.g. Hourly Admin Support (10hrs/week)">
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label" for="message">Message</label>
+                            <textarea id="message" class="form-input" rows="5" placeholder="Tell me briefly about your business needs..." required></textarea>
+                        </div>
+                        <div class="form-group full-width" style="margin-top: 1rem;">
+                            <button type="submit" class="submit-btn">Send Inquiry</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast Success Notification -->
+    <div class="toast" id="successToast">
+        <span class="toast-icon">✓</span>
+        <span id="toast-message">Message sent successfully!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Esther. All rights reserved.</p>
+            <p style="color: var(--text-muted); font-size: 0.8rem;">Administrative, Operations & Social Media Specialist | Lagos, Nigeria</p>
+            <div class="footer-socials">
+                <a href="#">LinkedIn</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sticky Header
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Interactive Rates State
+        let currentTab = 'hourly';
+        let hourlyRate = 15;
+        let selectedProjectPrice = 350;
+        let selectedProjectName = 'Social Media Setup & Audit';
+
+        function switchTab(type) {
+            currentTab = type;
+            
+            // Toggle tab UI
+            document.querySelectorAll('.rate-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Toggle panels
+            document.getElementById('hourly-panel').classList.remove('active');
+            document.getElementById('fixed-panel').classList.remove('active');
+            
+            if (type === 'hourly') {
+                document.getElementById('hourly-panel').classList.add('active');
+                updateHourlyEstimate();
+            } else {
+                document.getElementById('fixed-panel').classList.add('active');
+                updateFixedEstimate();
+            }
+        }
+
+        function updateHourlyEstimate() {
+            const hours = parseInt(document.getElementById('hours-slider').value);
+            document.getElementById('hours-display-val').textContent = hours;
+            
+            // Cost calculation: weekly hours * 4.33 weeks in a month * $15/hr
+            const monthlyCost = Math.round(hours * 4.33 * hourlyRate);
+            
+            document.getElementById('calc-label').textContent = 'Estimated Monthly';
+            document.getElementById('calc-price').textContent = `$${monthlyCost.toLocaleString()}`;
+            document.getElementById('calc-details').textContent = `Based on ${hours} hours/week at $15/hr`;
+            document.getElementById('calc-cta').textContent = `Book Hourly (${hours}h/wk)`;
+            
+            // Populate project type form field
+            document.getElementById('project-type').value = `Hourly Support: ${hours} hours/week ($${monthlyCost}/mo)`;
+        }
+
+        function selectPackage(element, price, name) {
+            // Remove selection from all
+            document.querySelectorAll('.package-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            // Add selection to active
+            element.classList.add('selected');
+            
+            selectedProjectPrice = price;
+            selectedProjectName = name;
+            updateFixedEstimate();
+        }
+
+        function updateFixedEstimate() {
+            document.getElementById('calc-label').textContent = 'Project Cost';
+            document.getElementById('calc-price').textContent = `$${selectedProjectPrice.toLocaleString()}`;
+            document.getElementById('calc-details').textContent = selectedProjectName;
+            document.getElementById('calc-cta').textContent = `Order ${selectedProjectName}`;
+            
+            // Populate project type form field
+            document.getElementById('project-type').value = `Project: ${selectedProjectName} ($${selectedProjectPrice})`;
+        }
+
+        // Initialize display on load
+        updateHourlyEstimate();
+
+        // Form submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const project = document.getElementById('project-type').value;
+            const message = document.getElementById('message').value;
+
+            // Trigger success toast
+            const toast = document.getElementById('successToast');
+            toast.classList.add('show');
+            
+            // Reset form
+            document.getElementById('contactForm').reset();
+            
+            // Update rate select value after reset
+            if (currentTab === 'hourly') {
+                updateHourlyEstimate();
+            } else {
+                updateFixedEstimate();
+            }
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>

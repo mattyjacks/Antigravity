@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Everyday Essentials | Zai Essentials</title>
+    <meta name="description" content="Shop Zai's premium collection of everyday essentials. Sustainable, eco-friendly, and organic daily necessities.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                Zai <span>Essentials</span>
+            </a>
+            <button class="menu-toggle" aria-label="Toggle Menu">☰</button>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="essentials.html" class="active">Essentials</a></li>
+                    <li><a href="health.html">Health</a></li>
+                    <li><a href="beauty.html">Beauty</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-icon" aria-label="View Cart">
+                    🛒
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Catalog Page Container -->
+    <main class="container">
+        <div class="section-title" style="text-align: left; margin-bottom: 2rem;">
+            <h2>Everyday Essentials</h2>
+            <p>Thoughtfully crafted, eco-friendly tools and essentials that elevate your conscious lifestyle.</p>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="catalog-controls">
+            <div>Showing 6 premium products</div>
+            <div class="filter-group">
+                <label for="sort-products" style="font-weight: 500; color: var(--color-forest);">Sort By:</label>
+                <select id="sort-products" class="filter-select">
+                    <option value="default">Default Alphabetical</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card" data-id="ess-01" data-name="Bamboo Toothbrush Set" data-price="12.50" data-category="Essentials">
+                <div class="product-image-container">
+                    <span class="product-tag">Eco Choice</span>
+                    <img src="images/category_essentials.png" alt="Bamboo Toothbrush Set">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Essentials</span>
+                    <h3 class="product-title">Bamboo Toothbrush Set (4-Pack)</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$12.50</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card" data-id="ess-02" data-name="Organic Cotton Mesh Tote" data-price="15.00" data-category="Essentials">
+                <div class="product-image-container">
+                    <img src="images/category_essentials.png" alt="Organic Cotton Mesh Tote">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Essentials</span>
+                    <h3 class="product-title">Organic Cotton Mesh Tote Bag</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$15.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card" data-id="ess-03" data-name="Beeswax Food Wraps" data-price="18.00" data-category="Essentials">
+                <div class="product-image-container">
+                    <span class="product-tag">Best Seller</span>
+                    <img src="images/category_essentials.png" alt="Beeswax Food Wraps">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Essentials</span>
+                    <h3 class="product-title">Beeswax Food Wraps (Set of 3)</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$18.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card" data-id="ess-04" data-name="Solid Laundry Detergent Sheets" data-price="14.00" data-category="Essentials">
+                <div class="product-image-container">
+                    <img src="images/category_essentials.png" alt="Solid Laundry Detergent Sheets">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Essentials</span>
+                    <h3 class="product-title">Laundry Detergent Sheets (60 Loads)</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$14.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card" data-id="ess-05" data-name="Refillable Glass Spray Bottle" data-price="16.00" data-category="Essentials">
+                <div class="product-image-container">
+                    <img src="images/category_essentials.png" alt="Refillable Glass Spray Bottle">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Essentials</span>
+                    <h3 class="product-title">Refillable Amber Glass Spray Bottle</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$16.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card" data-id="ess-06" data-name="Organic Hemp Kitchen Towels" data-price="20.00" data-category="Essentials">
+                <div class="product-image-container">
+                    <img src="images/category_essentials.png" alt="Organic Hemp Kitchen Towels">
+                </div>
+                <div class="product-details">
+                    <span class="product-category">Essentials</span>
+                    <h3 class="product-title">Organic Hemp Kitchen Towels (Set of 2)</h3>
+                    <div class="product-bottom">
+                        <span class="product-price">$20.00</span>
+                        <button class="add-to-cart-btn">Add to Cart ➔</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <h3>Zai Essentials</h3>
+                <p>Elevating daily routines through curated, high-end organic products. Pure ingredients, ethical practices, and premium quality.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Catalog</h4>
+                <ul>
+                    <li><a href="essentials.html">Daily Essentials</a></li>
+                    <li><a href="health.html">Wellness & Health</a></li>
+                    <li><a href="beauty.html">Organic Beauty</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="about.html">Our Story</a></li>
+                    <li><a href="contact.html">Support / FAQS</a></li>
+                    <li><a href="contact.html">Careers</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li>hello@zaiessentials.com</li>
+                    <li>+1 (555) 019-2834</li>
+                    <li>New York, NY</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Zai Essentials. All rights reserved.</p>
+            <p>Designed for Conscious Consumers.</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
