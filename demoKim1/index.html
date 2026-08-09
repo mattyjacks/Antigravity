@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KimberlAI - Bubblegum Data Annotation, Coding & Artificial Intelligence</title>
+  <meta name="description" content="Welcome to KimberlAI, the pink-themed, highly animated playground exploring the intersection of cute coding, data labeling, and artificial intelligence.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Background Floating Canvas Elements -->
+  <div class="floating-bg"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav-wrapper">
+      <a href="#" class="logo annotate-target" data-annotation-label="Brand Logo [Class: Highly Sparkling]">
+        <span class="logo-sparkle">✨</span> KimberlAI
+      </a>
+      <nav>
+        <ul>
+          <li><a href="#about" class="annotate-target" data-annotation-label="Nav Item: About">About</a></li>
+          <li><a href="#annotator" class="annotate-target" data-annotation-label="Nav Item: Annotate">Annotator Game</a></li>
+          <li><a href="#compiler" class="annotate-target" data-annotation-label="Nav Item: Compiler">Bubblegum Compiler</a></li>
+          <li><a href="privacy.html" class="annotate-target" data-annotation-label="Nav Item: Privacy">Privacy Policy</a></li>
+          <li><button class="nav-btn glitter-hover" onclick="document.getElementById('bot-avatar').click()">Talk to Bot 🐰</button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-content">
+      <div class="hero-tagline annotate-target" data-annotation-label="Micro-Copy [Confidence: 99%]">
+        💖 Artificial Intelligence meets Bubblegum Magic
+      </div>
+      <h1 class="hero-title annotate-target" data-annotation-label="Main Heading [Class: Highly Catchy]">
+        Sparkling Data. Cute Code.<br><span>Magical AI.</span>
+      </h1>
+      <p class="hero-desc annotate-target" data-annotation-label="Sub-Heading [Role: Engagement]">
+        KimberlAI is a whimsical playground exploring how human programmers write cute code, annotate adorable datasets, and nurture super-smart neural networks.
+      </p>
+      <div class="hero-ctas">
+        <a href="#annotator" class="btn btn-primary glitter-hover annotate-target" data-annotation-label="Primary CTA Button">Start Labeling 🎀</a>
+        <a href="#compiler" class="btn btn-secondary annotate-target" data-annotation-label="Secondary CTA Button">Compile Code ✨</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">THE TRIFECTA OF AI</span>
+        <h2 class="section-title">How <span>KimberlAI</span> Works</h2>
+      </div>
+      
+      <div class="grid-3">
+        <!-- Card 1: Data Annotation -->
+        <div class="glass-card annotate-target" data-annotation-label="Information Card: Data Labeling">
+          <div class="card-icon">🏷️</div>
+          <h3 class="card-title">Bubblegum Annotation</h3>
+          <p class="card-desc">
+            AI can't learn without sweet training data! Data annotation is like painting tags on images and text so the AI model knows a boba tea from a compiler bug. We make it pink and sparkly.
+          </p>
+        </div>
+
+        <!-- Card 2: Coding -->
+        <div class="glass-card annotate-target" data-annotation-label="Information Card: Cyber Code">
+          <div class="card-icon">💻</div>
+          <h3 class="card-title">Cute Coding</h3>
+          <p class="card-desc">
+            Writing instructions (spells!) that tell computers how to ingest data, update weights, and generate pretty pictures. Code is just poetry with semicolons and coffee.
+          </p>
+        </div>
+
+        <!-- Card 3: AI -->
+        <div class="glass-card annotate-target" data-annotation-label="Information Card: Magical AI">
+          <div class="card-icon">🧠</div>
+          <h3 class="card-title">Magical Intelligence</h3>
+          <p class="card-desc">
+            When you mix raw code with billions of annotated data candies inside a neural spa, a smart, cute robot consciousness emerges, ready to chat and write jokes!
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Annotator Mode Toggle Section -->
+  <section id="mode-selector">
+    <div class="container">
+      <div class="glass-card mode-toggle-card annotate-target" data-annotation-label="Mode Switch Panel">
+        <h3 class="card-title">Toggle Website Annotation Mode 👁️</h3>
+        <p class="card-desc">Enable this to view the computer-vision bounding boxes and dataset labels that KimberlAI uses to perceive this website!</p>
+        <div class="toggle-switch-wrapper">
+          <span class="toggle-label">Standard Mode</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="annotate-mode-checkbox">
+            <span class="slider"></span>
+          </label>
+          <span class="toggle-label" style="color: var(--pink-primary);">AI Annotation Mode</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Game Section -->
+  <section id="annotator">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">HUMAN-IN-THE-LOOP TRAINING</span>
+        <h2 class="section-title">The <span>Annotate-O-Matic</span> 3000</h2>
+      </div>
+      
+      <div class="game-container annotate-target" data-annotation-label="Interactive Labeling App">
+        <div class="game-header">
+          <div class="game-title">✨ Annotator Console</div>
+          <div class="score-board">Score: <span id="game-score">0</span> pts</div>
+        </div>
+        <div class="game-screen" id="game-screen">
+          <!-- JS will render round content here -->
+        </div>
+        <div class="game-controls">
+          <div class="game-prompt" id="game-prompt">Loading round...</div>
+          <div class="game-buttons" id="game-buttons">
+            <!-- JS will render options here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compiler Section -->
+  <section id="compiler">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">BUBBLEGUM PARSING ENGINE</span>
+        <h2 class="section-title">The <span>Bubblegum</span> Compiler</h2>
+      </div>
+
+      <div class="compiler-container annotate-target" data-annotation-label="Bubblegum Compiler Panel">
+        <!-- Input Panel -->
+        <div>
+          <div class="panel-title">📝 Input Boring Code</div>
+          <textarea class="code-box" id="compiler-input" placeholder="function helloWorld() {
+  let message = 'Hello, world!';
+  console.log(message);
+  return true;
+}"></textarea>
+        </div>
+
+        <!-- Output Panel -->
+        <div>
+          <div class="panel-title">✨ Output Magical Code</div>
+          <div class="code-box output-box" id="compiler-output">Your sparkly parsed bubblegum code will show up here...</div>
+        </div>
+
+        <!-- Action Button -->
+        <div class="compiler-action">
+          <button class="btn btn-primary glitter-hover" id="compile-btn">Pinkify & Sparkle Compile 💅</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <span class="footer-logo">💖 KimberlAI</span>
+      <div class="footer-links">
+        <a href="#about">About</a>
+        <a href="#annotator">Annotate</a>
+        <a href="#compiler">Compiler</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+      <p style="color: var(--text-secondary); font-size: 0.9rem;">&copy; 2026 KimberlAI Inc. Created by MattyJacks. 🦄✨</p>
+    </div>
+  </footer>
+
+  <!-- Chatbot Floating Widget -->
+  <div class="bot-widget" id="bot-widget">
+    <div class="bot-avatar annotate-target" id="bot-avatar" data-annotation-label="Chatbot Avatar Widget">
+      🐰
+      <div class="bot-badge"></div>
+    </div>
+    
+    <div class="chat-window" id="chat-window">
+      <div class="chat-header">
+        <span>🐰 KimberlAI Bot</span>
+        <button class="chat-close" id="chat-close">&times;</button>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="msg msg-bot">
+          Hi bestie! I am your AI bunny friend. Ask me about Coding, Data Annotation, or tell me to tell you a programmer Joke! 💖✨
+        </div>
+      </div>
+      <div class="chat-suggestions">
+        <button class="suggestion-btn">Tell me an AI joke! 🎭</button>
+        <button class="suggestion-btn">What is data annotation? 🏷️</button>
+        <button class="suggestion-btn">Explain coding! 💻</button>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" class="chat-input" id="chat-input" placeholder="Ask about AI, coding, labels...">
+        <button class="chat-send" id="chat-send">✨</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
