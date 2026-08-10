@@ -67,11 +67,42 @@ function initMouseTrail() {
   });
 }
 
-/* 3. Click Sparkles Effect */
+/* 3. Click Sparkles Effect & Pop Sound Synth */
+function playPopSound() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(150, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.12);
+    
+    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.12);
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    osc.start();
+    osc.stop(ctx.currentTime + 0.13);
+  } catch (e) {
+    // blocked by browser audio policy or not supported
+  }
+}
+
 function initClickSparkles() {
   const sparkles = ['✨', '💖', '⭐', '🌸', '💫'];
   
   window.addEventListener('click', (e) => {
+    // Play POP sound if clicked on interactive elements
+    const target = e.target;
+    if (target.closest('button, a, input, select, textarea, .slider, .game-btn, .suggestion-btn, #bot-avatar, .logo')) {
+      playPopSound();
+    }
+
     // Spawn 5 sparkles
     for (let i = 0; i < 5; i++) {
       const p = document.createElement('div');
@@ -91,8 +122,8 @@ function initClickSparkles() {
       
       // Inject inline animation custom offsets
       p.animate([
-        { transform: 'translate(-50%, -50%) scale(0.5)', opacity: 1 },
-        { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1.3)`, opacity: 0 }
+        { transform: 'translate(-50%, -50%) scale(0.5) rotate(0deg)', opacity: 1 },
+        { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1.3) rotate(${Math.random() * 360}deg)`, opacity: 0 }
       ], {
         duration: 800,
         easing: 'ease-out',
@@ -144,6 +175,36 @@ const GAME_ROUNDS = [
     successMsg: 'Incredible! You annotated the magical data core. KimberlAI is now fully conscious and requests boba! 💖'
   }
 ];
+
+function spawnConfettiBurst(x, y) {
+  const particles = ['✨', '💖', '⭐', '🌸', '💫', '🍬', '🐰', '🧋'];
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'sparkle-particle';
+    p.textContent = particles[Math.floor(Math.random() * particles.length)];
+    p.style.left = `${x}px`;
+    p.style.top = `${y}px`;
+    p.style.fontSize = `${Math.random() * 1.5 + 1}rem`;
+    
+    // Random direction
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * 120 + 40;
+    const tx = Math.cos(angle) * distance;
+    const ty = Math.sin(angle) * distance;
+    
+    p.animate([
+      { transform: 'translate(-50%, -50%) scale(0.3) rotate(0deg)', opacity: 1 },
+      { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1.5) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+    ], {
+      duration: Math.random() * 1000 + 600,
+      easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)',
+      fill: 'forwards'
+    });
+    
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 1600);
+  }
+}
 
 function initAnnotatorGame() {
   let score = 0;
@@ -212,6 +273,12 @@ function initAnnotatorGame() {
       bboxEl.setAttribute('data-label', `${round.correctTag} [Conf: 99.99%]`);
       
       wrapper.appendChild(bboxEl);
+
+      // Trigger confetti from the middle of the game screen
+      const rect = wrapper.getBoundingClientRect();
+      const burstX = window.scrollX + rect.left + rect.width / 2;
+      const burstY = window.scrollY + rect.top + rect.height / 2;
+      spawnConfettiBurst(burstX, burstY);
       
       // Disable buttons
       const buttons = buttonsContainer.querySelectorAll('button');
@@ -370,6 +437,18 @@ function initChatbot() {
   const suggestions = document.querySelectorAll('.suggestion-btn');
   
   if (!widget || !avatar || !chatWin || !closeBtn || !msgContainer || !chatInput || !chatSend) return;
+  
+  // Periodically wiggle bunny ears
+  setInterval(() => {
+    avatar.animate([
+      { transform: 'scale(1) rotate(0)' },
+      { transform: 'scale(1.1) rotate(-8deg)', offset: 0.2 },
+      { transform: 'scale(1.1) rotate(8deg)', offset: 0.4 },
+      { transform: 'scale(1.1) rotate(-8deg)', offset: 0.6 },
+      { transform: 'scale(1.15) rotate(0)', offset: 0.8 },
+      { transform: 'scale(1) rotate(0)' }
+    ], { duration: 800, easing: 'ease-in-out' });
+  }, 4000);
   
   // Toggle open
   avatar.addEventListener('click', () => {

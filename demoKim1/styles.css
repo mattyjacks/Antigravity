@@ -16,9 +16,17 @@
   --glass-border: rgba(255, 105, 180, 0.15);
   --glass-shadow: 0 8px 32px 0 rgba(255, 20, 147, 0.1);
   --font-display: 'Fredoka', sans-serif;
-  --font-body: 'Outfit', sans-serif;
+  --font-body: 'Fredoka', sans-serif; /* Cute rounded font for all text */
   --font-mono: 'Space Mono', monospace;
   --transition-smooth: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Cute custom cursors */
+html, body {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' style='font-size:16px'><text y='16'>✨</text></svg>") 8 8, auto;
+}
+a, button, input, select, textarea, .toggle-switch, .slider, .game-btn, .suggestion-btn, #bot-avatar, .logo {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' style='font-size:16px'><text y='16'>💖</text></svg>") 8 8, pointer !important;
 }
 
 * {
@@ -34,6 +42,23 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   line-height: 1.6;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.05;
+  pointer-events: none;
+  background-image: radial-gradient(var(--pink-primary) 1.5px, transparent 1.5px),
+                    radial-gradient(var(--pink-primary) 1.5px, transparent 1.5px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
 }
 
 /* Custom Scrollbar */
@@ -216,37 +241,45 @@ nav a:hover::after {
   font-family: var(--font-display);
   font-size: 1.1rem;
   font-weight: 700;
-  padding: 15px 35px;
-  border-radius: 50px;
-  border: none;
+  padding: 12px 30px;
+  border-radius: 30px;
+  border: 3px solid var(--text-dark);
   cursor: pointer;
   transition: var(--transition-smooth);
   text-decoration: none;
   display: inline-block;
+  box-shadow: 0 6px 0 var(--text-dark);
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #ff1493 0%, #da70d6 100%);
-  color: #fff;
-  box-shadow: 0 0 20px rgba(255, 20, 147, 0.4);
+  background: linear-gradient(135deg, var(--pink-primary) 0%, var(--pink-neon) 100%);
+  color: var(--text-dark);
 }
 
 .btn-primary:hover {
-  transform: translateY(-4px) scale(1.03);
-  box-shadow: 0 0 35px rgba(255, 20, 147, 0.8);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 0 var(--text-dark), 0 0 20px rgba(255, 20, 147, 0.5);
+}
+
+.btn-primary:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 var(--text-dark);
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--pink-pastel);
-  border: 2px solid rgba(255, 105, 180, 0.3);
+  background: linear-gradient(135deg, var(--pink-pastel) 0%, #fff 100%);
+  color: var(--text-dark);
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 105, 180, 0.15);
-  border-color: var(--pink-primary);
+  background: #fff;
   transform: translateY(-4px);
-  color: #fff;
+  box-shadow: 0 10px 0 var(--text-dark);
+}
+
+.btn-secondary:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 var(--text-dark);
 }
 
 /* Floating Elements Canvas/Container */
@@ -305,36 +338,55 @@ section {
 
 .glass-card {
   background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 24px;
+  border: 2px solid var(--glass-border);
+  border-radius: 32px;
   padding: 40px;
   box-shadow: var(--glass-shadow);
   backdrop-filter: blur(12px);
   transition: var(--transition-smooth);
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* show wiggling ears */
 }
 
-.glass-card::before {
+/* Cute ears that pop up on card hover */
+.glass-card::before, .glass-card::after {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(90deg, var(--pink-primary), var(--purple-glow));
-  opacity: 0;
+  width: 24px;
+  height: 28px;
+  background: radial-gradient(circle at center, var(--pink-neon) 30%, var(--pink-pastel) 35%);
+  border: 2px solid var(--pink-primary);
+  z-index: -1;
   transition: var(--transition-smooth);
+  opacity: 0;
+  transform: translateY(0);
+}
+
+.glass-card::before {
+  left: 30px;
+  border-radius: 50% 50% 10% 10% / 70% 70% 30% 30%;
+}
+
+.glass-card::after {
+  right: 30px;
+  border-radius: 50% 50% 10% 10% / 70% 70% 30% 30%;
 }
 
 .glass-card:hover {
   transform: translateY(-10px) scale(1.02);
-  border-color: rgba(255, 105, 180, 0.4);
-  box-shadow: 0 15px 40px rgba(255, 20, 147, 0.2);
+  border-color: var(--pink-primary);
+  box-shadow: 0 15px 40px rgba(255, 20, 147, 0.35);
 }
 
 .glass-card:hover::before {
   opacity: 1;
+  transform: translateY(-24px) rotate(-15deg);
+}
+
+.glass-card:hover::after {
+  opacity: 1;
+  transform: translateY(-24px) rotate(15deg);
 }
 
 .card-icon {
@@ -358,19 +410,40 @@ section {
 
 /* WIDGET: Annotator Game */
 .game-container {
-  max-width: 800px;
+  max-width: 760px;
   margin: 0 auto;
-  background: var(--glass-bg);
-  border: 2px solid var(--pink-primary);
-  border-radius: 28px;
-  overflow: hidden;
-  box-shadow: 0 0 30px rgba(255, 105, 180, 0.2);
+  background: linear-gradient(135deg, #ffd1dc 0%, #e8c4ec 100%); /* soft pastel purple pink chassis */
+  border: 4px solid var(--text-dark);
+  border-radius: 36px;
+  padding: 24px;
+  box-shadow: 0 12px 0 var(--text-dark), 0 15px 40px rgba(255, 20, 147, 0.3);
+  position: relative;
+}
+
+/* Console badge */
+.game-container::before {
+  content: '🎮 KIM-GOTCHI';
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-dark);
+  color: #ffd1dc;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 4px 20px;
+  border-radius: 20px;
+  letter-spacing: 2px;
+  border: 3px solid var(--text-dark);
 }
 
 .game-header {
-  background: linear-gradient(90deg, rgba(255, 20, 147, 0.2) 0%, rgba(218, 112, 214, 0.2) 100%);
-  padding: 20px;
-  border-bottom: 2px solid var(--pink-primary);
+  background: var(--text-dark);
+  padding: 12px 20px;
+  border-radius: 20px 20px 0 0;
+  border: 3px solid var(--text-dark);
+  border-bottom: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -390,7 +463,7 @@ section {
   background: rgba(13, 2, 14, 0.8);
   padding: 8px 16px;
   border-radius: 15px;
-  border: 1px solid var(--pink-primary);
+  border: 2px solid var(--pink-primary);
   color: var(--pink-primary);
   font-weight: bold;
 }
@@ -398,11 +471,14 @@ section {
 .game-screen {
   height: 350px;
   position: relative;
-  background: #140516;
+  background: #1e0926;
+  border: 4px solid var(--text-dark);
+  border-radius: 0 0 20px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  box-shadow: inset 0 8px 0 rgba(0,0,0,0.5);
 }
 
 .game-image-wrapper {
@@ -422,9 +498,9 @@ section {
 /* Interactive Bounding Box */
 .dynamic-bbox {
   position: absolute;
-  border: 2px dashed var(--pink-neon);
-  box-shadow: 0 0 10px rgba(255, 20, 147, 0.5);
-  background: rgba(255, 20, 147, 0.1);
+  border: 3px dashed var(--pink-neon);
+  box-shadow: 0 0 15px rgba(255, 20, 147, 0.6);
+  background: rgba(255, 20, 147, 0.15);
   transition: all 0.3s ease;
   pointer-events: none;
 }
@@ -433,26 +509,27 @@ section {
   content: attr(data-label);
   position: absolute;
   top: -24px;
-  left: -2px;
+  left: -3px;
   background: var(--pink-neon);
   color: #fff;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   padding: 2px 6px;
-  border-radius: 3px 3px 0 0;
+  border-radius: 4px;
   white-space: nowrap;
 }
 
 .game-controls {
-  padding: 30px;
-  background: rgba(20, 5, 22, 0.5);
+  padding: 24px 10px 10px;
+  background: transparent;
   text-align: center;
 }
 
 .game-prompt {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   margin-bottom: 20px;
-  font-weight: 500;
+  font-weight: bold;
+  color: var(--text-dark);
 }
 
 .game-buttons {
@@ -463,13 +540,15 @@ section {
 }
 
 .game-btn {
-  background: var(--glass-bg);
-  border: 1px solid var(--pink-primary);
-  color: var(--pink-pastel);
-  padding: 12px 24px;
-  border-radius: 12px;
+  background: #fff;
+  border: 3px solid var(--text-dark);
+  color: var(--text-dark);
+  padding: 10px 20px;
+  border-radius: 20px;
   font-family: var(--font-display);
   font-size: 1.1rem;
+  font-weight: 700;
+  box-shadow: 0 4px 0 var(--text-dark);
   cursor: pointer;
   transition: var(--transition-smooth);
 }
@@ -477,75 +556,115 @@ section {
 .game-btn:hover {
   background: var(--pink-primary);
   color: var(--text-dark);
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 var(--text-dark);
+}
+
+.game-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--text-dark);
 }
 
 /* WIDGET: Bubblegum Compiler */
 .compiler-container {
+  background: var(--glass-bg);
+  border: 3px solid var(--glass-border);
+  border-radius: 36px;
+  padding: 30px;
+  box-shadow: var(--glass-shadow);
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 30px;
   max-width: 1000px;
   margin: 0 auto;
+  position: relative;
 }
 
 @media (max-width: 768px) {
   .compiler-container {
     grid-template-columns: 1fr;
+    padding: 20px;
   }
 }
 
 .panel-title {
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   margin-bottom: 12px;
   color: var(--pink-pastel);
   display: flex;
   align-items: center;
   gap: 8px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .code-box {
-  background: rgba(13, 2, 14, 0.8);
-  border: 1.5px solid var(--glass-border);
-  border-radius: 16px;
+  background: rgba(13, 2, 14, 0.85);
+  border: 3px solid var(--text-dark);
+  border-radius: 24px;
   padding: 20px;
   min-height: 250px;
-  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 6px 0 rgba(0,0,0,0.3);
+  transition: var(--transition-smooth);
+}
+
+/* Notebook grid styling for input */
+.notebook-wrapper {
+  position: relative;
 }
 
 textarea.code-box {
   width: 100%;
-  color: #57ff57; /* Coding green for contrast before pinkification */
+  background: #fbfbf6; /* warm paper color */
+  background-image: linear-gradient(#e8e6e2 1px, transparent 1px);
+  background-size: 100% 24px;
+  line-height: 24px;
+  border: 3px solid var(--text-dark);
+  border-radius: 24px;
+  padding: 20px 20px 20px 45px; /* indent for red line margin */
+  color: #2c3e50; /* readable charcoal code */
   font-family: var(--font-mono);
-  font-size: 1rem;
+  font-size: 0.95rem;
   resize: vertical;
-  border-color: rgba(255, 105, 180, 0.2);
+  box-shadow: 0 8px 0 rgba(0,0,0,0.15);
+  position: relative;
+}
+
+.notebook-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 32px;
+  width: 2px;
+  height: calc(100% - 10px);
+  background: rgba(255, 0, 0, 0.25);
+  pointer-events: none;
 }
 
 textarea.code-box:focus {
   outline: none;
   border-color: var(--pink-primary);
-  box-shadow: 0 0 15px rgba(255, 105, 180, 0.3);
+  box-shadow: 0 8px 0 var(--text-dark), 0 0 15px rgba(255, 105, 180, 0.4);
 }
 
 .output-box {
-  color: var(--pink-primary);
+  color: #ffd1dc;
   font-family: var(--font-mono);
   font-size: 0.95rem;
   overflow-y: auto;
   white-space: pre-wrap;
   position: relative;
+  border: 3px solid var(--text-dark);
+  box-shadow: inset 0 8px 0 rgba(0,0,0,0.4);
 }
 
 .output-box.sparkling::after {
-  content: '✨';
+  content: '🪄';
   position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 1.5rem;
-  animation: pulse 1s infinite alternate;
+  top: 15px;
+  right: 15px;
+  font-size: 1.8rem;
+  animation: pulse 0.5s infinite alternate;
 }
 
 .compiler-action {
@@ -666,9 +785,9 @@ body.annotated-mode .annotate-target::before {
   align-items: center;
   justify-content: center;
   font-size: 2.2rem;
-  box-shadow: 0 5px 25px rgba(255, 20, 147, 0.5);
+  box-shadow: 0 8px 0 var(--text-dark), 0 5px 25px rgba(255, 20, 147, 0.5);
   cursor: pointer;
-  border: 3px solid #fff;
+  border: 3px solid var(--text-dark);
   transition: var(--transition-smooth);
   position: relative;
 }
@@ -681,7 +800,7 @@ body.annotated-mode .annotate-target::before {
   width: 15px;
   height: 30px;
   background: var(--pink-primary);
-  border: 3px solid #fff;
+  border: 3px solid var(--text-dark);
   border-radius: 50% 50% 0 0;
   z-index: -1;
   transition: var(--transition-smooth);
@@ -698,14 +817,14 @@ body.annotated-mode .annotate-target::before {
 }
 
 .bot-avatar:hover {
-  transform: scale(1.1) rotate(5deg);
+  transform: scale(1.15) rotate(5deg);
 }
 
 .bot-avatar:hover::before {
-  transform: rotate(-25deg) translateY(-5px);
+  transform: rotate(-35deg) translateY(-8px);
 }
 .bot-avatar:hover::after {
-  transform: rotate(25deg) translateY(-5px);
+  transform: rotate(35deg) translateY(-8px);
 }
 
 .bot-badge {
@@ -716,7 +835,7 @@ body.annotated-mode .annotate-target::before {
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  border: 2px solid #fff;
+  border: 2px solid var(--text-dark);
   animation: pulse 1.5s infinite;
 }
 
@@ -728,16 +847,41 @@ body.annotated-mode .annotate-target::before {
   width: 350px;
   height: 450px;
   background: rgba(13, 2, 14, 0.95);
-  border: 2px solid var(--pink-primary);
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(255, 20, 147, 0.3);
+  border: 3px solid var(--text-dark);
+  border-radius: 28px;
+  box-shadow: 0 12px 0 var(--text-dark), 0 10px 30px rgba(255, 20, 147, 0.3);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible; /* show ears */
   transform: scale(0);
   transform-origin: bottom right;
   transition: var(--transition-smooth);
   backdrop-filter: blur(15px);
+}
+
+/* Chat window bunny ears! */
+.chat-window::before, .chat-window::after {
+  content: '';
+  position: absolute;
+  top: -24px;
+  width: 24px;
+  height: 40px;
+  background: radial-gradient(circle at center, var(--pink-neon) 30%, var(--pink-pastel) 35%);
+  border: 3px solid var(--text-dark);
+  z-index: -1;
+  transition: var(--transition-smooth);
+}
+
+.chat-window::before {
+  left: 30px;
+  border-radius: 50% 50% 0 0;
+  transform: rotate(-10deg);
+}
+
+.chat-window::after {
+  right: 30px;
+  border-radius: 50% 50% 0 0;
+  transform: rotate(10deg);
 }
 
 .chat-window.open {
@@ -754,6 +898,8 @@ body.annotated-mode .annotate-target::before {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-radius: 24px 24px 0 0;
+  border-bottom: 3px solid var(--text-dark);
 }
 
 .chat-close {
@@ -775,22 +921,23 @@ body.annotated-mode .annotate-target::before {
 
 .msg {
   max-width: 80%;
-  padding: 10px 14px;
-  border-radius: 15px;
+  padding: 12px 16px;
+  border-radius: 20px;
   font-size: 0.95rem;
+  border: 2px solid var(--text-dark);
+  box-shadow: 0 4px 0 rgba(0,0,0,0.15);
 }
 
 .msg-bot {
-  background: rgba(255, 105, 180, 0.15);
-  color: var(--text-primary);
+  background: #fff;
+  color: var(--text-dark);
   align-self: flex-start;
   border-bottom-left-radius: 2px;
-  border: 1px solid rgba(255, 105, 180, 0.25);
 }
 
 .msg-user {
-  background: var(--pink-neon);
-  color: #fff;
+  background: #ffd1dc;
+  color: var(--text-dark);
   align-self: flex-end;
   border-bottom-right-radius: 2px;
 }
@@ -804,49 +951,55 @@ body.annotated-mode .annotate-target::before {
 }
 
 .suggestion-btn {
-  background: rgba(255, 105, 180, 0.1);
-  border: 1px solid rgba(255, 105, 180, 0.3);
-  color: var(--pink-pastel);
+  background: #fff;
+  border: 2px solid var(--text-dark);
+  color: var(--text-dark);
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.8rem;
+  font-weight: bold;
   cursor: pointer;
   transition: var(--transition-smooth);
+  box-shadow: 0 3px 0 var(--text-dark);
 }
 
 .suggestion-btn:hover {
-  background: var(--pink-primary);
+  background: var(--pink-pastel);
   color: var(--text-dark);
-  border-color: var(--pink-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 var(--text-dark);
 }
 
 .chat-input-area {
   display: flex;
   padding: 12px;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(20, 5, 22, 0.9);
   gap: 10px;
-  border-top: 1px solid var(--glass-border);
+  border-top: 3px solid var(--text-dark);
+  border-radius: 0 0 24px 24px;
 }
 
 .chat-input {
   flex: 1;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--glass-border);
-  color: #fff;
+  background: #fff;
+  border: 2.5px solid var(--text-dark);
+  color: var(--text-dark);
   padding: 10px 15px;
   border-radius: 25px;
   font-family: var(--font-body);
+  font-weight: bold;
 }
 
 .chat-input:focus {
   outline: none;
-  border-color: var(--pink-primary);
+  border-color: var(--pink-neon);
+  box-shadow: 0 0 10px rgba(255, 20, 147, 0.4);
 }
 
 .chat-send {
-  background: var(--pink-neon);
-  border: none;
-  color: #fff;
+  background: var(--pink-primary);
+  border: 2.5px solid var(--text-dark);
+  color: var(--text-dark);
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -854,12 +1007,15 @@ body.annotated-mode .annotate-target::before {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: bold;
   transition: var(--transition-smooth);
+  box-shadow: 0 3px 0 var(--text-dark);
 }
 
 .chat-send:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 10px rgba(255, 20, 147, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 var(--text-dark);
+  background: var(--pink-neon);
 }
 
 /* Interactive Fun: Click Sparkles and Cursor elements */

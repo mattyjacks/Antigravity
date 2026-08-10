@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singson Hotdogs | Gourmet Manila Hotdogs by Chef Justin Singson</title>
+    <meta name="description" content="Experience elevated Filipino street food at Singson Hotdogs. Artisan sausages, heritage sauces, and gourmet toppings crafted by celebrity Chef Justin Singson in Manila.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Sticky Header & Navbar -->
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">🌭</span>
+                Singson <span>Hotdogs</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#story">Chef's Story</a></li>
+                <li><a href="#menu">Our Menu</a></li>
+                <li><a href="#builder">Build-A-Dog</a></li>
+                <li><a href="#reservations">Reservations</a></li>
+                <li><a href="#contact">Find Us</a></li>
+            </ul>
+
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <div class="cart-icon-wrapper" onclick="document.getElementById('builder').scrollIntoView();">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-primary);"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    <span class="cart-badge" style="display: none;">0</span>
+                </div>
+                
+                <button class="hamburger" aria-label="Toggle Navigation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-container">
+            <div class="hero-content">
+                <span class="badge-chef">Concept by Chef Justin Singson</span>
+                <h1 class="hero-title">
+                    Manila's Finest 
+                    <span>Gourmet Hotdogs</span>
+                </h1>
+                <p class="hero-desc">
+                    Celebrity Chef Justin Singson reimagines the humble street hotdog. Combining premium local meats, secret heritage longganisa blends, and bold regional flavors to deliver a world-class culinary bite.
+                </p>
+                <div class="hero-btns">
+                    <a href="#builder" class="btn btn-primary">Order Online</a>
+                    <a href="#reservations" class="btn btn-outline">Book a Table</a>
+                </div>
+            </div>
+            
+            <div class="hero-image-wrapper">
+                <div class="hero-circle-bg"></div>
+                <img src="assets/hero_hotdog.png" alt="Singson Gourmet Hotdog" class="hero-image">
+            </div>
+        </div>
+    </section>
+
+    <!-- Chef Story Section -->
+    <section id="story" class="story">
+        <div class="section-container">
+            <div class="story-grid">
+                <div class="story-image-container">
+                    <img src="assets/chef_justin.png" alt="Chef Justin Singson" class="story-image">
+                    <div class="story-badge-overlay">
+                        <h4>Top Chef</h4>
+                        <p>Manila Finalist</p>
+                    </div>
+                </div>
+                
+                <div class="story-content">
+                    <span class="section-subtitle">The Mastermind</span>
+                    <h3>Meet Chef <span>Justin Singson</span></h3>
+                    <p class="story-text">
+                        Growing up in the bustling markets of Manila, Justin was always fascinated by the simple comfort of street food. After training in Michelin-starred kitchens in Melbourne and Paris, he returned to the Philippines with a vision: to elevate local street favorites to the high-end dining table.
+                    </p>
+                    <div class="story-quote">
+                        "The hotdog is the ultimate canvas of flavor. By marrying it with culinary techniques and the rich ingredients of our provinces, we create a sensory experience that feels both nostalgic and groundbreaking."
+                    </div>
+                    <p class="story-text">
+                        Singson Hotdogs is the realization of that dream—where fine dining craftsmanship meets the unpretentious joy of hotdogs.
+                    </p>
+                    <a href="#menu" class="btn btn-outline">Explore His Creations</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Menu Section -->
+    <section id="menu" class="menu">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">Crafted with Passion</span>
+                <h2 class="section-title">The Culinary <span>Lineup</span></h2>
+            </div>
+
+            <!-- Tabs -->
+            <div class="menu-tabs">
+                <button class="menu-tab-btn active" data-filter="all">All Items</button>
+                <button class="menu-tab-btn" data-filter="hotdogs">Signature Dogs</button>
+                <button class="menu-tab-btn" data-filter="sides">Sides & Slaws</button>
+                <button class="menu-tab-btn" data-filter="drinks">Craft Drinks</button>
+            </div>
+
+            <!-- Grid -->
+            <div class="menu-grid">
+                <!-- Signature Dogs -->
+                <div class="menu-card" data-category="hotdogs">
+                    <div class="menu-card-header">
+                        <h4 class="menu-card-title">The Manila Thrill</h4>
+                        <span class="menu-card-price">₱290</span>
+                    </div>
+                    <p class="menu-card-desc">Gourmet pork longganisa sausage, sweet green mango salsa, house-crafted salted egg aioli, and toasted garlic crunch.</p>
+                    <div class="menu-card-tags">
+                        <span class="menu-tag popular">Popular</span>
+                    </div>
+                    <div class="menu-card-footer">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Pork Sausage Base</span>
+                        <button class="btn-add-cart" aria-label="Add to cart">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-card" data-category="hotdogs">
+                    <div class="menu-card-header">
+                        <h4 class="menu-card-title">Bicol Express Snag</h4>
+                        <span class="menu-card-price">₱320</span>
+                    </div>
+                    <p class="menu-card-desc">Spicy coconut-chili cream drizzle, crispy bagnet bits, grilled local sausage, and red serrano chili toppings.</p>
+                    <div class="menu-card-tags">
+                        <span class="menu-tag spicy">Spicy</span>
+                    </div>
+                    <div class="menu-card-footer">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Beef Sausage Base</span>
+                        <button class="btn-add-cart" aria-label="Add to cart">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-card" data-category="hotdogs">
+                    <div class="menu-card-header">
+                        <h4 class="menu-card-title">Adobo Glaze Bite</h4>
+                        <span class="menu-card-price">₱290</span>
+                    </div>
+                    <p class="menu-card-desc">Juicy beef sausage slow-cooked in vinegar, soy sauce, garlic, topped with caramelized white onions and crunchy chicken skin.</p>
+                    <div class="menu-card-tags">
+                        <span class="menu-tag">Heritage</span>
+                    </div>
+                    <div class="menu-card-footer">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Beef Sausage Base</span>
+                        <button class="btn-add-cart" aria-label="Add to cart">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-card" data-category="hotdogs">
+                    <div class="menu-card-header">
+                        <h4 class="menu-card-title">The BGC Wagyu Dog</h4>
+                        <span class="menu-card-price">₱380</span>
+                    </div>
+                    <p class="menu-card-desc">Premium Wagyu beef dog, luxury truffle mustard, wild button mushroom confit, finished with an elegant hint of edible gold leaf.</p>
+                    <div class="menu-card-tags">
+                        <span class="menu-tag popular">Popular</span>
+                    </div>
+                    <div class="menu-card-footer">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Wagyu Base</span>
+                        <button class="btn-add-cart" aria-label="Add to cart">+</button>
+                    </div>
+                </div>
+
+                <!-- Sides -->
+                <div class="menu-card" data-category="sides">
+                    <div class="menu-card-header">
+                        <h4 class="menu-card-title">Kamote Fries</h4>
+                        <span class="menu-card-price">₱150</span>
+                    </div>
+                    <p class="menu-card-desc">Sweet potato wedges dusted with premium salted egg yolk powder, served with a tangy cane vinegar dip.</p>
+                    <div class="menu-card-tags">
+                        <span class="menu-tag">Voted Best Side</span>
+                    </div>
+                    <div class="menu-card-footer">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Vegetarian Friendly</span>
+                        <button class="btn-add-cart" aria-label="Add to cart">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-card" data-category="sides">
+                    <div class="menu-card-header">
+                        <h4 class="menu-card-title">Sisig Croquettes</h4>
+                        <span class="menu-card-price">₱180</span>
+                    </div>
+                    <p class="menu-card-desc">Crispy golden panko balls stuffed with sizzling pork sisig, molten cheese, served with a fresh squeeze of calamansi aioli.</p>
+                    <div class="menu-card-tags">
+                        <span class="menu-tag popular">Popular</span>
+                    </div>
+                    <div class="menu-card-footer">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Crispy Pork</span>
+                        <button class="btn-add-cart" aria-label="Add to cart">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-card" data-category="sides">
+                    <div class="menu-card-header">
+                        <h4 class="menu-card-title">Chicharon Slaw</h4>
+                        <span class="menu-card-price">₱120</span>
+                    </div>
+                    <p class="menu-card-desc">Refreshing red cabbage, green julienned mango, calamansi dressing, topped with hand-crushed pork cracklings.</p>
+                    <div class="menu-card-tags">
+                        <span class="menu-tag">Crunchy</span>
+                    </div>
+                    <div class="menu-card-footer">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Light & Zesty</span>
+                        <button class="btn-add-cart" aria-label="Add to cart">+</button>
+                    </div>
+                </div>
+
+                <!-- Drinks -->
+                <div class="menu-card" data-category="drinks">
+                    <div class="menu-card-header">
+                        <h4 class="menu-card-title">Pandan Iced Tea</h4>
+                        <span class="menu-card-price">₱95</span>
+                    </div>
+                    <p class="menu-card-desc">Slow-steeped organic black tea leaves infused with fragrant pandan and lemongrass, sweetened with muscovado syrup.</p>
+                    <div class="menu-card-tags">
+                        <span class="menu-tag">Signature Drink</span>
+                    </div>
+                    <div class="menu-card-footer">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">100% Brewed</span>
+                        <button class="btn-add-cart" aria-label="Add to cart">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-card" data-category="drinks">
+                    <div class="menu-card-header">
+                        <h4 class="menu-card-title">Calamansi Craft Soda</h4>
+                        <span class="menu-card-price">₱110</span>
+                    </div>
+                    <p class="menu-card-desc">Sparkling mineral water mixed with cold-pressed local calamansi lime juice and organic forest honey.</p>
+                    <div class="menu-card-tags">
+                        <span class="menu-tag">Refreshing</span>
+                    </div>
+                    <div class="menu-card-footer">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">No Added Sugar</span>
+                        <button class="btn-add-cart" aria-label="Add to cart">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Custom Builder & Cart Section -->
+    <section id="builder" class="order-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">Interactive Kitchen</span>
+                <h2 class="section-title">Design Your <span>Singson Dog</span></h2>
+            </div>
+
+            <div class="order-grid">
+                <!-- Custom Dog Builder -->
+                <div class="order-builder">
+                    <!-- Live Vector Visualizer -->
+                    <div class="custom-dog-visualizer">
+                        <div class="visualizer-title">Live Dog Visualizer</div>
+                        <div class="visualizer-dog-name">Classic Beef Dog</div>
+                        
+                        <div class="visual-canvas">
+                            <div class="visual-element v-bun"></div>
+                            <div class="visual-element v-sausage"></div>
+                            
+                            <!-- Toppings Overlays -->
+                            <div class="visual-element v-topping cheese" id="v-topping-cheese"></div>
+                            <div class="visual-element v-topping onions" id="v-topping-onions"></div>
+                            <div class="visual-element v-topping mango-salsa" id="v-topping-mango"></div>
+                            
+                            <!-- Sauce Overlays -->
+                            <div class="visual-element v-sauce ketchup" id="v-sauce-ketchup"></div>
+                            <div class="visual-element v-sauce mustard" id="v-sauce-mustard"></div>
+                            <div class="visual-element v-sauce garlic-aioli" id="v-sauce-aioli"></div>
+                        </div>
+                    </div>
+
+                    <form id="dog-builder-form">
+                        <!-- Step 1: Base Sausage -->
+                        <div class="builder-step">
+                            <h3 class="step-title">
+                                <span class="step-num">1</span>
+                                Choose Sausage Base
+                            </h3>
+                            <div class="builder-options">
+                                <label class="option-card selected">
+                                    <input type="radio" name="sausage-base" id="beef" value="200" data-name="Classic Beef" checked>
+                                    <span class="option-name">Classic Beef</span>
+                                    <span class="option-desc">Juicy grass-fed beef sausage</span>
+                                    <span class="option-price">₱200</span>
+                                </label>
+                                <label class="option-card">
+                                    <input type="radio" name="sausage-base" id="longganisa" value="220" data-name="Longganisa Blend">
+                                    <span class="option-name">Longganisa Blend</span>
+                                    <span class="option-desc">Sweet-garlicky Filipino blend</span>
+                                    <span class="option-price">₱220</span>
+                                </label>
+                                <label class="option-card">
+                                    <input type="radio" name="sausage-base" id="wagyu" value="300" data-name="Premium Wagyu">
+                                    <span class="option-name">Premium Wagyu</span>
+                                    <span class="option-desc">A-grade marbled Wagyu dog</span>
+                                    <span class="option-price">₱300</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Drizzling Sauces -->
+                        <div class="builder-step">
+                            <h3 class="step-title">
+                                <span class="step-num">2</span>
+                                Select House Sauces (₱15 each)
+                            </h3>
+                            <div class="builder-options">
+                                <label class="option-card">
+                                    <input type="checkbox" name="sauce" id="ketchup" value="15" data-name="Spiced Ketchup">
+                                    <span class="option-name">Spiced Ketchup</span>
+                                    <span class="option-desc">Classic tomato with a kick</span>
+                                    <span class="option-price">+₱15</span>
+                                </label>
+                                <label class="option-card">
+                                    <input type="checkbox" name="sauce" id="mustard" value="15" data-name="Truffle Mustard">
+                                    <span class="option-name">Truffle Mustard</span>
+                                    <span class="option-desc">Yellow mustard with black truffle</span>
+                                    <span class="option-price">+₱15</span>
+                                </label>
+                                <label class="option-card">
+                                    <input type="checkbox" name="sauce" id="garlic-aioli" value="15" data-name="Garlic Aioli">
+                                    <span class="option-name">Salted Egg Aioli</span>
+                                    <span class="option-desc">Creamy egg yolk and garlic flavor</span>
+                                    <span class="option-price">+₱15</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Gourmet Toppings -->
+                        <div class="builder-step">
+                            <h3 class="step-title">
+                                <span class="step-num">3</span>
+                                Add Gourmet Toppings (₱25 each)
+                            </h3>
+                            <div class="builder-options">
+                                <label class="option-card">
+                                    <input type="checkbox" name="topping" id="cheese" value="25" data-name="Quickmelt Queso">
+                                    <span class="option-name">Quickmelt Queso</span>
+                                    <span class="option-desc">Melted local Cheddar & Monterey</span>
+                                    <span class="option-price">+₱25</span>
+                                </label>
+                                <label class="option-card">
+                                    <input type="checkbox" name="topping" id="onions" value="25" data-name="Adobo Onions">
+                                    <span class="option-name">Adobo Onions</span>
+                                    <span class="option-desc">Soy-vinegar caramelized onions</span>
+                                    <span class="option-price">+₱25</span>
+                                </label>
+                                <label class="option-card">
+                                    <input type="checkbox" name="topping" id="mango-salsa" value="25" data-name="Green Mango Salsa">
+                                    <span class="option-name">Green Mango Salsa</span>
+                                    <span class="option-desc">Zesty diced raw green mango</span>
+                                    <span class="option-price">+₱25</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 2.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+                            <div style="font-size: 1.3rem; font-weight: 700;">
+                                Total Custom Price: <span style="color: var(--accent-gold);">₱<span id="custom-dog-price">200</span></span>
+                            </div>
+                            <button type="button" id="btn-add-custom" class="btn btn-primary">Add Custom Dog to Basket</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Shopping Cart Panel -->
+                <div class="cart-panel">
+                    <h3 class="cart-title">
+                        <span>Your Order</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    </h3>
+                    
+                    <div class="cart-items">
+                        <!-- Items dynamically generated -->
+                        <div class="cart-empty-msg">Your basket is currently empty. Add items from the menu or design your own to get started!</div>
+                    </div>
+
+                    <div class="cart-totals" style="display: none;">
+                        <div class="total-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal-price">₱0</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Delivery Service Fee</span>
+                            <span>₱50</span>
+                        </div>
+                        <div class="total-row grand-total">
+                            <span>Grand Total</span>
+                            <span id="total-price">₱0</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-checkout" disabled>Checkout Order</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservation Section -->
+    <section id="reservations" class="reservations">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">Secure Your Spot</span>
+                <h2 class="section-title">Chef's Table <span>Booking</span></h2>
+            </div>
+
+            <div class="reservation-container">
+                <form id="reservation-form">
+                    <div class="reservation-form-grid">
+                        <div class="form-group">
+                            <label for="res-name">Full Name</label>
+                            <input type="text" id="res-name" class="form-control" placeholder="E.g. Juan dela Cruz" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="res-phone">Phone Number</label>
+                            <input type="tel" id="res-phone" class="form-control" placeholder="E.g. 0917 123 4567" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="res-guests">Number of Guests</label>
+                            <select id="res-guests" class="form-control" required>
+                                <option value="2">2 Guests</option>
+                                <option value="4">4 Guests</option>
+                                <option value="6">6 Guests</option>
+                                <option value="8">8 Guests (Chef Table Private)</option>
+                                <option value="12">10-12 Guests (Full Booth Lounge)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="res-date">Date</label>
+                            <input type="date" id="res-date" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="res-time">Time Slot</label>
+                            <select id="res-time" class="form-control" required>
+                                <option value="12:00 PM">12:00 PM (Lunch)</option>
+                                <option value="1:30 PM">1:30 PM (Lunch)</option>
+                                <option value="6:00 PM">6:00 PM (Dinner Slates)</option>
+                                <option value="7:30 PM">7:30 PM (Dinner Slates)</option>
+                                <option value="9:00 PM">9:00 PM (Late Night Bites)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="res-experience">Dining Preference</label>
+                            <select id="res-experience" class="form-control" required>
+                                <option value="Standard Dining">Standard Dining Hall</option>
+                                <option value="Chef Justin Experience">Chef's Table Experience (+₱500/head)</option>
+                                <option value="Outdoor Patio">Al Fresco Balcony</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="res-notes">Special Requests / Dietary Restrictions</label>
+                            <textarea id="res-notes" class="form-control" placeholder="E.g. Allergies, celebrating a birthday, wheelchair access..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-reservation">Confirm Booking Reservation</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer id="contact">
+        <div class="footer-grid">
+            <div class="footer-info">
+                <a href="#" class="logo" style="margin-bottom: 1rem;">
+                    <span class="logo-icon">🌭</span>
+                    Singson <span>Hotdogs</span>
+                </a>
+                <p>
+                    Redefining street eats. Conceptualized by Chef Justin Singson, combining French technical precision with proud Filipino gastronomy heritage.
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-btn" aria-label="Facebook">FB</a>
+                    <a href="#" class="social-btn" aria-label="Instagram">IG</a>
+                    <a href="#" class="social-btn" aria-label="TikTok">YT</a>
+                </div>
+            </div>
+
+            <div class="footer-hours">
+                <h4>Hours of Operation</h4>
+                <ul class="hours-list">
+                    <li><span>Monday - Thursday</span> <span>11:00 AM - 10:00 PM</span></li>
+                    <li><span>Friday - Saturday</span> <span>11:00 AM - 11:30 PM</span></li>
+                    <li><span>Sunday Brunch</span> <span>10:30 AM - 9:00 PM</span></li>
+                </ul>
+            </div>
+
+            <div class="footer-contact">
+                <h4>Locate Us</h4>
+                <ul class="contact-list">
+                    <li>
+                        <span class="contact-icon">📍</span>
+                        <span>Ground Floor, High Street East, Bonifacio Global City, Taguig, Metro Manila, Philippines</span>
+                    </li>
+                    <li>
+                        <span class="contact-icon">📞</span>
+                        <span>+63 (2) 8888-DOGS / +63 917 890 1234</span>
+                    </li>
+                    <li>
+                        <span class="contact-icon">✉️</span>
+                        <span>dine@singsonhotdogs.ph</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 Singson Hotdogs Culinary Inc. All Rights Reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Media Kit</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Alert Notification Popup -->
+    <div class="alert-popup">
+        <div class="alert-icon">🔔</div>
+        <div class="alert-message">
+            <h4>Notification</h4>
+            <p>Description placeholder text here.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
