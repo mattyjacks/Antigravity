@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OBSplug/plug1 - Modular AI Streamer Suite</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="navbar">
+      <div class="logo">
+        <span class="badge">OBS PLUGIN</span>
+        <h1>OBSplug <span>/ plug1</span></h1>
+      </div>
+      <div class="system-status">
+        <span class="status-indicator online"></span>
+        <span id="ai-backend-status">Local AI: GPU Direct3D Active</span>
+      </div>
+    </header>
+
+    <!-- Main Workspace Grid -->
+    <main class="dashboard-grid">
+      <!-- Left: Real-time Live Stream & AI GreenScreen Preview -->
+      <section class="panel preview-panel">
+        <div class="panel-header">
+          <h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg> Live AI GreenScreen & FX Viewport</h2>
+          <div class="controls-mini">
+            <span class="fps-tag" id="fps-display">60 FPS</span>
+          </div>
+        </div>
+
+        <div class="viewport-wrapper">
+          <canvas id="stream-canvas" width="854" height="480"></canvas>
+          <div id="active-effect-banner" class="effect-overlay-banner hidden">
+            🔥 CHAT TRIGGER ACTIVE: FIRE AURA
+          </div>
+          <!-- Chat Overlay Styles on Stream -->
+          <div id="obs-chat-overlay" class="obs-chat-layer style-bubbles">
+            <!-- Dynamic Chat Messages Rendered Here -->
+          </div>
+        </div>
+
+        <!-- AI GreenScreen Controls -->
+        <div class="control-row-group">
+          <h3>Local AI Human Segmentation & Edge Effects</h3>
+          <div class="control-grid">
+            <div class="control-card">
+              <label for="ai-compute-mode">AI Acceleration Engine</label>
+              <select id="ai-compute-mode">
+                <option value="gpu">GPU Powered (WebGL/DirectX)</option>
+                <option value="cpu">CPU Powered (SIMD Threaded)</option>
+              </select>
+            </div>
+
+            <div class="control-card">
+              <label for="edge-effect-select">Edge Contour FX</label>
+              <select id="edge-effect-select">
+                <option value="fire">Fire Aura 🔥</option>
+                <option value="cyberpunk">Cyberpunk Neon ⚡</option>
+                <option value="electric">Electric Lightning ⚡</option>
+                <option value="rainbow">Rainbow Glow 🌈</option>
+                <option value="glitch">Glitch Edge 👾</option>
+                <option value="none">None (Standard GreenScreen Removal)</option>
+              </select>
+            </div>
+
+            <div class="control-card">
+              <label for="glow-intensity">Glow Radius & Intensity</label>
+              <input type="range" id="glow-intensity" min="1" max="50" value="20">
+            </div>
+
+            <div class="control-card">
+              <label for="ai-threshold">AI Person Mask Sensitivity</label>
+              <input type="range" id="ai-threshold" min="10" max="95" value="65">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Twitch Chat & Interactive Triggers -->
+      <section class="panel chat-panel">
+        <div class="panel-header">
+          <h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Twitch Chat & Reactive FX</h2>
+        </div>
+
+        <div class="chat-display" id="twitch-chat-box">
+          <!-- Sample messages -->
+        </div>
+
+        <!-- Simulator & Trigger Controls -->
+        <div class="chat-simulator">
+          <input type="text" id="chat-input-sim" placeholder="Simulate chat message (e.g. 'fire 🔥', 'glitch', 'shake', 'boom')...">
+          <button id="send-chat-btn" class="btn btn-primary">Send to Stream</button>
+        </div>
+
+        <!-- Chat Overlay Selector -->
+        <div class="overlay-style-selector">
+          <label>Chat Display Style on Screen:</label>
+          <div class="radio-group">
+            <button class="style-btn active" data-style="bubbles">Floating Speech Bubbles</button>
+            <button class="style-btn" data-style="cyberpunk">Cyberpunk HUD</button>
+            <button class="style-btn" data-style="ticker">Bottom News Ticker</button>
+            <button class="style-btn" data-style="glass">Glassmorphism Cards</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom Full Width: Video Presenter & Sub-Plugin Ecosystem -->
+      <section class="panel full-width-panel">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="tab-presenter">🎬 Present Premade Video Mode</button>
+          <button class="tab-btn" data-tab="tab-subplugins">🧩 Sub-Plugin Ecosystem Architecture</button>
+        </div>
+
+        <!-- Tab 1: Video Presenter -->
+        <div id="tab-presenter" class="tab-content active">
+          <div class="presenter-grid">
+            <div class="presenter-control">
+              <h3>Sponsorship & Ad Video Queue</h3>
+              <p class="subtitle">Presents video overlays, auto-ducks streamer microphone audio, and transitions smoothly back to stream.</p>
+
+              <div class="video-queue-list" id="video-queue-list">
+                <div class="queue-item active">
+                  <div class="q-icon">▶</div>
+                  <div class="q-details">
+                    <span class="q-title">HyperX Sponsor Bumper 2026.mp4</span>
+                    <span class="q-meta">15 Seconds • Auto-Duck Mic Audio Enabled</span>
+                  </div>
+                  <button class="btn btn-sm btn-play">Trigger Now</button>
+                </div>
+                <div class="queue-item">
+                  <div class="q-icon">⏳</div>
+                  <div class="q-details">
+                    <span class="q-title">RedBull Cyberpunk Promo Spot.mp4</span>
+                    <span class="q-meta">30 Seconds • Scheduled at 45m</span>
+                  </div>
+                  <button class="btn btn-sm btn-play">Trigger Now</button>
+                </div>
+              </div>
+
+              <div class="presenter-actions">
+                <button id="add-video-btn" class="btn btn-secondary">+ Add Video Clip to Queue</button>
+                <button id="duck-toggle-btn" class="btn btn-accent">Mic Auto-Ducking: ON</button>
+              </div>
+            </div>
+
+            <div class="presenter-preview">
+              <h4>Ad Scene Presenter Monitor</h4>
+              <div class="ad-screen" id="ad-monitor">
+                <div class="ad-placeholder">
+                  <span>PREMADE VIDEO AD MONITOR</span>
+                  <p id="ad-status-text">Standby (Ready to play)</p>
+                  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="ad-progress"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Sub-Plugins -->
+        <div id="tab-subplugins" class="tab-content">
+          <div class="subplugin-ecosystem">
+            <div class="subplugin-header">
+              <h3>Modular Sub-Plugin Manager</h3>
+              <button class="btn btn-primary" id="load-subplugin-btn">+ Install New Sub-Plugin (.dll / .js)</button>
+            </div>
+
+            <div class="subplugin-grid">
+              <div class="subplugin-card">
+                <div class="card-top">
+                  <span class="sub-icon">🌧️</span>
+                  <div>
+                    <h4>Emote Rain Visualizer</h4>
+                    <span class="sub-ver">v1.0.0 • by OBSplug Core</span>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <p>Spawns physics-based falling Twitch emotes on screen when chat spams "POG" or "LUL".</p>
+              </div>
+
+              <div class="subplugin-card">
+                <div class="card-top">
+                  <span class="sub-icon">🔊</span>
+                  <div>
+                    <h4>Interactive Soundboard</h4>
+                    <span class="sub-ver">v1.0.0 • by OBSplug Core</span>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <p>Allows viewers to trigger spatial 3D audio clips with Twitch cheer bits or channel points.</p>
+              </div>
+
+              <div class="subplugin-card">
+                <div class="card-top">
+                  <span class="sub-icon">📊</span>
+                  <div>
+                    <h4>Stream Stats & Hype Meter</h4>
+                    <span class="sub-ver">v1.2.1 • Community Plugin</span>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <p>Monitors chat velocity and dynamically scales edge aura effects based on stream hype.</p>
+              </div>
+
+              <div class="subplugin-card">
+                <div class="card-top">
+                  <span class="sub-icon">🤖</span>
+                  <div>
+                    <h4>Local AI Face Tracking Cam</h4>
+                    <span class="sub-ver">v0.9.4 • Community Plugin</span>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <p>Keeps the streamer perfectly centered in the AI background cutout frame dynamically.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
