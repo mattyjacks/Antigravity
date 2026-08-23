@@ -1,0 +1,13 @@
+# Local Environment Variables
+.env
+.env.local
+old.env
+
+# Dependency directories
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.system_generated/

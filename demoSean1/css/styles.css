@@ -1,0 +1,305 @@
+/* ==========================================================================
+   DUOQ GAMER DATING APP - GLOBAL LAYOUT
+   ========================================================================== */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;600;700;900&family=Space+Grotesk:wght@400;600;700&display=swap');
+
+/* Theme Variable Declarations */
+:root {
+  --font-gaming: 'Orbitron', sans-serif;
+  --font-ui: 'Outfit', sans-serif;
+  --font-accent: 'Space Grotesk', sans-serif;
+  
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 16px;
+  --border-radius-circle: 50%;
+}
+
+/* 1. Cyberpunk Neon Theme (Default) */
+body.theme-cyberpunk {
+  --bg-primary: #08090e;
+  --bg-secondary: #0f111a;
+  --bg-tertiary: #161926;
+  --bg-panel: rgba(15, 17, 26, 0.8);
+  --accent: #00f0ff; /* Cyber Cyan */
+  --accent-secondary: #ff007f; /* Love Pink */
+  --accent-glow: rgba(0, 240, 255, 0.3);
+  --accent-glow-secondary: rgba(255, 0, 127, 0.3);
+  --text-primary: #f5f6fa;
+  --text-secondary: #a0a6c7;
+  --text-muted: #5e6488;
+  --border-color: rgba(255, 255, 255, 0.06);
+  --border-glow: 0 0 10px rgba(0, 240, 255, 0.15);
+  background-image: radial-gradient(circle at 10% 20%, rgba(255, 0, 127, 0.08) 0%, transparent 40%),
+                    radial-gradient(circle at 90% 80%, rgba(0, 240, 255, 0.08) 0%, transparent 40%);
+}
+
+/* 2. Tactical Ops Theme */
+body.theme-tactical {
+  --bg-primary: #0c0f0d;
+  --bg-secondary: #141a16;
+  --bg-tertiary: #1c2620;
+  --bg-panel: rgba(20, 26, 22, 0.85);
+  --accent: #00ff66; /* Tactical Green */
+  --accent-secondary: #ff9900; /* Ammo Orange */
+  --accent-glow: rgba(0, 255, 102, 0.25);
+  --accent-glow-secondary: rgba(255, 153, 0, 0.25);
+  --text-primary: #f0f4f1;
+  --text-secondary: #9cb0a2;
+  --text-muted: #586b5e;
+  --border-color: rgba(0, 255, 102, 0.08);
+  --border-glow: 0 0 10px rgba(0, 255, 102, 0.1);
+  background-image: linear-gradient(rgba(18, 24, 20, 0.03) 50%, rgba(0, 0, 0, 0.15) 50%),
+                    linear-gradient(90deg, rgba(0, 255, 102, 0.01), rgba(0, 0, 0, 0.02));
+  background-size: 100% 4px, 6px 100%;
+}
+
+/* 3. Fantasy Guild Tavern Theme */
+body.theme-guild {
+  --bg-primary: #11091c;
+  --bg-secondary: #1b102b;
+  --bg-tertiary: #27193d;
+  --bg-panel: rgba(27, 16, 43, 0.85);
+  --accent: #ffd700; /* Royal Gold */
+  --accent-secondary: #c71585; /* Mage Magenta */
+  --accent-glow: rgba(255, 215, 0, 0.25);
+  --accent-glow-secondary: rgba(199, 21, 133, 0.25);
+  --text-primary: #fdfaf6;
+  --text-secondary: #caaedb;
+  --text-muted: #7f6096;
+  --border-color: rgba(255, 215, 0, 0.12);
+  --border-glow: 0 0 15px rgba(255, 215, 0, 0.15);
+  background-image: radial-gradient(circle at 50% 30%, rgba(199, 21, 133, 0.1) 0%, transparent 60%),
+                    radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+}
+
+/* Global Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: var(--border-radius-sm);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Typography elements */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-gaming);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--text-primary);
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: var(--font-gaming);
+  transition: all var(--transition-fast);
+}
+
+/* Main layouts and structure */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  height: 80px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-gaming);
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  text-shadow: var(--border-glow);
+}
+
+.logo span {
+  color: var(--accent-secondary);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-gaming);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--accent-secondary);
+  transition: width var(--transition-fast);
+  box-shadow: var(--accent-glow-secondary);
+}
+
+.nav-links a.active {
+  color: var(--text-primary);
+  text-shadow: 0 0 8px var(--accent-glow-secondary);
+}
+
+.nav-links a.active::after {
+  width: 100%;
+}
+
+/* Theme selector header widget */
+.theme-selector {
+  display: flex;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 3px;
+  border-radius: 30px;
+  border: 1px solid var(--border-color);
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.theme-btn:hover {
+  color: var(--text-primary);
+}
+
+.theme-btn.active {
+  background: var(--accent-secondary);
+  color: #fff;
+  box-shadow: 0 0 10px var(--accent-secondary);
+}
+
+/* Main Workspace layout */
+main {
+  flex: 1;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  position: relative;
+}
+
+.app-section {
+  display: none;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.app-section.active {
+  display: block;
+}
+
+/* Footer layout */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: auto;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.footer-links a {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.footer-links a:hover {
+  color: var(--accent);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+    gap: 1rem;
+  }
+  .nav-links {
+    gap: 1rem;
+  }
+}

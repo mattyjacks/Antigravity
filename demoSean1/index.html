@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DuoQ - The premium matchmaking and dating app for gamers. Connect, swipe, match, and level up your love life with Player 2.">
+  <meta name="keywords" content="gaming dating, find gamer girlfriend, gamer boyfriend, Tinder for gamers, DuoQ, co-op date, LFG, PC, PlayStation, Xbox, Switch">
+  <title>DuoQ // Match, Team Up, Level Up</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body class="theme-cyberpunk">
+
+  <!-- ==========================================================================
+       HEADER & NAVIGATION BAR
+       ========================================================================== -->
+  <header>
+    <div class="navbar">
+      <a href="#" class="logo">
+        <i data-lucide="zap" style="width:28px;height:28px;fill:var(--accent-secondary);color:var(--accent-secondary);"></i>
+        Duo<span>Q</span>
+      </a>
+      
+      <ul class="nav-links">
+        <li><a href="#swipe-section" class="active">Match Queue</a></li>
+        <li><a href="#chat-section">Active Chats</a></li>
+        <li><a href="#profile-section">My Loadout</a></li>
+      </ul>
+      
+      <!-- Theme Skin Switcher -->
+      <div class="theme-selector">
+        <button class="theme-btn active" data-theme="cyberpunk" title="Cyberpunk Pink/Cyan">
+          <i data-lucide="sparkles" style="width:14px;height:14px;"></i>
+          Neon
+        </button>
+        <button class="theme-btn" data-theme="tactical" title="Stealth Tactical Green">
+          <i data-lucide="shield" style="width:14px;height:14px;"></i>
+          Tactical
+        </button>
+        <button class="theme-btn" data-theme="guild" title="Fantasy Guild Gold">
+          <i data-lucide="swords" style="width:14px;height:14px;"></i>
+          Guild
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       MAIN APP SCREEN VIEWS
+       ========================================================================== -->
+  <main>
+    
+    <!-- 1. SWIPE DECK SECTION -->
+    <section id="swipe-section" class="app-section active">
+      <div class="deck-section-wrap">
+        <div class="card-stack-container" id="swipe-deck-container">
+          <!-- Populated dynamically by swipe.js -->
+        </div>
+        
+        <!-- Controls at bottom of deck -->
+        <div class="deck-controls">
+          <button class="control-btn" id="action-pass" title="Pass / Dislike">
+            <i data-lucide="x" style="color:var(--accent-secondary);"></i>
+          </button>
+          <button class="control-btn" id="action-super" title="Super Like! Instant High Affection">
+            <i data-lucide="star"></i>
+          </button>
+          <button class="control-btn" id="action-like" title="Match / Like">
+            <i data-lucide="heart" style="color:var(--accent);fill:rgba(0, 240, 255, 0.1);"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. PRIVATE CHATS / MATCHES SECTION -->
+    <section id="chat-section" class="app-section">
+      <div class="chat-layout-grid">
+        
+        <!-- Matches Sidebar list -->
+        <div class="panel matches-sidebar">
+          <div class="matches-sidebar-title">
+            <i data-lucide="heart" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:4px;color:var(--accent-secondary);fill:var(--accent-secondary);"></i>
+            Your Gamer Matches
+          </div>
+          <div class="matches-sidebar-list" id="matches-sidebar-list">
+            <!-- Populated dynamically by chat.js -->
+          </div>
+        </div>
+
+        <!-- Chat Comms Terminal -->
+        <div class="panel chat-terminal">
+          <div class="panel-header" id="active-chat-header">
+            <h3>DUOQ COMMS TERMINAL</h3>
+          </div>
+
+          <div class="chat-messages-container" id="chat-messages-container">
+            <!-- Messages rendered dynamically by chat.js -->
+          </div>
+
+          <div class="chat-input-area" id="chat-input-area" style="opacity: 0.5;">
+            <!-- Quick Dialogue replies -->
+            <div class="quick-replies-wrap" id="quick-replies">
+              <!-- Rendered dynamically depending on persona -->
+            </div>
+            
+            <div class="chat-input-row">
+              <input type="text" class="chat-field" id="chat-input-field" placeholder="Transmit chat logs to player two..." autocomplete="off">
+              <button class="btn btn-primary" id="chat-send-btn">
+                <i data-lucide="send" style="width:16px;height:16px;"></i>
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. PROFILE CUSTOMIZER / LOADOUT -->
+    <section id="profile-section" class="app-section">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i data-lucide="sliders" style="width:20px;height:20px;color:var(--accent);"></i>
+            <h3>CONFIGURE YOUR GAMER LOADOUT</h3>
+          </div>
+          <div class="panel-subtitle">Update your gaming profile statistics to automatically recalibrate compatibility scores.</div>
+        </div>
+
+        <form id="profile-edit-form" class="profile-edit-grid">
+          <div>
+            <div class="profile-form-group">
+              <label for="edit-gamertag">GamerTag / Nickname</label>
+              <input type="text" id="edit-gamertag" required placeholder="e.g. HealerPro">
+            </div>
+
+            <div class="profile-form-group">
+              <label for="edit-location">Location / Outpost</label>
+              <input type="text" id="edit-location" required placeholder="e.g. Concord, NH">
+            </div>
+
+            <div class="profile-form-group">
+              <label for="edit-playstyle">Core Playstyle</label>
+              <select id="edit-playstyle">
+                <option value="Casual">Casual / Cozy (Co-op worlds, farm simulators)</option>
+                <option value="Competitive">Competitive (Ranked grinds, tournaments)</option>
+                <option value="Achievements">Achievements (100% completions, speedruns)</option>
+                <option value="Lore">Lore / Explorer (Deep storytelling, RP worlds)</option>
+              </select>
+            </div>
+
+            <div class="profile-form-group">
+              <label>Gaming Systems / Platforms</label>
+              <div class="checkbox-grid">
+                <label class="checkbox-label"><input type="checkbox" name="platforms" value="PC"> PC</label>
+                <label class="checkbox-label"><input type="checkbox" name="platforms" value="PlayStation"> PlayStation</label>
+                <label class="checkbox-label"><input type="checkbox" name="platforms" value="Xbox"> Xbox</label>
+                <label class="checkbox-label"><input type="checkbox" name="platforms" value="Switch"> Nintendo Switch</label>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="profile-form-group">
+              <label>Active Games List</label>
+              <div class="checkbox-grid" style="grid-template-columns: 1fr;">
+                <label class="checkbox-label"><input type="checkbox" name="games" value="Valorant"> Valorant</label>
+                <label class="checkbox-label"><input type="checkbox" name="games" value="Elden Ring"> Elden Ring</label>
+                <label class="checkbox-label"><input type="checkbox" name="games" value="Stardew Valley"> Stardew Valley</label>
+                <label class="checkbox-label"><input type="checkbox" name="games" value="Animal Crossing: New Horizons"> Animal Crossing: New Horizons</label>
+                <label class="checkbox-label"><input type="checkbox" name="games" value="World of Warcraft"> World of Warcraft</label>
+                <label class="checkbox-label"><input type="checkbox" name="games" value="Call of Duty: Warzone"> Call of Duty: Warzone</label>
+                <label class="checkbox-label"><input type="checkbox" name="games" value="Minecraft"> Minecraft</label>
+                <label class="checkbox-label"><input type="checkbox" name="games" value="Hades II"> Hades II</label>
+                <label class="checkbox-label"><input type="checkbox" name="games" value="Street Fighter 6"> Street Fighter 6</label>
+              </div>
+            </div>
+
+            <div class="profile-form-group">
+              <label>Preferred Role Profiles</label>
+              <div class="checkbox-grid">
+                <label class="checkbox-label"><input type="checkbox" name="roles" value="Support"> Support</label>
+                <label class="checkbox-label"><input type="checkbox" name="roles" value="Healer"> Healer</label>
+                <label class="checkbox-label"><input type="checkbox" name="roles" value="DPS"> DPS</label>
+                <label class="checkbox-label"><input type="checkbox" name="roles" value="Duelist"> Duelist</label>
+                <label class="checkbox-label"><input type="checkbox" name="roles" value="Tank"> Tank</label>
+                <label class="checkbox-label"><input type="checkbox" name="roles" value="IGL (In-Game Leader)"> IGL</label>
+                <label class="checkbox-label"><input type="checkbox" name="roles" value="Builder"> Builder</label>
+                <label class="checkbox-label"><input type="checkbox" name="roles" value="Sniper"> Sniper</label>
+              </div>
+            </div>
+
+            <div class="profile-form-group">
+              <label for="edit-bio">Gamer Bio</label>
+              <textarea id="edit-bio" rows="3" placeholder="Tell other players about your ideal co-op date, character builds, and favorite coffee shop..."></textarea>
+            </div>
+          </div>
+
+          <div class="profile-actions">
+            <button type="submit" class="btn btn-primary">
+              <i data-lucide="save" style="width:16px;height:16px;"></i>
+              Update Loadout Settings
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER & PRIVACY POLICY SECTION
+       ========================================================================== -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DuoQ Gaming Matches. Connect and play with Player Two.</p>
+      <div class="footer-links">
+        <a href="#" id="open-privacy-policy">NHCDPA Privacy Policy</a>
+        <a href="mailto:matt@mattyjacks.com">Contact Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Notification Toasts Layer -->
+  <div class="notification-container" id="notification-container"></div>
+
+  <!-- PRIVACY POLICY POPUP DIALOG MODAL (NHCDPA Compliant) -->
+  <div class="hud-modal" id="privacy-policy-modal" style="display: none;">
+    <div class="match-overlay-bg" id="privacy-overlay-bg"></div>
+    <div class="privacy-modal-card">
+      <h2>NEW HAMPSHIRE CONSUMER PRIVACY RIGHTS DISCLOSURE</h2>
+      <div class="privacy-content-scroll">
+        <p><strong>Effective Date:</strong> August 23, 2026</p>
+        <p>This disclosure explains your rights under the <strong>New Hampshire Consumer Data Privacy Act (NHCDPA)</strong> when using the DuoQ match system. DuoQ respects and secures your privacy.</p>
+        
+        <h3>1. DATA WE COLLECT</h3>
+        <p>We process only local, client-side preferences (GamerTag, preferred platforms, games lists, role selections, and private simulated message scripts) necessary to run matchmaking calculations. Personal profiles are stored locally inside your browser's <code>localStorage</code> database.</p>
+        
+        <h3>2. CONSUMER DATA RIGHTS</h3>
+        <p>NH consumers have specific rights regarding their personal data under state law:</p>
+        <ul>
+          <li><strong>Right to Access:</strong> You can review the matches and settings stored in your client application at any time.</li>
+          <li><strong>Right to Correct:</strong> You can edit your parameters dynamically inside the "My Loadout" profile form.</li>
+          <li><strong>Right to Delete:</strong> You can wipe all local storage data, swiped history, and chat logs by purging your browser cache or using the Deck re-queue triggers.</li>
+          <li><strong>Right to Opt-Out:</strong> We do not sell user data, engage in commercial advertising, or perform profiling/automated decision making on consumers.</li>
+        </ul>
+        
+        <h3>3. EXERCISE YOUR RIGHTS</h3>
+        <p>To submit an inquiry, file an appeal, or request details, please contact us directly at <a href="mailto:matt@mattyjacks.com">matt@mattyjacks.com</a>. We will reply to NH consumer requests within 45 days.</p>
+      </div>
+      <button class="btn btn-secondary" id="close-privacy-btn">Close Disclosures</button>
+    </div>
+  </div>
+
+  <!-- Lucide Icons CDN Loader -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- JavaScript Application Entry Script -->
+  <script type="module" src="js/app.js"></script>
+
+  <!-- Interactive script to trigger Privacy policy Modal -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const openBtn = document.getElementById('open-privacy-policy');
+      const closeBtn = document.getElementById('close-privacy-btn');
+      const modal = document.getElementById('privacy-policy-modal');
+      const overlay = document.getElementById('privacy-overlay-bg');
+
+      if (openBtn && modal) {
+        openBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          modal.style.display = 'flex';
+        });
+      }
+
+      const closeModal = () => {
+        if (modal) modal.style.display = 'none';
+      };
+
+      if (closeBtn) closeBtn.addEventListener('click', closeModal);
+      if (overlay) overlay.addEventListener('click', closeModal);
+    });
+  </script>
+</body>
+</html>
