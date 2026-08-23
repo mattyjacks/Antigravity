@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LogicSphere | Propositional Logic Calculator</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #080d16;
+      --panel-bg: rgba(13, 22, 38, 0.7);
+      --border-glow: rgba(0, 195, 255, 0.3);
+      --primary: #00c3ff;
+      --secondary: #9d4edd;
+      --success: #10b981;
+      --error: #f43f5e;
+      --text: #f8fafc;
+      --text-muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at top right, rgba(157, 78, 221, 0.1), transparent 400px),
+        radial-gradient(circle at bottom left, rgba(0, 195, 255, 0.08), transparent 400px);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.25rem;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2rem;
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    @media (max-width: 1024px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .panel-header {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Calculator Input Area */
+    .screen-container {
+      position: relative;
+    }
+
+    .expr-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      color: #fff;
+      font-family: 'Fira Code', monospace;
+      font-size: 1.3rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .expr-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 15px var(--border-glow);
+    }
+
+    .validation-badge {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .validation-badge.valid {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .validation-badge.invalid {
+      background: rgba(244, 63, 94, 0.15);
+      color: var(--error);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+
+    /* Keypad */
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+    }
+
+    .key {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .key:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .key:active {
+      transform: translateY(1px);
+    }
+
+    .key.operator {
+      color: var(--primary);
+      background: rgba(0, 195, 255, 0.03);
+      border-color: rgba(0, 195, 255, 0.1);
+    }
+
+    .key.operator:hover {
+      background: rgba(0, 195, 255, 0.1);
+      border-color: var(--primary);
+    }
+
+    .key.variable {
+      color: var(--secondary);
+      background: rgba(157, 78, 221, 0.03);
+      border-color: rgba(157, 78, 221, 0.1);
+    }
+
+    .key.variable:hover {
+      background: rgba(157, 78, 221, 0.1);
+      border-color: var(--secondary);
+    }
+
+    .key.action {
+      background: rgba(244, 63, 94, 0.1);
+      border-color: rgba(244, 63, 94, 0.2);
+      color: var(--error);
+    }
+
+    .key.action:hover {
+      background: rgba(244, 63, 94, 0.2);
+      border-color: var(--error);
+    }
+
+    .key-sub {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+
+    /* Variable Truth Value Toggles */
+    .variable-toggles {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+    }
+
+    .toggle-card {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 0.75rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toggle-label {
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .toggle-btn {
+      width: 100%;
+      padding: 6px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Fira Code', monospace;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .toggle-btn.true {
+      background: var(--success);
+      color: #042f1a;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    }
+
+    .toggle-btn.false {
+      background: var(--error);
+      color: #4c0519;
+      box-shadow: 0 0 10px rgba(244, 63, 94, 0.3);
+    }
+
+    /* Step-by-Step Evaluation */
+    .eval-display {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      padding: 1.25rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 1rem;
+      line-height: 1.6;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .eval-step {
+      margin-bottom: 0.5rem;
+      color: var(--text-muted);
+    }
+
+    .eval-step span.highlight {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .eval-result {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+      font-size: 1.15rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badge-val {
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-weight: 800;
+    }
+
+    .badge-val.true {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+      border: 1px solid var(--success);
+    }
+
+    .badge-val.false {
+      background: rgba(244, 63, 94, 0.2);
+      color: var(--error);
+      border: 1px solid var(--error);
+    }
+
+    /* Truth Table Container */
+    .table-container {
+      overflow-x: auto;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    td.cell-true {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    td.cell-false {
+      color: var(--error);
+      font-weight: 600;
+    }
+
+    .meta-tags {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .meta-badge {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .meta-badge.tautology {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .meta-badge.contradiction {
+      background: rgba(244, 63, 94, 0.15);
+      color: var(--error);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+
+    .meta-badge.contingency {
+      background: rgba(157, 78, 221, 0.15);
+      color: var(--secondary);
+      border: 1px solid rgba(157, 78, 221, 0.3);
+    }
+
+    /* Tutorial Panel Styles */
+    .tutorial-panel {
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      max-width: 1200px;
+      width: 100%;
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .tutorial-header {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .tutorial-toggle-icon {
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .tutorial-panel.collapsed .tutorial-toggle-icon {
+      transform: rotate(-90deg);
+    }
+
+    .tutorial-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      transition: max-height 0.4s ease, opacity 0.4s ease;
+      max-height: 5000px;
+      overflow: hidden;
+      opacity: 1;
+    }
+
+    .tutorial-panel.collapsed .tutorial-content {
+      max-height: 0;
+      opacity: 0;
+      pointer-events: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      .tutorial-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .tutorial-section {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .tutorial-section-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 1rem;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+      padding-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tutorial-text {
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: #cbd5e1;
+      margin-bottom: 1rem;
+    }
+
+    .tutorial-list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .tutorial-list li {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .tutorial-list li::before {
+      content: "➔";
+      color: var(--primary);
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    .code-ex {
+      font-family: 'Fira Code', monospace;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--primary);
+    }
+
+    .example-btn {
+      background: rgba(157, 78, 221, 0.1);
+      border: 1px solid rgba(157, 78, 221, 0.2);
+      color: var(--secondary);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .example-btn:hover {
+      background: rgba(157, 78, 221, 0.2);
+      border-color: var(--secondary);
+      transform: translateY(-1px);
+    }
+  </style>
+  <script>
+    function loadExampleExpression(expr) {
+      const input = document.getElementById('expressionInput');
+      input.value = expr;
+      input.focus();
+      if (typeof updateCalculator === 'function') {
+        updateCalculator();
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <header>
+    <h1>LogicSphere</h1>
+    <div class="subtitle">Interactive Propositional Logic Calculator</div>
+  </header>
+
+  <div class="container">
+    
+    <!-- LEFT PANEL: Inputs & Controls -->
+    <div class="panel">
+      <div class="panel-header">
+        <span>LOGICAL INPUT</span>
+        <div id="validationStatus" class="validation-badge valid">Valid Expression</div>
+      </div>
+
+      <div class="screen-container">
+        <input type="text" class="expr-input" id="expressionInput" placeholder="P ∧ Q" value="P ∧ Q">
+      </div>
+
+      <!-- Logic Gate Keypad -->
+      <div class="keypad">
+        <button class="key variable" data-val="P">P<span class="key-sub">Variable</span></button>
+        <button class="key variable" data-val="Q">Q<span class="key-sub">Variable</span></button>
+        <button class="key variable" data-val="R">R<span class="key-sub">Variable</span></button>
+        <button class="key variable" data-val="S">S<span class="key-sub">Variable</span></button>
+
+        <button class="key operator" data-val="¬">¬<span class="key-sub">NOT</span></button>
+        <button class="key operator" data-val=" ∧ ">∧<span class="key-sub">AND</span></button>
+        <button class="key operator" data-val=" ∨ ">∨<span class="key-sub">OR</span></button>
+        <button class="key operator" data-val=" ⊕ ">⊕<span class="key-sub">XOR</span></button>
+
+        <button class="key operator" data-val=" → ">→<span class="key-sub">IMPLIES</span></button>
+        <button class="key operator" data-val=" ↔ ">↔<span class="key-sub">EQUIV</span></button>
+        <button class="key operator" data-val="(">(<span class="key-sub">open</span></button>
+        <button class="key operator" data-val=")">)</span class="key-sub">close</span></button>
+
+        <button class="key action" style="grid-column: span 2;" id="clearBtn">CLEAR</button>
+        <button class="key action" style="grid-column: span 2;" id="backspaceBtn">BACKSPACE</button>
+      </div>
+
+      <!-- Variable values toggle -->
+      <div class="panel-header">
+        <span>INPUT VARIABLES BINDINGS</span>
+      </div>
+      <div class="variable-toggles">
+        <div class="toggle-card">
+          <span class="toggle-label">P</span>
+          <button class="toggle-btn true" id="toggle-P" data-var="P">T</button>
+        </div>
+        <div class="toggle-card">
+          <span class="toggle-label">Q</span>
+          <button class="toggle-btn false" id="toggle-Q" data-var="Q">F</button>
+        </div>
+        <div class="toggle-card">
+          <span class="toggle-label">R</span>
+          <button class="toggle-btn true" id="toggle-R" data-var="R">T</button>
+        </div>
+        <div class="toggle-card">
+          <span class="toggle-label">S</span>
+          <button class="toggle-btn false" id="toggle-S" data-var="S">F</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: Evaluator & Truth Table -->
+    <div class="panel">
+      <div class="panel-header">
+        <span>STEP-BY-STEP EVALUATION</span>
+      </div>
+
+      <div class="eval-display" id="evalDisplay">
+        <!-- Live steps injected here -->
+      </div>
+
+      <div class="panel-header">
+        <span>TRUTH TABLE VISUALIZATION</span>
+        <div class="meta-tags" id="metaBadges">
+          <!-- Tautology / Contingency badges -->
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table id="truthTable">
+          <thead>
+            <!-- Headers injected dynamically -->
+          </thead>
+          <tbody>
+            <!-- Rows injected dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- COMPREHENSIVE LOGIC TUTORIAL & GUIDE PANEL -->
+  <div class="tutorial-panel" id="tutorialPanel">
+    <div class="tutorial-header" onclick="document.getElementById('tutorialPanel').classList.toggle('collapsed')">
+      <span>📖 PROPOSITIONAL LOGIC HANDBOOK & GUIDE</span>
+      <span class="tutorial-toggle-icon">▼</span>
+    </div>
+    
+    <div class="tutorial-content">
+      
+      <!-- SECTION 1: Introduction to Propositions -->
+      <div class="tutorial-section">
+        <div class="tutorial-section-title">
+          <span>1. Introduction to Propositions</span>
+        </div>
+        <p class="tutorial-text">
+          A <strong>proposition</strong> (or statement) is a declarative sentence that is either strictly <strong>True (T)</strong> or <strong>False (F)</strong>, but not both. In mathematical logic, we represent these statements using propositional variables such as <span class="code-ex">P</span>, <span class="code-ex">Q</span>, <span class="code-ex">R</span>, and <span class="code-ex">S</span>.
+        </p>
+        <p class="tutorial-text">
+          For example:
+        </p>
+        <ul class="tutorial-list" style="margin-bottom: 1rem;">
+          <li><strong>P</strong>: "The sky is blue." (True proposition)</li>
+          <li><strong>Q</strong>: "The number 5 is greater than 10." (False proposition)</li>
+          <li><strong>R</strong>: "x + 2 = 5." (Not a proposition, since its truth value depends on the variable x)</li>
+        </ul>
+        <p class="tutorial-text">
+          By combining these simple propositions with logical operators, we can construct compound propositions and analyze complex statements programmatically.
+        </p>
+      </div>
+
+      <!-- SECTION 2: Logical Operators Cheat Sheet -->
+      <div class="tutorial-section">
+        <div class="tutorial-section-title">
+          <span>2. Logical Operators Reference</span>
+        </div>
+        <p class="tutorial-text">
+          Propositional logic utilizes symbols to represent operations. Below is a cheat sheet of the symbols and rules supported in LogicSphere:
+        </p>
+        <ul class="tutorial-list">
+          <li>
+            <strong>Negation (<span class="code-ex">¬</span> - NOT)</strong>: Inverts the truth value of a proposition.
+            <br><em>Rule:</em> <span class="code-ex">¬P</span> is True if and only if P is False.
+          </li>
+          <li>
+            <strong>Conjunction (<span class="code-ex">∧</span> - AND)</strong>: Combines statements requiring both to be true.
+            <br><em>Rule:</em> <span class="code-ex">P ∧ Q</span> is True only if both P and Q are True.
+          </li>
+          <li>
+            <strong>Disjunction (<span class="code-ex">∨</span> - OR)</strong>: Combines statements requiring at least one to be true.
+            <br><em>Rule:</em> <span class="code-ex">P ∨ Q</span> is True if P is True, Q is True, or both.
+          </li>
+          <li>
+            <strong>Exclusive OR (<span class="code-ex">⊕</span> - XOR)</strong>: Combines statements requiring exactly one to be true.
+            <br><em>Rule:</em> <span class="code-ex">P ⊕ Q</span> is True if P and Q have different truth values.
+          </li>
+          <li>
+            <strong>Conditional (<span class="code-ex">→</span> - IMPLIES)</strong>: Represents "If P, then Q".
+            <br><em>Rule:</em> <span class="code-ex">P → Q</span> is False only when the premise P is True and the conclusion Q is False.
+          </li>
+          <li>
+            <strong>Biconditional (<span class="code-ex">↔</span> - EQUIVALENT)</strong>: Represents "P if and only if Q".
+            <br><em>Rule:</em> <span class="code-ex">P ↔ Q</span> is True when P and Q share identical truth values.
+          </li>
+        </ul>
+      </div>
+
+      <!-- SECTION 3: Constructing Truth Tables -->
+      <div class="tutorial-section">
+        <div class="tutorial-section-title">
+          <span>3. Truth Table Construction</span>
+        </div>
+        <p class="tutorial-text">
+          A <strong>truth table</strong> lists all possible combinations of truth values for input variables and tracks the step-by-step outcomes of compound formulas.
+        </p>
+        <p class="tutorial-text">
+          To build a truth table manually:
+        </p>
+        <ul class="tutorial-list" style="margin-bottom: 1rem;">
+          <li>Calculate the number of rows: If an expression has <span class="code-ex">n</span> unique variables, the table contains <span class="code-ex">2<sup>n</sup></span> rows.</li>
+          <li>Write columns for each variable, listing combinations systematically (e.g. alternating T/F values).</li>
+          <li>Write columns for intermediate subexpressions (e.g. for <span class="code-ex">P ∧ ¬Q</span>, construct columns for <span class="code-ex">P</span>, <span class="code-ex">Q</span>, <span class="code-ex">¬Q</span>, and then <span class="code-ex">P ∧ ¬Q</span>).</li>
+          <li>Evaluate the final column to find the output.</li>
+        </ul>
+        <p class="tutorial-text">
+          LogicSphere automates this breakdown, isolating each sub-expression and detailing the operations in column headers automatically!
+        </p>
+      </div>
+
+      <!-- SECTION 4: Classification of Expressions -->
+      <div class="tutorial-section">
+        <div class="tutorial-section-title">
+          <span>4. Classification & Core Logic Laws</span>
+        </div>
+        <p class="tutorial-text">
+          Propositional statements are classified into three types based on their truth tables:
+        </p>
+        <ul class="tutorial-list" style="margin-bottom: 1rem;">
+          <li><strong>Tautology</strong>: A compound proposition that is always True, regardless of the truth values of its component variables. (e.g. Law of Excluded Middle: <span class="code-ex">P ∨ ¬P</span>).</li>
+          <li><strong>Contradiction</strong>: A compound proposition that is always False. (e.g. <span class="code-ex">P ∧ ¬P</span>).</li>
+          <li><strong>Contingency</strong>: An expression that is True for some combinations and False for others. (e.g. <span class="code-ex">P ∧ Q</span>).</li>
+        </ul>
+        <p class="tutorial-text">
+          <strong>Key Equivalence Laws:</strong>
+        </p>
+        <ul class="tutorial-list">
+          <li><strong>De Morgan's Laws</strong>:
+            <br><span class="code-ex">¬(P ∧ Q) ↔ (¬P ∨ ¬Q)</span>
+            <br><span class="code-ex">¬(P ∨ Q) ↔ (¬P ∧ ¬Q)</span>
+          </li>
+          <li><strong>Double Negation</strong>: <span class="code-ex">¬(¬P) ↔ P</span></li>
+          <li><strong>Distributive Laws</strong>:
+            <br><span class="code-ex">P ∧ (Q ∨ R) ↔ (P ∧ Q) ∨ (P ∧ R)</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- SECTION 5: Interactive Sandbox & Practice Examples -->
+      <div class="tutorial-section" style="grid-column: span 2;">
+        <div class="tutorial-section-title">
+          <span>5. Interactive Practice & Common Proofs</span>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Click any button below to load into the calculator!</span>
+        </div>
+        <p class="tutorial-text">
+          Try clicking these common logical identities to see their truth tables, step-by-step evaluations, and classifications:
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+          
+          <div style="background: rgba(0,0,0,0.2); padding: 0.75rem; border-radius: 8px; display: flex; flex-direction: column; gap: 6px;">
+            <strong style="font-size: 0.85rem; color: var(--primary);">Law of Excluded Middle (Tautology)</strong>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">P must either be True or False; there is no third option.</span>
+            <button class="example-btn" onclick="loadExampleExpression('P ∨ ¬P')">P ∨ ¬P</button>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.2); padding: 0.75rem; border-radius: 8px; display: flex; flex-direction: column; gap: 6px;">
+            <strong style="font-size: 0.85rem; color: var(--primary);">Self-Contradiction</strong>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">A statement cannot be both True and False simultaneously.</span>
+            <button class="example-btn" onclick="loadExampleExpression('P ∧ ¬P')">P ∧ ¬P</button>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.2); padding: 0.75rem; border-radius: 8px; display: flex; flex-direction: column; gap: 6px;">
+            <strong style="font-size: 0.85rem; color: var(--primary);">Modus Ponens (Implication Rule)</strong>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">If P implies Q, and P is true, then Q must be true.</span>
+            <button class="example-btn" onclick="loadExampleExpression('((P → Q) ∧ P) → Q')">((P → Q) ∧ P) → Q</button>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.2); padding: 0.75rem; border-radius: 8px; display: flex; flex-direction: column; gap: 6px;">
+            <strong style="font-size: 0.85rem; color: var(--primary);">De Morgan's Disjunction Law</strong>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Verify the biconditional equivalence of De Morgan's disjunction.</span>
+            <button class="example-btn" onclick="loadExampleExpression('¬(P ∨ Q) ↔ (¬P ∧ ¬Q)')">¬(P ∨ Q) ↔ (¬P ∧ ¬Q)</button>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.2); padding: 0.75rem; border-radius: 8px; display: flex; flex-direction: column; gap: 6px;">
+            <strong style="font-size: 0.85rem; color: var(--primary);">Transitivity of Implication</strong>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">If P implies Q, and Q implies R, then P implies R.</span>
+            <button class="example-btn" onclick="loadExampleExpression('((P → Q) ∧ (Q → R)) → (P → R)')">((P → Q) ∧ (Q → R)) → (P → R)</button>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.2); padding: 0.75rem; border-radius: 8px; display: flex; flex-direction: column; gap: 6px;">
+            <strong style="font-size: 0.85rem; color: var(--primary);">Biconditional Transitivity</strong>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">If P equals Q, and Q equals R, then P equals R.</span>
+            <button class="example-btn" onclick="loadExampleExpression('((P ↔ Q) ∧ (Q ↔ R)) → (P ↔ R)')">((P ↔ Q) ∧ (Q ↔ R)) → (P ↔ R)</button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  </div>
+
+  <script>
+    // Logic Tokens
+    const OPERATORS = {
+      '¬': { prec: 4, assoc: 'R', arity: 1 },
+      '∧': { prec: 3, assoc: 'L', arity: 2 },
+      '∨': { prec: 2, assoc: 'L', arity: 2 },
+      '⊕': { prec: 2, assoc: 'L', arity: 2 },
+      '→': { prec: 1, assoc: 'R', arity: 2 },
+      '↔': { prec: 1, assoc: 'L', arity: 2 }
+    };
+
+    // UI Input and variables
+    const expressionInput = document.getElementById('expressionInput');
+    const validationStatus = document.getElementById('validationStatus');
+    const evalDisplay = document.getElementById('evalDisplay');
+    const truthTable = document.getElementById('truthTable');
+    const metaBadges = document.getElementById('metaBadges');
+
+    const varStates = { P: true, Q: false, R: true, S: false };
+
+    // Set variable toggles UI
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const v = btn.dataset.var;
+        varStates[v] = !varStates[v];
+        btn.textContent = varStates[v] ? 'T' : 'F';
+        btn.className = `toggle-btn ${varStates[v] ? 'true' : 'false'}`;
+        updateCalculator();
+      });
+    });
+
+    // Handle Virtual Keypad
+    document.querySelectorAll('.key[data-val]').forEach(key => {
+      key.addEventListener('click', () => {
+        const insertText = key.dataset.val;
+        const start = expressionInput.selectionStart;
+        const end = expressionInput.selectionEnd;
+        const val = expressionInput.value;
+        expressionInput.value = val.substring(0, start) + insertText + val.substring(end);
+        expressionInput.focus();
+        // Move selection cursor
+        expressionInput.selectionStart = expressionInput.selectionEnd = start + insertText.length;
+        updateCalculator();
+      });
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      expressionInput.value = '';
+      updateCalculator();
+    });
+
+    document.getElementById('backspaceBtn').addEventListener('click', () => {
+      const start = expressionInput.selectionStart;
+      const val = expressionInput.value;
+      if (start > 0) {
+        // Strip trailing spaces around operators if deleting them
+        let charsToDelete = 1;
+        if (val[start - 1] === ' ' && start > 1) {
+          charsToDelete = 2;
+        }
+        expressionInput.value = val.substring(0, start - charsToDelete) + val.substring(start);
+        expressionInput.selectionStart = expressionInput.selectionEnd = start - charsToDelete;
+      }
+      updateCalculator();
+    });
+
+    expressionInput.addEventListener('input', updateCalculator);
+
+    // Parsing Logic
+    function tokenize(str) {
+      const tokens = [];
+      let i = 0;
+      while (i < str.length) {
+        const char = str[i];
+        if (/\s/.test(char)) {
+          i++;
+          continue;
+        }
+        if (['P', 'Q', 'R', 'S'].includes(char.toUpperCase())) {
+          tokens.push({ type: 'VAR', val: char.toUpperCase() });
+          i++;
+        } else if (['T', 'F'].includes(char.toUpperCase())) {
+          tokens.push({ type: 'CONST', val: char.toUpperCase() === 'T' });
+          i++;
+        } else if (char === '(' || char === ')') {
+          tokens.push({ type: 'PAREN', val: char });
+          i++;
+        } else if (char in OPERATORS) {
+          tokens.push({ type: 'OP', val: char });
+          i++;
+        } else {
+          // Check multi-character operator names or arrows
+          const sub2 = str.substr(i, 2);
+          const sub3 = str.substr(i, 3);
+          if (sub3 === '<->' || str[i] === '↔') {
+            tokens.push({ type: 'OP', val: '↔' });
+            i += sub3 === '<->' ? 3 : 1;
+          } else if (sub2 === '->' || str[i] === '→') {
+            tokens.push({ type: 'OP', val: '→' });
+            i += sub2 === '->' ? 2 : 1;
+          } else {
+            // Unrecognized character: token error
+            return null;
+          }
+        }
+      }
+      return tokens;
+    }
+
+    // Shunting-yard algorithm to convert Infix to Postfix (RPN)
+    function shuntingYard(tokens) {
+      if (!tokens) return null;
+      const outputQueue = [];
+      const operatorStack = [];
+
+      for (const token of tokens) {
+        if (token.type === 'VAR' || token.type === 'CONST') {
+          outputQueue.push(token);
+        } else if (token.type === 'OP') {
+          const op1 = token.val;
+          let topOp = operatorStack[operatorStack.length - 1];
+          while (
+            topOp &&
+            topOp.type === 'OP' &&
+            ((OPERATORS[op1].assoc === 'L' && OPERATORS[op1].prec <= OPERATORS[topOp.val].prec) ||
+             (OPERATORS[op1].assoc === 'R' && OPERATORS[op1].prec < OPERATORS[topOp.val].prec))
+          ) {
+            outputQueue.push(operatorStack.pop());
+            topOp = operatorStack[operatorStack.length - 1];
+          }
+          operatorStack.push(token);
+        } else if (token.val === '(') {
+          operatorStack.push(token);
+        } else if (token.val === ')') {
+          let top = operatorStack.pop();
+          while (top && top.val !== '(') {
+            outputQueue.push(top);
+            top = operatorStack.pop();
+          }
+          if (!top) return null; // Mismatched parentheses
+        }
+      }
+
+      while (operatorStack.length > 0) {
+        const top = operatorStack.pop();
+        if (top.val === '(' || top.val === ')') return null; // Mismatched parentheses
+        outputQueue.push(top);
+      }
+
+      return outputQueue;
+    }
+
+    // Build Abstract Syntax Tree (AST) for logical decomposition
+    function buildAST(postfix) {
+      if (!postfix || postfix.length === 0) return null;
+      const stack = [];
+      for (const token of postfix) {
+        if (token.type === 'VAR' || token.type === 'CONST') {
+          stack.push({
+            type: token.type,
+            val: token.val,
+            toString: () => token.type === 'CONST' ? (token.val ? 'T' : 'F') : token.val
+          });
+        } else if (token.type === 'OP') {
+          const op = token.val;
+          const info = OPERATORS[op];
+          if (stack.length < info.arity) return null; // Invalid postfix structure
+          
+          if (info.arity === 1) {
+            const arg = stack.pop();
+            stack.push({
+              type: 'OP',
+              op,
+              arg,
+              toString: () => `¬${arg.toString()}`
+            });
+          } else {
+            const right = stack.pop();
+            const left = stack.pop();
+            stack.push({
+              type: 'OP',
+              op,
+              left,
+              right,
+              toString: () => `(${left.toString()} ${op} ${right.toString()})`
+            });
+          }
+        }
+      }
+      return stack.length === 1 ? stack[0] : null;
+    }
+
+    // Evaluate AST node
+    function evaluateAST(node, varVals, stepsArr = null) {
+      if (!node) return false;
+      if (node.type === 'CONST') return node.val;
+      if (node.type === 'VAR') {
+        const val = !!varVals[node.val];
+        if (stepsArr) stepsArr.push({ expr: node.val, val });
+        return val;
+      }
+
+      if (node.op === '¬') {
+        const sub = evaluateAST(node.arg, varVals, stepsArr);
+        const res = !sub;
+        if (stepsArr) stepsArr.push({ expr: `¬${node.arg.toString()}`, val: res });
+        return res;
+      }
+
+      const leftVal = evaluateAST(node.left, varVals, stepsArr);
+      const rightVal = evaluateAST(node.right, varVals, stepsArr);
+      let res = false;
+
+      switch (node.op) {
+        case '∧': res = leftVal && rightVal; break;
+        case '∨': res = leftVal || rightVal; break;
+        case '⊕': res = leftVal !== rightVal; break;
+        case '→': res = !leftVal || rightVal; break;
+        case '↔': res = leftVal === rightVal; break;
+      }
+
+      if (stepsArr) {
+        stepsArr.push({
+          expr: `${node.left.toString()} ${node.op} ${node.right.toString()}`,
+          val: res
+        });
+      }
+      return res;
+    }
+
+    // Get subexpressions of an AST
+    function collectSubExpressions(node, list = new Set()) {
+      if (!node) return list;
+      if (node.type === 'VAR' || node.type === 'CONST') return list;
+      
+      if (node.left) collectSubExpressions(node.left, list);
+      if (node.right) collectSubExpressions(node.right, list);
+      if (node.arg) collectSubExpressions(node.arg, list);
+
+      list.add(node);
+      return list;
+    }
+
+    // Identify active variables in AST
+    function collectVariables(node, list = new Set()) {
+      if (!node) return list;
+      if (node.type === 'VAR') list.add(node.val);
+      if (node.left) collectVariables(node.left, list);
+      if (node.right) collectVariables(node.right, list);
+      if (node.arg) collectVariables(node.arg, list);
+      return list;
+    }
+
+    // Main Update Cycle
+    function updateCalculator() {
+      const exprString = expressionInput.value.trim();
+      if (!exprString) {
+        validationStatus.textContent = 'Empty Expression';
+        validationStatus.className = 'validation-badge invalid';
+        evalDisplay.innerHTML = `<span style="color: var(--text-muted);">Awaiting logical expression input...</span>`;
+        truthTable.querySelector('thead').innerHTML = '';
+        truthTable.querySelector('tbody').innerHTML = '';
+        metaBadges.innerHTML = '';
+        return;
+      }
+
+      const tokens = tokenize(exprString);
+      const postfix = shuntingYard(tokens);
+      const ast = buildAST(postfix);
+
+      if (!ast) {
+        validationStatus.textContent = 'Syntax Error';
+        validationStatus.className = 'validation-badge invalid';
+        return;
+      }
+
+      // Valid Expression
+      validationStatus.textContent = 'Valid Expression';
+      validationStatus.className = 'validation-badge valid';
+
+      // 1. Step by step output
+      const evaluationSteps = [];
+      const finalResult = evaluateAST(ast, varStates, evaluationSteps);
+
+      let evalHTML = '';
+      evaluationSteps.forEach((step, idx) => {
+        const cleanExpr = step.expr.replace(/^\((.*)\)$/, '$1'); // strip outer parenthesis
+        evalHTML += `<div class="eval-step">Step ${idx + 1}: <span class="highlight">${cleanExpr}</span> ➔ ${step.val ? 'T' : 'F'}</div>`;
+      });
+      evalHTML += `
+        <div class="eval-result">
+          <span>Final Outcome:</span>
+          <span class="badge-val ${finalResult ? 'true' : 'false'}">${finalResult ? 'TRUE (T)' : 'FALSE (F)'}</span>
+        </div>
+      `;
+      evalDisplay.innerHTML = evalHTML;
+
+      // 2. Truth Table generation
+      const activeVars = Array.from(collectVariables(ast)).sort();
+      if (activeVars.length === 0) {
+        // Only constants used
+        return;
+      }
+
+      // Collect intermediate expressions for tabular headers
+      const subExprs = Array.from(collectSubExpressions(ast));
+      
+      // Setup headers
+      let theadHTML = '<tr>';
+      activeVars.forEach(v => theadHTML += `<th>${v}</th>`);
+      subExprs.forEach(sub => {
+        const cleanSub = sub.toString().replace(/^\((.*)\)$/, '$1');
+        theadHTML += `<th>${cleanSub}</th>`;
+      });
+      theadHTML += '</tr>';
+      truthTable.querySelector('thead').innerHTML = theadHTML;
+
+      // Generate binary states combinations
+      const numRows = Math.pow(2, activeVars.length);
+      let tbodyHTML = '';
+
+      let trueRowsCount = 0;
+      let falseRowsCount = 0;
+
+      for (let i = 0; i < numRows; i++) {
+        // Build state values dictionary
+        const rowVals = {};
+        activeVars.forEach((v, idx) => {
+          // bitwise check to generate T/F patterns
+          rowVals[v] = ((i >> (activeVars.length - 1 - idx)) & 1) === 0;
+        });
+
+        tbodyHTML += '<tr>';
+        // Render variables columns
+        activeVars.forEach(v => {
+          tbodyHTML += `<td class="${rowVals[v] ? 'cell-true' : 'cell-false'}">${rowVals[v] ? 'T' : 'F'}</td>`;
+        });
+
+        // Render subexpression intermediate calculations
+        subExprs.forEach((sub, subIdx) => {
+          const res = evaluateAST(sub, rowVals);
+          if (subIdx === subExprs.length - 1) {
+            // Track final column stats
+            if (res) trueRowsCount++;
+            else falseRowsCount++;
+          }
+          tbodyHTML += `<td class="${res ? 'cell-true' : 'cell-false'}">${res ? 'T' : 'F'}</td>`;
+        });
+
+        tbodyHTML += '</tr>';
+      }
+      truthTable.querySelector('tbody').innerHTML = tbodyHTML;
+
+      // 3. Classify expression type (Tautology, Contradiction, Contingency)
+      let classificationBadge = '';
+      if (trueRowsCount === numRows) {
+        classificationBadge = '<span class="meta-badge tautology">Tautology</span>';
+      } else if (falseRowsCount === numRows) {
+        classificationBadge = '<span class="meta-badge contradiction">Contradiction</span>';
+      } else {
+        classificationBadge = '<span class="meta-badge contingency">Contingency</span>';
+      }
+      metaBadges.innerHTML = classificationBadge;
+    }
+
+    // Initialize
+    updateCalculator();
+  </script>
+</body>
+</html>
