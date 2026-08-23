@@ -1081,3 +1081,181 @@
     grid-column: 1;
   }
 }
+
+/* ==========================================================================
+   6. MATTYJACKS.COM HIRE PROMO SECTION
+   ========================================================================== */
+.mattyjacks-promo-section {
+  margin-top: 4rem;
+  padding: 3rem 2rem;
+  background: #050508;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.05), inset 0 0 20px rgba(0, 0, 0, 0.8);
+  position: relative;
+  overflow: hidden;
+  max-width: 800px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: var(--font-accent);
+  text-align: center;
+}
+
+.mattyjacks-promo-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(255, 0, 127, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mattyjacks-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 6px 14px;
+  background: #000;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #10b981;
+  font-family: var(--font-gaming);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+  position: relative;
+  z-index: 1;
+}
+
+.mattyjacks-heading {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  font-family: var(--font-gaming);
+  position: relative;
+  z-index: 1;
+}
+
+.mattyjacks-heading span {
+  color: #10b981;
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+.mattyjacks-subheading {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: 2rem;
+  font-style: italic;
+  position: relative;
+  z-index: 1;
+}
+
+.mattyjacks-pitch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.mattyjacks-pitch-card {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius-md);
+  padding: 1.25rem;
+  text-align: left;
+  transition: all var(--transition-normal);
+}
+
+.mattyjacks-pitch-card:hover {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.02);
+  transform: translateY(-2px);
+}
+
+.mattyjacks-pitch-icon {
+  color: #10b981;
+  margin-bottom: 0.75rem;
+}
+
+.mattyjacks-pitch-title {
+  font-family: var(--font-gaming);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.mattyjacks-pitch-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.mattyjacks-cta-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.mattyjacks-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 2.5rem;
+  border-radius: var(--border-radius-md);
+  background: #10b981;
+  color: #000;
+  font-family: var(--font-gaming);
+  font-size: 0.95rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 1px solid #10b981;
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.3);
+  transition: all var(--transition-normal);
+  text-decoration: none;
+}
+
+.mattyjacks-btn:hover {
+  background: transparent;
+  color: #10b981;
+  box-shadow: 0 0 35px rgba(16, 185, 129, 0.5);
+  transform: translateY(-2px);
+}
+
+.mattyjacks-die-trying {
+  font-family: var(--font-gaming);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ef4444;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  text-shadow: 0 0 8px rgba(239, 68, 68, 0.3);
+  animation: pulse 2s infinite;
+}
+
+@media (max-width: 600px) {
+  .mattyjacks-pitch-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

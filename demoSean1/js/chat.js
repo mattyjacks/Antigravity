@@ -321,7 +321,11 @@ async function sendMessage(text) {
     // Format message logs for system context (keep last 10 messages to avoid large tokens)
     const contextMessages = history.slice(-10);
 
-    const response = await fetch('/api/chat', {
+    const apiEndpoint = window.location.protocol === 'file:' 
+      ? 'http://localhost:3000/api/chat' 
+      : '/api/chat';
+
+    const response = await fetch(apiEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
