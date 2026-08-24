@@ -223,8 +223,8 @@ export class CardDeck {
       if (resetBtn) {
         resetBtn.addEventListener('click', () => {
           synth.playClick();
-          localStorage.removeItem('duoq_swiped_profiles');
-          window.dispatchEvent(new Event('duoqResetDeck'));
+          localStorage.removeItem('carryme_swiped_profiles');
+          window.dispatchEvent(new Event('carrymeResetDeck'));
         });
       }
       

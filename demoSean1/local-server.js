@@ -43,7 +43,7 @@ app.get('*', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`================================================================`);
-  console.log(`🎮 DuoQ Local Development Server Running!`);
+  console.log(`🎮 CarryMe Local Development Server Running!`);
   console.log(`🔗 Address: http://localhost:${PORT}`);
   console.log(`⚙️  Model:   ${process.env.OPENAI_MODEL || 'gpt-5.4-nano-2026-03-17'}`);
   console.log(`🔑 API Key: ${process.env.OPENAI_API_KEY ? 'Configured ✅' : 'DEMO MODE ⚠️ (Use mock responses)'}`);

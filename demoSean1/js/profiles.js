@@ -1,4 +1,4 @@
-// Gamer profiles for DuoQ
+// Gamer profiles for CarryMe
 export const PROFILES = [
   {
     id: "aura_jett",

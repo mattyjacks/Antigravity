@@ -36,12 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
   setupDeckActionButtons();
 
   // Listen to profile change events to refresh deck scores
-  window.addEventListener('duoqUserProfileChanged', () => {
+  window.addEventListener('carrymeUserProfileChanged', () => {
     refreshDeck();
   });
 
   // Listen to deck re-queue events
-  window.addEventListener('duoqResetDeck', () => {
+  window.addEventListener('carrymeResetDeck', () => {
     refreshDeck();
   });
 
@@ -71,7 +71,7 @@ function refreshDeck() {
 
 // Track profile IDs swiped in localStorage to filter them later
 function getSwipedProfiles() {
-  const saved = localStorage.getItem('duoq_swiped_profiles');
+  const saved = localStorage.getItem('carryme_swiped_profiles');
   return saved ? JSON.parse(saved) : [];
 }
 
@@ -79,7 +79,7 @@ function trackSwipedProfile(profileId) {
   const swiped = getSwipedProfiles();
   if (!swiped.includes(profileId)) {
     swiped.push(profileId);
-    localStorage.setItem('duoq_swiped_profiles', JSON.stringify(swiped));
+    localStorage.setItem('carryme_swiped_profiles', JSON.stringify(swiped));
   }
 }
 
@@ -117,8 +117,8 @@ function setupDeckActionButtons() {
             if (idx !== -1) {
               matches[idx].affection = 40; // Starts higher
               matches[idx].affectionReason = "Super Liked by Player 1! Instant connection.";
-              localStorage.setItem('duoq_matches', JSON.stringify(matches));
-              window.dispatchEvent(new Event('duoqMatchesUpdated'));
+              localStorage.setItem('carryme_matches', JSON.stringify(matches));
+              window.dispatchEvent(new Event('carrymeMatchesUpdated'));
             }
           }, 350);
         }
@@ -169,7 +169,7 @@ function initThemeEngine() {
   const themeBtns = document.querySelectorAll('.theme-btn');
   const body = document.body;
   
-  const savedTheme = localStorage.getItem('duoq-theme') || 'cyberpunk';
+  const savedTheme = localStorage.getItem('carryme-theme') || 'cyberpunk';
   applyTheme(savedTheme);
   
   themeBtns.forEach(btn => {
@@ -188,6 +188,6 @@ function initThemeEngine() {
     if (activeBtn) activeBtn.classList.add('active');
     
     body.classList.add(`theme-${themeName}`);
-    localStorage.setItem('duoq-theme', themeName);
+    localStorage.setItem('carryme-theme', themeName);
   }
 }

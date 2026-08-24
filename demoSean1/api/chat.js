@@ -68,7 +68,7 @@ export default async function handler(req, res) {
 
   // Check if API key is configured. If not, run in DEMO Mode.
   if (!apiKey || apiKey.startsWith('your-')) {
-    console.log("DuoQ API Running in Demo Mode (No OpenAI Key)");
+    console.log("CarryMe API Running in Demo Mode (No OpenAI Key)");
     const responseJson = getDemoResponse(characterName, messages, currentAffection);
     return res.status(200).json({ ...responseJson, demo: true });
   }
@@ -76,7 +76,7 @@ export default async function handler(req, res) {
   const openai = new OpenAI({ apiKey });
 
   try {
-    const systemPrompt = `You are roleplaying as ${characterName}, a gamer on a Tinder-like dating app called DuoQ.
+    const systemPrompt = `You are roleplaying as ${characterName}, a gamer on a Tinder-like dating app called CarryMe.
 Your profile details:
 - Bio: ${characterBio}
 - Favorite Games: ${characterGames}

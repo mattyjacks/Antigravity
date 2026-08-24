@@ -1,4 +1,4 @@
-// Profile customization logic for DuoQ
+// Profile customization logic for CarryMe
 export const DEFAULT_USER_PROFILE = {
   tag: "Player1",
   age: 22,
@@ -61,7 +61,7 @@ export function initProfileSettings() {
       roles: Array.from(form.querySelectorAll('input[name="roles"]:checked')).map(cb => cb.value)
     };
 
-    localStorage.setItem('duoq_user_profile', JSON.stringify(updatedProfile));
+    localStorage.setItem('carryme_user_profile', JSON.stringify(updatedProfile));
     
     // Play level up sound
     import('./swipe.js').then(module => {
@@ -72,12 +72,12 @@ export function initProfileSettings() {
     showNotification("Loadout saved successfully! Synergy scores updated.");
 
     // Fire event
-    window.dispatchEvent(new CustomEvent('duoqUserProfileChanged', { detail: updatedProfile }));
+    window.dispatchEvent(new CustomEvent('carrymeUserProfileChanged', { detail: updatedProfile }));
   });
 }
 
 export function getUserProfile() {
-  const saved = localStorage.getItem('duoq_user_profile');
+  const saved = localStorage.getItem('carryme_user_profile');
   if (saved) {
     try {
       return JSON.parse(saved);

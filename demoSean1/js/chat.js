@@ -8,7 +8,7 @@ export function initChatSystem() {
   renderMatchesList();
 
   // Custom event listeners
-  window.addEventListener('duoqMatchesUpdated', () => {
+  window.addEventListener('carrymeMatchesUpdated', () => {
     renderMatchesList();
   });
 
@@ -48,14 +48,14 @@ export function initChatSystem() {
 
 // Retrieve matches list from localStorage
 export function getMatches() {
-  const saved = localStorage.getItem('duoq_matches');
+  const saved = localStorage.getItem('carryme_matches');
   return saved ? JSON.parse(saved) : [];
 }
 
 // Save matches list to localStorage
 export function saveMatches(matches) {
-  localStorage.setItem('duoq_matches', JSON.stringify(matches));
-  window.dispatchEvent(new Event('duoqMatchesUpdated'));
+  localStorage.setItem('carryme_matches', JSON.stringify(matches));
+  window.dispatchEvent(new Event('carrymeMatchesUpdated'));
 }
 
 // Adds a new match to the matched pool
@@ -148,7 +148,7 @@ function clearChatScreen() {
   const chatMessages = document.getElementById('chat-messages-container');
   const chatInputArea = document.getElementById('chat-input-area');
 
-  if (chatHeader) chatHeader.innerHTML = `<h3>DUOQ COMMS TERMINAL</h3>`;
+  if (chatHeader) chatHeader.innerHTML = `<h3>CARRYME COMMS TERMINAL</h3>`;
   if (chatMessages) chatMessages.innerHTML = `
     <div class="empty-chat-placeholder">
       <i data-lucide="message-square" style="width:36px;height:36px;color:var(--text-muted);margin-bottom:1rem;"></i>
@@ -240,13 +240,13 @@ function renderQuickReplies(match) {
 
 // Retrieve chat logs from localStorage
 function getChatHistory(matchId) {
-  const saved = localStorage.getItem(`duoq_chat_${matchId}`);
+  const saved = localStorage.getItem(`carryme_chat_${matchId}`);
   return saved ? JSON.parse(saved) : [];
 }
 
 // Save chat logs to localStorage
 function saveChatHistory(matchId, history) {
-  localStorage.setItem(`duoq_chat_${matchId}`, JSON.stringify(history));
+  localStorage.setItem(`carryme_chat_${matchId}`, JSON.stringify(history));
 }
 
 // Render the messages of selected chat
