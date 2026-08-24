@@ -2,10 +2,12 @@ import { getUserProfile, showNotification } from './profile-settings.js';
 import { synth } from './swipe.js';
 import { CameraEmotionScanner } from './cam-emotion.js';
 import { VoiceTalkEngine } from './voice-engine.js';
+import { Waifu3DEngine } from './waifu-3d.js';
 
 let activeMatchId = null;
 const camScanner = new CameraEmotionScanner();
 const voiceEngine = new VoiceTalkEngine();
+const waifu3d = new Waifu3DEngine();
 let lastAiReplyText = "";
 let isVisionModalOpen = false;
 
@@ -500,6 +502,11 @@ async function sendMessage(text) {
   }
 }
 
+let isAutoDateActive = false;
+let autoTurnsLeft = 6;
+let autoLoopIntervalId = null;
+let lastAutoTurnTime = 0;
+
 // Vision & Voice Date Modal Handlers
 function initVisionDateModalHandlers() {
   const modal = document.getElementById('vision-date-modal');
@@ -508,9 +515,22 @@ function initVisionDateModalHandlers() {
   const scanBtn = document.getElementById('vision-scan-btn');
   const talkBtn = document.getElementById('vision-voice-talk-btn');
   const replayBtn = document.getElementById('vision-replay-voice-btn');
+  const autoDateBtn = document.getElementById('vision-auto-date-btn');
 
   if (closeBtn) closeBtn.addEventListener('click', closeVisionDateModal);
   if (overlay) overlay.addEventListener('click', closeVisionDateModal);
+
+  // Auto Live Date Toggle Button
+  if (autoDateBtn) {
+    autoDateBtn.addEventListener('click', () => {
+      synth.playClick();
+      if (isAutoDateActive) {
+        stopAutoDateMode();
+      } else {
+        startAutoDateMode();
+      }
+    });
+  }
 
   // Manual Face Scan Button
   if (scanBtn) {
@@ -532,7 +552,7 @@ function initVisionDateModalHandlers() {
       if (userCuesVal) userCuesVal.innerText = res.facial_cues;
 
       scanBtn.disabled = false;
-      scanBtn.innerHTML = `<i data-lucide="camera" style="width:16px;height:16px;"></i> Scan My Face Emotion`;
+      scanBtn.innerHTML = `<i data-lucide="camera" style="width:16px;height:16px;"></i> Scan Face`;
       if (window.refreshIcons) window.refreshIcons();
 
       showNotification(`Captured Face Emotion: ${res.primary_emotion}`, 'heart');
@@ -545,16 +565,16 @@ function initVisionDateModalHandlers() {
       synth.playClick();
       if (voiceEngine.isListening) {
         voiceEngine.stopListening();
-        talkBtn.innerHTML = `<i data-lucide="mic" style="width:16px;height:16px;"></i> Push to Talk (Voice Date)`;
+        talkBtn.innerHTML = `<i data-lucide="mic" style="width:16px;height:16px;"></i> Push to Talk`;
         if (window.refreshIcons) window.refreshIcons();
       } else {
-        talkBtn.innerHTML = `<i data-lucide="mic-off" style="width:16px;height:16px;"></i> Listening to Voice...`;
+        talkBtn.innerHTML = `<i data-lucide="mic-off" style="width:16px;height:16px;"></i> Listening...`;
         if (window.refreshIcons) window.refreshIcons();
 
         voiceEngine.startListening(
           (transcript, isFinal) => {
             if (isFinal) {
-              talkBtn.innerHTML = `<i data-lucide="mic" style="width:16px;height:16px;"></i> Push to Talk (Voice Date)`;
+              talkBtn.innerHTML = `<i data-lucide="mic" style="width:16px;height:16px;"></i> Push to Talk`;
               if (window.refreshIcons) window.refreshIcons();
               
               // Automatically scan face + send voice message!
@@ -563,7 +583,7 @@ function initVisionDateModalHandlers() {
             }
           },
           (err) => {
-            talkBtn.innerHTML = `<i data-lucide="mic" style="width:16px;height:16px;"></i> Push to Talk (Voice Date)`;
+            talkBtn.innerHTML = `<i data-lucide="mic" style="width:16px;height:16px;"></i> Push to Talk`;
             if (window.refreshIcons) window.refreshIcons();
           }
         );
@@ -586,6 +606,114 @@ function initVisionDateModalHandlers() {
   }
 }
 
+// Start Auto Live Date Mode (6 Turns, min 10s rate limit)
+function startAutoDateMode() {
+  isAutoDateActive = true;
+  autoTurnsLeft = 6;
+  lastAutoTurnTime = 0;
+
+  const autoBtn = document.getElementById('vision-auto-date-btn');
+  const badge = document.getElementById('auto-session-badge');
+  const counter = document.getElementById('auto-turns-counter');
+
+  if (autoBtn) {
+    autoBtn.classList.add('auto-date-active');
+    autoBtn.innerHTML = `<i data-lucide="pause" style="width:16px;height:16px;"></i> Stop Auto Date`;
+  }
+  if (badge) badge.style.display = 'flex';
+  if (counter) counter.innerText = autoTurnsLeft;
+  if (window.refreshIcons) window.refreshIcons();
+
+  showNotification("🤖 Auto Live Date Mode Started! (6 Turns / Min 10s delay)", 'heart');
+
+  // Run immediate first auto turn
+  executeAutoTurn();
+
+  // Polling loop every 3 seconds to check rate limits & turn triggers
+  if (autoLoopIntervalId) clearInterval(autoLoopIntervalId);
+  autoLoopIntervalId = setInterval(checkAndRunAutoTurn, 3000);
+}
+
+// Stop Auto Live Date Mode
+function stopAutoDateMode(reason = "") {
+  isAutoDateActive = false;
+  if (autoLoopIntervalId) {
+    clearInterval(autoLoopIntervalId);
+    autoLoopIntervalId = null;
+  }
+
+  const autoBtn = document.getElementById('vision-auto-date-btn');
+  const badge = document.getElementById('auto-session-badge');
+
+  if (autoBtn) {
+    autoBtn.classList.remove('auto-date-active');
+    autoBtn.innerHTML = `<i data-lucide="zap" style="width:16px;height:16px;"></i> Auto Live Date (6 Turns)`;
+  }
+  if (badge) badge.style.display = 'none';
+  if (window.refreshIcons) window.refreshIcons();
+
+  if (reason) {
+    showNotification(reason, 'warning');
+  } else {
+    showNotification("Auto Live Date Paused", 'warning');
+  }
+}
+
+// Check rate limiting (minimum 10s between turns) & AI speech state
+async function checkAndRunAutoTurn() {
+  if (!isAutoDateActive || !isVisionModalOpen) {
+    stopAutoDateMode();
+    return;
+  }
+
+  if (autoTurnsLeft <= 0) {
+    stopAutoDateMode("Auto Live Date Session Complete! (6 Turns Limit Reached)");
+    return;
+  }
+
+  // Rate Limiting: Minimum 10 seconds (10,000ms) between turns
+  const now = Date.now();
+  if (now - lastAutoTurnTime < 10000) {
+    return; // Rate limit hold
+  }
+
+  // Do not interrupt if AI is currently speaking or user mic is active
+  if (voiceEngine.isSpeaking || voiceEngine.isListening) {
+    return;
+  }
+
+  executeAutoTurn();
+}
+
+// Execute one auto turn
+async function executeAutoTurn() {
+  lastAutoTurnTime = Date.now();
+  
+  const matches = getMatches();
+  const match = matches.find(m => m.id === activeMatchId);
+  if (!match) return;
+
+  // 1. Capture webcam frame
+  const frameRes = await camScanner.analyzeCurrentFrame(match.tag);
+
+  // 2. Formulate turn observation prompt based on emotion & cues
+  const prompt = `[Auto Vision Observation: My expression is "${frameRes.primary_emotion}" with visual cue "${frameRes.facial_cues}". Chat back with me dynamically based on how I look!]`;
+
+  // 3. Send message & trigger voice reply
+  await sendMessage(prompt);
+
+  // 4. Decrement turns left
+  autoTurnsLeft--;
+  const counter = document.getElementById('auto-turns-counter');
+  if (counter) counter.innerText = autoTurnsLeft;
+
+  if (autoTurnsLeft <= 0) {
+    setTimeout(() => {
+      stopAutoDateMode("Auto Live Date Session Complete! (6 Turns Limit Reached)");
+    }, 5000);
+  }
+}
+
 // Open Vision Date Mode Modal
 export function openVisionDateModal(match) {
   const modal = document.getElementById('vision-date-modal');
@@ -598,6 +726,7 @@ export function openVisionDateModal(match) {
   const canvasElem = document.getElementById('vision-webcam-canvas');
   const fallbackMsg = document.getElementById('cam-fallback-msg');
   const specCanvas = document.getElementById('voice-spectrum-canvas');
+  const waifuContainer = document.getElementById('waifu-3d-container');
 
   // Start Camera Scanner
   camScanner.start(videoElem, canvasElem).then(hasWebcam => {
@@ -609,6 +738,12 @@ export function openVisionDateModal(match) {
   // Bind Voice Engine visualizer canvas
   if (specCanvas) {
     voiceEngine.bindVisualizerCanvas(specCanvas);
+  }
+
+  // Initialize 3D Waifu Engine
+  if (waifuContainer) {
+    waifu3d.init(waifuContainer);
+    waifu3d.loadWaifuTexture(match.tag, match.currentEmotion || 'Smiling');
   }
 
   // Subscribe to webcam emotion updates
@@ -630,6 +765,7 @@ export function closeVisionDateModal() {
   isVisionModalOpen = false;
   camScanner.stop();
   voiceEngine.stopSpeaking();
+  waifu3d.destroy();
 }
 
 // Update Vision Date UI elements for current match
@@ -642,7 +778,13 @@ function updateVisionDateUI(match) {
   if (avatarElem) avatarElem.innerText = match.avatar;
   if (moodElem) moodElem.innerText = match.currentEmotion || "Neutral 😊";
   if (reactionElem) reactionElem.innerText = `"${match.emotionReaction || 'Reacting to your presence'}"`;
-  if (badgeElem) badgeElem.innerText = `${match.tag.toUpperCase()} HOLOGRAM`;
+  if (badgeElem) badgeElem.innerText = `${match.tag.toUpperCase()} 3D AI WAIFU`;
+
+  // Update 3D Waifu Mesh Emotion & Speech Lip-Sync State
+  if (waifu3d.initialized) {
+    waifu3d.updateEmotion(match.currentEmotion || "Neutral 😊");
+    waifu3d.setSpeakingState(voiceEngine.isSpeaking);
+  }
 }
 
 // Spawn floating particle effects on match hologram (Hearts, Sparkles, Fire)

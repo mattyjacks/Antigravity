@@ -1573,4 +1573,63 @@
   padding-top: 1rem;
 }
 
+.btn-accent {
+  background: linear-gradient(135deg, #00f0ff 0%, #ff007f 100%);
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+}
+
+.btn-accent:hover {
+  box-shadow: 0 0 25px rgba(255, 0, 127, 0.6);
+  transform: translateY(-2px);
+}
+
+.auto-date-active {
+  background: #ff007f !important;
+  box-shadow: 0 0 20px #ff007f !important;
+  animation: pulse 1.2s infinite;
+}
+
+.auto-session-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(0, 240, 255, 0.15);
+  border: 1px solid #00f0ff;
+  color: #00f0ff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-family: var(--font-gaming);
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+.waifu-3d-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.waifu-3d-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+.match-holo-avatar {
+  position: relative;
+  z-index: 2;
+}
+
+.match-emotion-ring {
+  position: relative;
+  z-index: 2;
+}
+
+
+
 

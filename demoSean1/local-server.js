@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import chatHandler from './api/chat.js';
 import camEmotionHandler from './api/cam-emotion.js';
 import ttsHandler from './api/tts.js';
+import waifuImageHandler from './api/waifu-image.js';
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ const mockVercelRes = (res) => {
 app.post('/api/chat', (req, res) => chatHandler(req, mockVercelRes(res)));
 app.post('/api/cam-emotion', (req, res) => camEmotionHandler(req, mockVercelRes(res)));
 app.post('/api/tts', (req, res) => ttsHandler(req, mockVercelRes(res)));
+app.post('/api/waifu-image', (req, res) => waifuImageHandler(req, mockVercelRes(res)));
 
 // Serve index.html for any other route
 app.get('*', (req, res) => {

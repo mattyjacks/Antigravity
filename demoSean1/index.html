@@ -164,6 +164,10 @@
           <span>AI VISION & DYNAMIC VOICE DATE LAB</span>
         </div>
         <div class="vision-header-controls">
+          <div class="auto-session-badge" id="auto-session-badge" style="display:none;">
+            <i data-lucide="bot" style="width:14px;height:14px;"></i>
+            AUTO DATE: <span id="auto-turns-counter">6</span> TURNS LEFT
+          </div>
           <label class="auto-voice-toggle">
             <input type="checkbox" id="vision-auto-voice-chk" checked>
             <span>Auto OpenAI Voice</span>
@@ -199,8 +203,9 @@
 
         <!-- Right: AI Match Dynamic Hologram & Emotion Ring -->
         <div class="vision-feed-box match-holo-box">
-          <div class="feed-badge" id="match-holo-badge">PLAYER TWO HOLOGRAM</div>
+          <div class="feed-badge" id="match-holo-badge">PLAYER TWO 3D WAIFU HOLOGRAM</div>
           <div class="match-holo-wrapper" id="match-holo-wrapper">
+            <div class="waifu-3d-container" id="waifu-3d-container"></div>
             <div class="match-holo-avatar" id="vision-match-avatar">☄️</div>
             <div class="match-emotion-ring" id="match-emotion-ring">
               <span class="match-mood-badge" id="vision-match-mood">Flustered 😳</span>
@@ -221,17 +226,21 @@
 
       <!-- Action Controls Bar -->
       <div class="vision-date-actions">
+        <button class="btn btn-accent" id="vision-auto-date-btn">
+          <i data-lucide="zap" style="width:16px;height:16px;"></i>
+          Auto Live Date (6 Turns)
+        </button>
         <button class="btn btn-secondary" id="vision-scan-btn">
           <i data-lucide="camera" style="width:16px;height:16px;"></i>
-          Scan My Face Emotion
+          Scan Face
         </button>
         <button class="btn btn-primary" id="vision-voice-talk-btn">
           <i data-lucide="mic" style="width:16px;height:16px;"></i>
-          Push to Talk (Voice Date)
+          Push to Talk
         </button>
         <button class="btn btn-secondary" id="vision-replay-voice-btn">
           <i data-lucide="volume-2" style="width:16px;height:16px;"></i>
-          Replay AI Voice
+          Replay Voice
         </button>
       </div>
     </div>
@@ -372,6 +381,9 @@
       <button class="btn btn-secondary" id="close-privacy-btn">Close Disclosures</button>
     </div>
   </div>
+
+  <!-- Three.js 3D WebGL Engine Loader -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <!-- Lucide Icons CDN Loader -->
   <script src="https://unpkg.com/lucide@latest"></script>
