@@ -1653,6 +1653,81 @@
   z-index: 2;
 }
 
+/* Embedded Vision Date Chat Transcript Log Box */
+.vision-chat-log-box {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.vision-chat-messages {
+  max-height: 120px;
+  min-height: 80px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-right: 0.25rem;
+}
+
+.vision-chat-msg {
+  font-size: 0.78rem;
+  line-height: 1.4;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  max-width: 90%;
+  word-break: break-word;
+}
+
+.vision-chat-msg.user {
+  align-self: flex-end;
+  background: rgba(0, 240, 255, 0.15);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: var(--text-primary);
+}
+
+.vision-chat-msg.match {
+  align-self: flex-start;
+  background: rgba(255, 0, 127, 0.15);
+  border: 1px solid rgba(255, 0, 127, 0.3);
+  color: var(--text-primary);
+}
+
+.vision-chat-msg.system-msg {
+  align-self: center;
+  background: transparent;
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.vision-chat-input-wrap {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.vision-chat-input-wrap input {
+  flex: 1;
+  background: rgba(10, 15, 25, 0.8);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  padding: 0.4rem 0.75rem;
+  color: var(--text-primary);
+  font-size: 0.78rem;
+}
+
+.vision-chat-input-wrap input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
 @media (max-width: 640px) {
   .vision-date-modal .vision-date-card {
     width: 96%;

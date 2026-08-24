@@ -220,6 +220,46 @@ export class Waifu3DEngine {
     return new THREE.CanvasTexture(canvas);
   }
 
+  // Key out white background of face.jpg to create a seamless transparent anime face overlay
+  createAlphaMaskedFaceTexture(image) {
+    const canvas = document.createElement('canvas');
+    canvas.width = image.width || 512;
+    canvas.height = image.height || 512;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(image, 0, 0);
+
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imgData.data;
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const maxR = canvas.width * 0.44;
+
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+
+      const px = (i / 4) % canvas.width;
+      const py = Math.floor((i / 4) / canvas.width);
+      const dist = Math.hypot(px - cx, py - cy);
+
+      // If near pure white or outside face radial boundary, make transparent
+      if ((r > 235 && g > 235 && b > 235) || dist > maxR) {
+        if (dist > maxR) {
+          const alphaFade = Math.max(0, 1 - (dist - maxR) / 25);
+          data[i + 3] = Math.floor(data[i + 3] * alphaFade);
+        } else {
+          data[i + 3] = 0;
+        }
+      }
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+    return texture;
+  }
+
   // Construct High-Poly Realistic Anime Waifu Mesh
   buildWaifuModel() {
     this.waifuGroup = new THREE.Group();
@@ -230,7 +270,7 @@ export class Waifu3DEngine {
     const textureLoader = new THREE.TextureLoader();
 
     // -------------------------------------------------------------------------
-    // 1. SCULPTED HIGH-POLY HEAD BASE & FACE OVERLAY (64x64 segments = 4,225 vertices)
+    // 1. SCULPTED HIGH-POLY HEAD BASE & CURVED FACE OVERLAY
     // -------------------------------------------------------------------------
     const headGeo = new THREE.SphereGeometry(1.15, 64, 64);
     const pos = headGeo.attributes.position;
@@ -239,13 +279,11 @@ export class Waifu3DEngine {
       let x = pos.getX(i);
       let z = pos.getZ(i);
 
-      // Taper chin and narrow jawline for anime face shape
       if (y < 0) {
         let factor = 1 + y * 0.28;
         pos.setX(i, x * factor);
         pos.setZ(i, z * Math.max(0.65, factor));
       }
-      // Slight cheek bulge
       if (y > -0.4 && y < 0.2 && z > 0) {
         pos.setZ(i, z * 1.05);
       }
@@ -255,33 +293,37 @@ export class Waifu3DEngine {
     const defaultFaceTex = this.generateFallbackFaceTexture();
     this.faceMaterial = new THREE.MeshPhongMaterial({
       map: defaultFaceTex,
-      shininess: 20,
-      specular: 0x333333
+      shininess: 25,
+      specular: 0x444444
     });
 
     this.faceMesh = new THREE.Mesh(headGeo, this.faceMaterial);
     this.headGroup.add(this.faceMesh);
 
-    // Front Face Overlay Plane for Authentic face.jpg Mapping without Spherical Distortion
-    const faceOverlayGeo = new THREE.PlaneGeometry(1.7, 1.8, 32, 32);
+    // Front Face Overlay Mesh (Curved Sphere Shell fitting head contour)
+    const faceOverlayGeo = new THREE.SphereGeometry(
+      1.154, 32, 32,
+      -Math.PI * 0.35, Math.PI * 0.7,
+      Math.PI * 0.18, Math.PI * 0.65
+    );
+
     this.faceOverlayMaterial = new THREE.MeshBasicMaterial({
       map: defaultFaceTex,
       transparent: true,
-      opacity: 0.98,
+      opacity: 0.99,
       side: THREE.DoubleSide
     });
 
-    textureLoader.load('assets/waifu_textures/face.jpg', (tex) => {
-      tex.wrapS = THREE.ClampToEdgeWrapping;
-      tex.wrapT = THREE.ClampToEdgeWrapping;
-      this.faceOverlayMaterial.map = tex;
+    textureLoader.load('assets/waifu_textures/face.jpg', (imageElem) => {
+      // Process image with alpha keying to remove white square background
+      const maskedTex = this.createAlphaMaskedFaceTexture(imageElem.image || imageElem);
+      this.faceOverlayMaterial.map = maskedTex;
       this.faceOverlayMaterial.needsUpdate = true;
-      this.faceMaterial.map = tex;
+      this.faceMaterial.map = maskedTex;
       this.faceMaterial.needsUpdate = true;
     });
 
     this.faceOverlayMesh = new THREE.Mesh(faceOverlayGeo, this.faceOverlayMaterial);
-    this.faceOverlayMesh.position.set(0, -0.02, 1.02);
     this.headGroup.add(this.faceOverlayMesh);
 
     // -------------------------------------------------------------------------

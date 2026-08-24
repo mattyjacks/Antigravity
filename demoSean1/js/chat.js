@@ -477,6 +477,7 @@ async function sendMessage(text) {
     // Trigger Vision Date UI update if open
     if (isVisionModalOpen) {
       updateVisionDateUI(match);
+      renderVisionDateChat(activeMatchId);
       spawnEmotionParticles(data.match_emotion);
     }
 
@@ -507,6 +508,7 @@ async function sendMessage(text) {
     history.push(replyMessage);
     saveChatHistory(activeMatchId, history);
     renderChatMessages(activeMatchId);
+    if (isVisionModalOpen) renderVisionDateChat(activeMatchId);
   }
 }
 
@@ -514,6 +516,38 @@ let isAutoDateActive = false;
 let autoTurnsLeft = 6;
 let autoLoopIntervalId = null;
 let lastAutoTurnTime = 0;
+
+// Render embedded live date chat transcript inside Vision Date Modal
+function renderVisionDateChat(matchId) {
+  const container = document.getElementById('vision-chat-messages');
+  if (!container) return;
+
+  const history = getChatHistory(matchId);
+  const matches = getMatches();
+  const match = matches.find(m => m.id === matchId);
+  const matchName = match ? match.tag : 'Match';
+
+  container.innerHTML = '';
+
+  if (history.length === 0) {
+    container.innerHTML = `
+      <div class="vision-chat-msg system-msg">
+        <span>💖 Connected live with ${matchName}. Chat by typing below, talking on mic, or starting Auto Date!</span>
+      </div>
+    `;
+    return;
+  }
+
+  history.slice(-10).forEach(msg => {
+    const isUser = msg.sender === 'You';
+    const div = document.createElement('div');
+    div.className = `vision-chat-msg ${isUser ? 'user' : 'match'}`;
+    div.innerHTML = `<strong>${isUser ? 'You' : matchName}:</strong> ${escapeHtml(msg.text)}`;
+    container.appendChild(div);
+  });
+
+  container.scrollTop = container.scrollHeight;
+}
 
 // Register Voice Barge-In Interruption Callback
 voiceEngine.onInterrupt(() => {
@@ -533,9 +567,26 @@ function initVisionDateModalHandlers() {
   const talkBtn = document.getElementById('vision-voice-talk-btn');
   const replayBtn = document.getElementById('vision-replay-voice-btn');
   const autoDateBtn = document.getElementById('vision-auto-date-btn');
+  const modalSendBtn = document.getElementById('vision-modal-chat-send');
+  const modalInput = document.getElementById('vision-modal-chat-input');
 
   if (closeBtn) closeBtn.addEventListener('click', closeVisionDateModal);
   if (overlay) overlay.addEventListener('click', closeVisionDateModal);
+
+  // Embedded Vision Modal Chat Input handlers
+  if (modalSendBtn && modalInput) {
+    const handleModalSend = () => {
+      const text = modalInput.value.trim();
+      if (!text || !activeMatchId) return;
+      sendMessage(text);
+      modalInput.value = '';
+    };
+
+    modalSendBtn.addEventListener('click', handleModalSend);
+    modalInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleModalSend();
+    });
+  }
 
   // Auto Live Date Toggle Button
   if (autoDateBtn) {
@@ -590,13 +641,10 @@ function initVisionDateModalHandlers() {
 
         voiceEngine.startListening(
           (transcript, isFinal) => {
-            if (isFinal) {
+            if (isFinal && transcript.trim()) {
               talkBtn.innerHTML = `<i data-lucide="mic" style="width:16px;height:16px;"></i> Push to Talk`;
               if (window.refreshIcons) window.refreshIcons();
-              
-              // Automatically scan face + send voice message!
-              camScanner.analyzeCurrentFrame();
-              sendMessage(transcript);
+              sendMessage(transcript.trim());
             }
           },
           (err) => {
@@ -623,7 +671,7 @@ function initVisionDateModalHandlers() {
   }
 }
 
-// Start Auto Live Date Mode (6 Turns, min 10s rate limit)
+// Start Auto Live Date Mode (6 Turns, min 10s rate limit + Interactive Mic Listening)
 export function startAutoDateMode() {
   isAutoDateActive = true;
   autoTurnsLeft = 6;
@@ -641,7 +689,20 @@ export function startAutoDateMode() {
   if (counter) counter.innerText = autoTurnsLeft;
   if (window.refreshIcons) window.refreshIcons();
 
-  showNotification("🤖 Auto Live Date Mode Started! (6 Turns / Min 10s delay)", 'heart');
+  showNotification("🤖 Auto Live Date Mode Started! Speak into your mic or watch the AI date react!", 'heart');
+
+  // Activate Mic Listening so bot hears user voice in real-time during Auto Date
+  if (voiceEngine.isSTTSupported()) {
+    voiceEngine.startListening(
+      (transcript, isFinal) => {
+        if (isFinal && transcript.trim()) {
+          showNotification(`🎙️ Heard: "${transcript.trim()}"`, 'heart');
+          sendMessage(transcript.trim());
+        }
+      },
+      (err) => {}
+    );
+  }
 
   // Run immediate first auto turn
   executeAutoTurn();
@@ -658,6 +719,8 @@ function stopAutoDateMode(reason = "") {
     clearInterval(autoLoopIntervalId);
     autoLoopIntervalId = null;
   }
+
+  voiceEngine.stopListening();
 
   const autoBtn = document.getElementById('vision-auto-date-btn');
   const badge = document.getElementById('auto-session-badge');
@@ -775,6 +838,7 @@ export function openVisionDateModal(match) {
   });
 
   updateVisionDateUI(match);
+  renderVisionDateChat(match.id);
 }
 
 // Close Vision Date Mode Modal
