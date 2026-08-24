@@ -132,7 +132,12 @@ Make sure the response is valid JSON. Do not include markdown code block styling
       response_format: { type: "json_object" }
     });
 
-    const outputText = completion.choices[0].message.content.trim();
+    let outputText = completion.choices[0].message.content.trim();
+    if (outputText.startsWith('```json')) {
+      outputText = outputText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+    } else if (outputText.startsWith('```')) {
+      outputText = outputText.replace(/^```\s*/, '').replace(/\s*```$/, '');
+    }
     const result = JSON.parse(outputText);
     
     return res.status(200).json(result);

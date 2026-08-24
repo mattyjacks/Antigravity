@@ -1,7 +1,11 @@
 /**
- * Three.js High-Detail Anime Realistic 3D Waifu Rendering Engine
- * Features Procedural Anime Textures (Skin, Eyes, Hair Highlights, Cyber Outfit),
- * Layered Anime Hairstyle, Morphable Face Rigging, and DALL-E 2 Texture Integration
+ * Three.js High-Detail 3D Anime Waifu Rendering & Animation Engine
+ * Features:
+ * - High-poly geometry (>20,000 vertices total)
+ * - Authentic texture integration (face.jpg, eyes.jpg, hair.jpg, outfit.jpg)
+ * - Dynamic facial rigging & animation (blinking, eye darting/tracking, speech lip-sync)
+ * - Animated Ahoge hair bounce, idle breathing, floating cyber halo, and particle physics
+ * - Non-destructive emotion-based material lighting & blush controls
  */
 
 export class Waifu3DEngine {
@@ -12,7 +16,7 @@ export class Waifu3DEngine {
     this.renderer = null;
     this.animFrameId = null;
 
-    // 3D Model Hierarchy
+    // 3D Model Hierarchy Groups
     this.waifuGroup = new THREE.Group();
     this.headGroup = new THREE.Group();
     this.hairGroup = new THREE.Group();
@@ -21,13 +25,25 @@ export class Waifu3DEngine {
     // Body Part Meshes & Materials
     this.faceMesh = null;
     this.faceMaterial = null;
+    this.faceOverlayMesh = null;
+    this.faceOverlayMaterial = null;
+    
     this.eyeLeftMesh = null;
     this.eyeRightMesh = null;
     this.eyeMaterial = null;
+    this.eyelidLeft = null;
+    this.eyelidRight = null;
+    this.eyebrowLeft = null;
+    this.eyebrowRight = null;
+
     this.mouthMesh = null;
     this.mouthMaterial = null;
-    this.hairMesh = null;
+    this.blushLeft = null;
+    this.blushRight = null;
+    this.blushMaterial = null;
+
     this.hairMaterial = null;
+    this.ahogeMesh = null;
     this.outfitMesh = null;
     this.outfitMaterial = null;
     this.haloRing = null;
@@ -38,12 +54,24 @@ export class Waifu3DEngine {
     this.ambientLight = null;
     this.dirLight = null;
     this.rimLight = null;
+    this.facePointLight = null;
 
-    // State & Animation
+    // Animation & State Tracking
     this.isSpeaking = false;
     this.currentEmotion = 'Neutral 😊';
     this.time = 0;
     this.blinkTimer = 0;
+    this.isBlinking = false;
+    
+    this.eyeTargetX = 0;
+    this.eyeTargetY = 0;
+    this.eyeCurrentX = 0;
+    this.eyeCurrentY = 0;
+    this.nextEyeLookTime = 0;
+
+    this.resizeObserver = null;
+    this.onWindowResize = this.handleResize.bind(this);
+
     this.initialized = false;
   }
 
@@ -52,39 +80,51 @@ export class Waifu3DEngine {
     this.container = containerElem;
     this.container.innerHTML = '';
 
-    const width = containerElem.clientWidth || 300;
-    const height = containerElem.clientHeight || 250;
+    const width = containerElem.clientWidth || 340;
+    const height = containerElem.clientHeight || 300;
 
     // Scene
     this.scene = new THREE.Scene();
 
     // Camera
-    this.camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
-    this.camera.position.set(0, 0.2, 6.5);
+    this.camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 1000);
+    this.camera.position.set(0, 0.15, 6.2);
 
-    // Renderer
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    // WebGL Renderer with High-Quality Shadows & Antialiasing
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.container.appendChild(this.renderer.domElement);
 
-    // Lighting setup for anime shading
-    this.ambientLight = new THREE.AmbientLight(0xfff0f5, 0.9);
+    // Auto-responsive resize observer
+    if (window.ResizeObserver) {
+      this.resizeObserver = new ResizeObserver(() => this.handleResize());
+      this.resizeObserver.observe(this.container);
+    }
+    window.addEventListener('resize', this.onWindowResize);
+
+    // Studio Lighting for Anime Aesthetic
+    this.ambientLight = new THREE.AmbientLight(0xfff0f5, 0.95);
     this.scene.add(this.ambientLight);
 
-    this.dirLight = new THREE.DirectionalLight(0xff007f, 1.2);
+    this.dirLight = new THREE.DirectionalLight(0xff66bb, 1.25);
     this.dirLight.position.set(3, 4, 5);
     this.scene.add(this.dirLight);
 
-    this.rimLight = new THREE.PointLight(0x00f0ff, 2.5, 10);
-    this.rimLight.position.set(-3, 2, -2);
+    this.rimLight = new THREE.PointLight(0x00f0ff, 2.5, 12);
+    this.rimLight.position.set(-3.5, 2.5, -2);
     this.scene.add(this.rimLight);
 
-    // Build Detailed Anime Waifu
+    this.facePointLight = new THREE.PointLight(0xffe6f2, 0.8, 5);
+    this.facePointLight.position.set(0, 0.5, 3);
+    this.scene.add(this.facePointLight);
+
+    // Construct High-Poly 3D Waifu
     this.buildWaifuModel();
 
-    // Build Floating Particle Effects
+    // Construct Ambient Floating Particles
     this.buildParticles();
 
     this.initialized = true;
@@ -93,115 +133,67 @@ export class Waifu3DEngine {
     return true;
   }
 
-  // Generate Procedural Textures for Each Body Part
-  generateFaceTexture(blushColor = '#ff66aa') {
+  // Generate High-Quality Canvas Fallback Textures (Used if image loading is delayed)
+  generateFallbackFaceTexture(blushColor = '#ff66aa') {
     const canvas = document.createElement('canvas');
     canvas.width = 512;
     canvas.height = 512;
     const ctx = canvas.getContext('2d');
 
-    // Base skin tone gradient
     const skinGrad = ctx.createLinearGradient(0, 0, 0, 512);
-    skinGrad.addColorStop(0, '#fff5f0');
-    skinGrad.addColorStop(0.5, '#ffebe3');
-    skinGrad.addColorStop(1, '#ffd9cd');
+    skinGrad.addColorStop(0, '#fff6f2');
+    skinGrad.addColorStop(0.6, '#ffece4');
+    skinGrad.addColorStop(1, '#ffd6c9');
     ctx.fillStyle = skinGrad;
     ctx.fillRect(0, 0, 512, 512);
 
-    // Soft Anime Cheek Blush
-    const drawBlush = (x, y) => {
-      const g = ctx.createRadialGradient(x, y, 5, x, y, 60);
-      g.addColorStop(0, blushColor);
-      g.addColorStop(0.6, 'rgba(255, 100, 150, 0.2)');
-      g.addColorStop(1, 'rgba(255, 235, 227, 0)');
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(x, y, 60, 0, Math.PI * 2);
-      ctx.fill();
-    };
-
-    drawBlush(150, 310);
-    drawBlush(362, 310);
-
-    // Subtle Anime Nose Dot
-    ctx.fillStyle = '#e8a598';
-    ctx.beginPath();
-    ctx.arc(256, 330, 3, 0, Math.PI * 2);
-    ctx.fill();
-
     return new THREE.CanvasTexture(canvas);
   }
 
-  generateAnimeEyeTexture(irisColor = '#00f0ff') {
+  generateFallbackEyeTexture(irisColor = '#00f0ff') {
     const canvas = document.createElement('canvas');
     canvas.width = 512;
     canvas.height = 512;
     const ctx = canvas.getContext('2d');
 
-    // Sclera (White background)
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, 512, 512);
 
-    // Iris Outer Circle & Gradient
-    const irisGrad = ctx.createLinearGradient(256, 100, 256, 420);
-    irisGrad.addColorStop(0, irisColor);
-    irisGrad.addColorStop(0.5, '#0088cc');
-    irisGrad.addColorStop(1, '#001a33');
-
-    ctx.fillStyle = irisGrad;
+    const grad = ctx.createRadialGradient(256, 256, 30, 256, 256, 200);
+    grad.addColorStop(0, '#000000');
+    grad.addColorStop(0.3, irisColor);
+    grad.addColorStop(0.8, '#ff00aa');
+    grad.addColorStop(1, '#050714');
+    ctx.fillStyle = grad;
     ctx.beginPath();
-    ctx.ellipse(256, 260, 140, 180, 0, 0, Math.PI * 2);
+    ctx.arc(256, 256, 200, 0, Math.PI * 2);
     ctx.fill();
 
-    // Pupil
-    ctx.fillStyle = '#050714';
-    ctx.beginPath();
-    ctx.ellipse(256, 260, 60, 90, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Anime Catchlights / Star Highlights
+    // Catchlight Highlights
     ctx.fillStyle = '#ffffff';
     ctx.beginPath();
-    ctx.arc(200, 180, 35, 0, Math.PI * 2);
+    ctx.arc(200, 180, 40, 0, Math.PI * 2);
     ctx.fill();
-
     ctx.beginPath();
-    ctx.arc(300, 330, 20, 0, Math.PI * 2);
+    ctx.arc(310, 310, 22, 0, Math.PI * 2);
     ctx.fill();
-
-    // Inner Star Burst
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-    ctx.font = 'bold 45px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('✦', 256, 275);
 
     return new THREE.CanvasTexture(canvas);
   }
 
-  generateHairTexture(hairColor = '#ff007f') {
+  generateFallbackHairTexture() {
     const canvas = document.createElement('canvas');
     canvas.width = 512;
     canvas.height = 512;
     const ctx = canvas.getContext('2d');
 
-    // Hair Base Color
-    ctx.fillStyle = hairColor;
+    ctx.fillStyle = '#ff007f';
     ctx.fillRect(0, 0, 512, 512);
 
-    // Hair Strand Details
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-    ctx.lineWidth = 2;
-    for (let i = 0; i < 512; i += 6) {
-      ctx.beginPath();
-      ctx.moveTo(i, 0);
-      ctx.lineTo(i + (Math.random() * 40 - 20), 512);
-      ctx.stroke();
-    }
-
-    // Anime Hair Specular Highlight Band ("Tenshi no Ring")
+    // Specular Highlight Band
     const ringGrad = ctx.createLinearGradient(0, 180, 0, 240);
     ringGrad.addColorStop(0, 'rgba(255, 255, 255, 0)');
-    ringGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.85)');
+    ringGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.9)');
     ringGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
     ctx.fillStyle = ringGrad;
     ctx.fillRect(0, 180, 512, 60);
@@ -209,159 +201,249 @@ export class Waifu3DEngine {
     return new THREE.CanvasTexture(canvas);
   }
 
-  generateCyberOutfitTexture() {
+  generateFallbackOutfitTexture() {
     const canvas = document.createElement('canvas');
     canvas.width = 512;
     canvas.height = 512;
     const ctx = canvas.getContext('2d');
 
-    // Dark Cyber Fabric
-    ctx.fillStyle = '#0d111e';
+    ctx.fillStyle = '#0f1423';
     ctx.fillRect(0, 0, 512, 512);
 
-    // Neon Cyber Trim Lines
     ctx.strokeStyle = '#00f0ff';
-    ctx.lineWidth = 8;
+    ctx.lineWidth = 10;
     ctx.beginPath();
     ctx.moveTo(0, 100); ctx.lineTo(512, 100);
     ctx.moveTo(256, 100); ctx.lineTo(256, 512);
     ctx.stroke();
 
-    ctx.strokeStyle = '#ff007f';
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.arc(256, 256, 150, 0, Math.PI * 2);
-    ctx.stroke();
-
     return new THREE.CanvasTexture(canvas);
   }
 
-  // Construct Realistic Anime Waifu Mesh Structure
+  // Construct High-Poly Realistic Anime Waifu Mesh
   buildWaifuModel() {
     this.waifuGroup = new THREE.Group();
     this.headGroup = new THREE.Group();
     this.hairGroup = new THREE.Group();
     this.bodyGroup = new THREE.Group();
 
-    // Texture loader helper
     const textureLoader = new THREE.TextureLoader();
 
-    // 1. Anime Face Mesh (Tapered chin, smooth cheeks)
-    const faceGeo = new THREE.SphereGeometry(1.1, 32, 32);
-    const pos = faceGeo.attributes.position;
+    // -------------------------------------------------------------------------
+    // 1. SCULPTED HIGH-POLY HEAD BASE & FACE OVERLAY (64x64 segments = 4,225 vertices)
+    // -------------------------------------------------------------------------
+    const headGeo = new THREE.SphereGeometry(1.15, 64, 64);
+    const pos = headGeo.attributes.position;
     for (let i = 0; i < pos.count; i++) {
       let y = pos.getY(i);
       let x = pos.getX(i);
       let z = pos.getZ(i);
+
+      // Taper chin and narrow jawline for anime face shape
       if (y < 0) {
-        pos.setX(i, x * (1 + y * 0.25));
-        pos.setZ(i, z * (1 + y * 0.25));
+        let factor = 1 + y * 0.28;
+        pos.setX(i, x * factor);
+        pos.setZ(i, z * Math.max(0.65, factor));
+      }
+      // Slight cheek bulge
+      if (y > -0.4 && y < 0.2 && z > 0) {
+        pos.setZ(i, z * 1.05);
       }
     }
-    faceGeo.computeVertexNormals();
+    headGeo.computeVertexNormals();
 
-    const defaultFaceTex = this.generateFaceTexture('#ff66aa');
+    const defaultFaceTex = this.generateFallbackFaceTexture();
     this.faceMaterial = new THREE.MeshPhongMaterial({
       map: defaultFaceTex,
-      shininess: 15,
-      specular: 0x222222
+      shininess: 20,
+      specular: 0x333333
     });
+
+    this.faceMesh = new THREE.Mesh(headGeo, this.faceMaterial);
+    this.headGroup.add(this.faceMesh);
+
+    // Front Face Overlay Plane for Authentic face.jpg Mapping without Spherical Distortion
+    const faceOverlayGeo = new THREE.PlaneGeometry(1.7, 1.8, 32, 32);
+    this.faceOverlayMaterial = new THREE.MeshBasicMaterial({
+      map: defaultFaceTex,
+      transparent: true,
+      opacity: 0.98,
+      side: THREE.DoubleSide
+    });
+
     textureLoader.load('assets/waifu_textures/face.jpg', (tex) => {
+      tex.wrapS = THREE.ClampToEdgeWrapping;
+      tex.wrapT = THREE.ClampToEdgeWrapping;
+      this.faceOverlayMaterial.map = tex;
+      this.faceOverlayMaterial.needsUpdate = true;
       this.faceMaterial.map = tex;
       this.faceMaterial.needsUpdate = true;
     });
 
-    this.faceMesh = new THREE.Mesh(faceGeo, this.faceMaterial);
-    this.headGroup.add(this.faceMesh);
+    this.faceOverlayMesh = new THREE.Mesh(faceOverlayGeo, this.faceOverlayMaterial);
+    this.faceOverlayMesh.position.set(0, -0.02, 1.02);
+    this.headGroup.add(this.faceOverlayMesh);
 
-    // 2. Realistic Curved Anime Eyes with Eyelashes
-    const eyeGeo = new THREE.PlaneGeometry(0.55, 0.7);
-    const defaultEyeTex = this.generateAnimeEyeTexture('#00f0ff');
+    // -------------------------------------------------------------------------
+    // 2. 3D EYE SOCKETS, IRIS DISCS & EYE ANIMATION RIG
+    // -------------------------------------------------------------------------
+    const eyeIrisGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.04, 32);
+    eyeIrisGeo.rotateX(Math.PI / 2);
+
+    const defaultEyeTex = this.generateFallbackEyeTexture();
     this.eyeMaterial = new THREE.MeshBasicMaterial({
       map: defaultEyeTex,
       transparent: true,
       side: THREE.DoubleSide
     });
+
     textureLoader.load('assets/waifu_textures/eyes.jpg', (tex) => {
       this.eyeMaterial.map = tex;
       this.eyeMaterial.needsUpdate = true;
     });
 
-    this.eyeLeftMesh = new THREE.Mesh(eyeGeo, this.eyeMaterial);
-    this.eyeLeftMesh.position.set(-0.42, 0.12, 1.02);
-    this.eyeLeftMesh.rotation.y = 0.2;
+    // Left Eye Iris Mesh
+    this.eyeLeftMesh = new THREE.Mesh(eyeIrisGeo, this.eyeMaterial);
+    this.eyeLeftMesh.position.set(-0.38, 0.08, 1.05);
     this.headGroup.add(this.eyeLeftMesh);
 
-    this.eyeRightMesh = new THREE.Mesh(eyeGeo, this.eyeMaterial);
-    this.eyeRightMesh.position.set(0.42, 0.12, 1.02);
-    this.eyeRightMesh.rotation.y = -0.2;
+    // Right Eye Iris Mesh
+    this.eyeRightMesh = new THREE.Mesh(eyeIrisGeo, this.eyeMaterial);
+    this.eyeRightMesh.position.set(0.38, 0.08, 1.05);
     this.headGroup.add(this.eyeRightMesh);
 
-    // Anime Eyelash Brushes
-    const lashGeo = new THREE.TorusGeometry(0.32, 0.03, 8, 16, Math.PI * 0.7);
-    const lashMat = new THREE.MeshBasicMaterial({ color: 0x050714 });
+    // 3D Eyelids for Blinking Animation (Torus Ribbons)
+    const eyelidGeo = new THREE.TorusGeometry(0.27, 0.04, 16, 32, Math.PI);
+    const eyelidMat = new THREE.MeshPhongMaterial({ color: 0xffdbd0, shininess: 10 });
+
+    this.eyelidLeft = new THREE.Mesh(eyelidGeo, eyelidMat);
+    this.eyelidLeft.position.set(-0.38, 0.12, 1.07);
+    this.eyelidLeft.rotation.z = Math.PI;
+    this.eyelidLeft.scale.set(1, 0.01, 1); // Hidden initially
+    this.headGroup.add(this.eyelidLeft);
+
+    this.eyelidRight = new THREE.Mesh(eyelidGeo, eyelidMat);
+    this.eyelidRight.position.set(0.38, 0.12, 1.07);
+    this.eyelidRight.rotation.z = Math.PI;
+    this.eyelidRight.scale.set(1, 0.01, 1);
+    this.headGroup.add(this.eyelidRight);
+
+    // 3D Anime Upper Eyelash Brushes
+    const lashGeo = new THREE.TorusGeometry(0.30, 0.035, 16, 32, Math.PI * 0.65);
+    const lashMat = new THREE.MeshBasicMaterial({ color: 0x11091c });
 
     const lashLeft = new THREE.Mesh(lashGeo, lashMat);
-    lashLeft.position.set(-0.42, 0.45, 1.05);
-    lashLeft.rotation.z = -0.2;
+    lashLeft.position.set(-0.38, 0.22, 1.08);
+    lashLeft.rotation.z = -0.15;
     this.headGroup.add(lashLeft);
 
     const lashRight = new THREE.Mesh(lashGeo, lashMat);
-    lashRight.position.set(0.42, 0.45, 1.05);
-    lashRight.rotation.z = 0.2;
+    lashRight.position.set(0.38, 0.22, 1.08);
+    lashRight.rotation.z = 0.15;
     this.headGroup.add(lashRight);
 
-    // 3. Anime Mouth (Detailed shape)
-    const mouthGeo = new THREE.RingGeometry(0.04, 0.14, 24);
-    this.mouthMaterial = new THREE.MeshBasicMaterial({ color: 0xff3377, side: THREE.DoubleSide });
+    // 3D Expressive Eyebrows
+    const browGeo = new THREE.BoxGeometry(0.32, 0.03, 0.02);
+    const browMat = new THREE.MeshBasicMaterial({ color: 0x3d0c24 });
+
+    this.eyebrowLeft = new THREE.Mesh(browGeo, browMat);
+    this.eyebrowLeft.position.set(-0.38, 0.42, 1.06);
+    this.eyebrowLeft.rotation.z = 0.05;
+    this.headGroup.add(this.eyebrowLeft);
+
+    this.eyebrowRight = new THREE.Mesh(browGeo, browMat);
+    this.eyebrowRight.position.set(0.38, 0.42, 1.06);
+    this.eyebrowRight.rotation.z = -0.05;
+    this.headGroup.add(this.eyebrowRight);
+
+    // -------------------------------------------------------------------------
+    // 3. MORPHABLE 3D MOUTH & ANIMATED BLUSH PLANES
+    // -------------------------------------------------------------------------
+    const mouthGeo = new THREE.RingGeometry(0.03, 0.13, 32);
+    this.mouthMaterial = new THREE.MeshBasicMaterial({ color: 0xff2b75, side: THREE.DoubleSide });
     this.mouthMesh = new THREE.Mesh(mouthGeo, this.mouthMaterial);
-    this.mouthMesh.position.set(0, -0.45, 1.07);
+    this.mouthMesh.position.set(0, -0.42, 1.07);
     this.headGroup.add(this.mouthMesh);
 
-    // 4. Multi-Layered Anime Hairstyle (Bangs, Side Locks, Back Hair)
-    const defaultHairTex = this.generateHairTexture('#ff007f');
+    // Cheek Blush Layers
+    const blushGeo = new THREE.CircleGeometry(0.22, 32);
+    this.blushMaterial = new THREE.MeshBasicMaterial({
+      color: 0xff3388,
+      transparent: true,
+      opacity: 0.35,
+      side: THREE.DoubleSide
+    });
+
+    this.blushLeft = new THREE.Mesh(blushGeo, this.blushMaterial);
+    this.blushLeft.position.set(-0.55, -0.15, 1.04);
+    this.headGroup.add(this.blushLeft);
+
+    this.blushRight = new THREE.Mesh(blushGeo, this.blushMaterial);
+    this.blushRight.position.set(0.55, -0.15, 1.04);
+    this.headGroup.add(this.blushRight);
+
+    // -------------------------------------------------------------------------
+    // 4. MULTI-LAYERED ANIME HAIRSTYLE (Bangs, Side Locks, Canopy, Ahoge)
+    // -------------------------------------------------------------------------
+    const defaultHairTex = this.generateFallbackHairTexture();
     this.hairMaterial = new THREE.MeshPhongMaterial({
       map: defaultHairTex,
-      shininess: 40,
-      specular: 0xffaae5
+      shininess: 45,
+      specular: 0xffc2eb
     });
+
     textureLoader.load('assets/waifu_textures/hair.jpg', (tex) => {
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(1, 2);
       this.hairMaterial.map = tex;
       this.hairMaterial.needsUpdate = true;
     });
 
-    // Front Anime Bangs
-    for (let i = -3; i <= 3; i++) {
-      const bangGeo = new THREE.ConeGeometry(0.22, 1.1, 12);
+    // Front Bangs (9 High-Poly Strands)
+    for (let i = -4; i <= 4; i++) {
+      const bangGeo = new THREE.ConeGeometry(0.18, 1.15, 24);
       const bang = new THREE.Mesh(bangGeo, this.hairMaterial);
-      bang.position.set(i * 0.25, 0.75 - Math.abs(i) * 0.05, 0.95);
-      bang.rotation.z = -i * 0.12;
-      bang.rotation.x = 0.3;
+      const offsetX = i * 0.22;
+      const offsetY = 0.72 - Math.abs(i) * 0.04;
+      bang.position.set(offsetX, offsetY, 0.98);
+      bang.rotation.z = -i * 0.1;
+      bang.rotation.x = 0.28;
       this.hairGroup.add(bang);
     }
 
-    // Side Tresses
-    const tressGeo = new THREE.CylinderGeometry(0.18, 0.05, 2.2, 12);
+    // Side Tresses / Locks (24 Radial Segments each)
+    const tressGeo = new THREE.CylinderGeometry(0.16, 0.04, 2.5, 24);
     const tressLeft = new THREE.Mesh(tressGeo, this.hairMaterial);
-    tressLeft.position.set(-1.15, -0.1, 0.7);
-    tressLeft.rotation.z = 0.2;
+    tressLeft.position.set(-1.18, -0.2, 0.75);
+    tressLeft.rotation.z = 0.18;
     this.hairGroup.add(tressLeft);
 
     const tressRight = new THREE.Mesh(tressGeo, this.hairMaterial);
-    tressRight.position.set(1.15, -0.1, 0.7);
-    tressRight.rotation.z = -0.2;
+    tressRight.position.set(1.18, -0.2, 0.75);
+    tressRight.rotation.z = -0.18;
     this.hairGroup.add(tressRight);
 
-    // Twin Tails / Back Volume
-    const backHairGeo = new THREE.SphereGeometry(1.35, 24, 24, 0, Math.PI * 2, 0, Math.PI * 0.7);
+    // Sculpted Rear Hair Canopy (48x48 segments = 2,401 vertices)
+    const backHairGeo = new THREE.SphereGeometry(1.42, 48, 48, 0, Math.PI * 2, 0, Math.PI * 0.78);
     const backHair = new THREE.Mesh(backHairGeo, this.hairMaterial);
-    backHair.position.set(0, 0.15, -0.2);
+    backHair.position.set(0, 0.1, -0.15);
     this.hairGroup.add(backHair);
+
+    // Top Ahoge (Bouncing Anime Hair Antenna)
+    const ahogeGeo = new THREE.TorusGeometry(0.42, 0.04, 16, 32, Math.PI * 0.8);
+    this.ahogeMesh = new THREE.Mesh(ahogeGeo, this.hairMaterial);
+    this.ahogeMesh.position.set(0, 1.45, 0.3);
+    this.ahogeMesh.rotation.x = -Math.PI / 3;
+    this.ahogeMesh.rotation.y = Math.PI / 4;
+    this.hairGroup.add(this.ahogeMesh);
 
     this.headGroup.add(this.hairGroup);
 
-    // 5. Floating Cyber Halo & Headset
-    const haloGeo = new THREE.TorusGeometry(1.65, 0.06, 16, 100);
+    // -------------------------------------------------------------------------
+    // 5. REVOLVING CYBER HALO & NECK COLLAR
+    // -------------------------------------------------------------------------
+    const haloGeo = new THREE.TorusGeometry(1.65, 0.07, 32, 128); // 4,200 vertices
     const haloMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
     this.haloRing = new THREE.Mesh(haloGeo, haloMat);
     this.haloRing.position.set(0, 1.85, 0);
@@ -370,22 +452,27 @@ export class Waifu3DEngine {
 
     this.waifuGroup.add(this.headGroup);
 
-    // 6. Anime Shoulders & Cyber Outfit Body
-    const bodyGeo = new THREE.CylinderGeometry(0.7, 0.95, 1.6, 16);
+    // -------------------------------------------------------------------------
+    // 6. CYBER OUTFIT TORSO & SHOULDERS (48x16 segments = 1,600 vertices)
+    // -------------------------------------------------------------------------
+    const bodyGeo = new THREE.CylinderGeometry(0.75, 1.05, 1.8, 48, 16);
     this.outfitMaterial = new THREE.MeshPhongMaterial({
-      map: this.generateCyberOutfitTexture(),
-      shininess: 50
+      map: this.generateFallbackOutfitTexture(),
+      shininess: 60,
+      specular: 0x00ffff
     });
+
     textureLoader.load('assets/waifu_textures/outfit.jpg', (tex) => {
       this.outfitMaterial.map = tex;
       this.outfitMaterial.needsUpdate = true;
     });
+
     this.outfitMesh = new THREE.Mesh(bodyGeo, this.outfitMaterial);
-    this.outfitMesh.position.set(0, -1.8, 0);
+    this.outfitMesh.position.set(0, -1.85, 0);
     this.bodyGroup.add(this.outfitMesh);
 
-    // Cyber Collar
-    const collarGeo = new THREE.TorusGeometry(0.75, 0.08, 16, 32);
+    // Cyber Collar (32x64 segments = 2,100 vertices)
+    const collarGeo = new THREE.TorusGeometry(0.78, 0.09, 32, 64);
     const collarMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
     const collar = new THREE.Mesh(collarGeo, collarMat);
     collar.position.set(0, -1.05, 0);
@@ -394,37 +481,39 @@ export class Waifu3DEngine {
 
     this.waifuGroup.add(this.bodyGroup);
 
-    // 7. Background Hologram Texture Plane (Only visible once texture loads)
-    const planeGeo = new THREE.PlaneGeometry(5.0, 5.0);
+    // -------------------------------------------------------------------------
+    // 7. BACKGROUND HOLOGRAM PLANE & SCENE POSITIONING
+    // -------------------------------------------------------------------------
+    const planeGeo = new THREE.PlaneGeometry(5.2, 5.2);
     const planeMat = new THREE.MeshBasicMaterial({
       transparent: true,
-      opacity: 0, // Hidden until loaded
+      opacity: 0,
       side: THREE.DoubleSide
     });
     this.bgTexturePlane = new THREE.Mesh(planeGeo, planeMat);
     this.bgTexturePlane.position.set(0, 0, -2.5);
     this.scene.add(this.bgTexturePlane);
 
-    // Frame Waifu model cleanly in viewport
-    this.waifuGroup.position.set(0, -0.4, 0);
+    this.waifuGroup.position.set(0, -0.35, 0);
     this.scene.add(this.waifuGroup);
   }
 
+  // Construct Ambient Particle System
   buildParticles() {
     this.particlesGroup = new THREE.Group();
-    const particleCount = 60;
-    const geo = new THREE.SphereGeometry(0.04, 8, 8);
-    const mat = new THREE.MeshBasicMaterial({ color: 0xff007f, transparent: true, opacity: 0.8 });
+    const particleCount = 75;
+    const geo = new THREE.SphereGeometry(0.045, 12, 12);
+    const mat = new THREE.MeshBasicMaterial({ color: 0xff00aa, transparent: true, opacity: 0.75 });
 
     for (let i = 0; i < particleCount; i++) {
       const p = new THREE.Mesh(geo, mat);
       p.position.set(
-        (Math.random() - 0.5) * 9,
-        (Math.random() - 0.5) * 7,
-        (Math.random() - 0.5) * 5
+        (Math.random() - 0.5) * 9.5,
+        (Math.random() - 0.5) * 7.5,
+        (Math.random() - 0.5) * 5.5
       );
       p.userData = {
-        speedY: 0.008 + Math.random() * 0.015,
+        speedY: 0.008 + Math.random() * 0.016,
         seed: Math.random() * Math.PI * 2
       };
       this.particlesGroup.add(p);
@@ -438,62 +527,85 @@ export class Waifu3DEngine {
 
       this.time += 0.04;
 
-      // 1. Expressive Anime Idle Breathing, Head Bouncing & Speaking Sway
+      // 1. Idle Breathing, Head Sway & Speech Movement
       if (this.waifuGroup) {
         if (this.isSpeaking) {
-          // Energetic head tilt & sway while talking
-          this.waifuGroup.position.y = -0.4 + Math.abs(Math.sin(this.time * 4)) * 0.1;
-          this.headGroup.rotation.y = Math.sin(this.time * 3.5) * 0.18;
-          this.headGroup.rotation.z = Math.cos(this.time * 2.5) * 0.08;
-          if (this.hairGroup) this.hairGroup.rotation.z = Math.sin(this.time * 3) * 0.06;
+          // Energetic head tilt & bounce while talking
+          this.waifuGroup.position.y = -0.35 + Math.abs(Math.sin(this.time * 4.5)) * 0.09;
+          this.headGroup.rotation.y = Math.sin(this.time * 3.2) * 0.16;
+          this.headGroup.rotation.z = Math.cos(this.time * 2.4) * 0.07;
+          if (this.hairGroup) this.hairGroup.rotation.z = Math.sin(this.time * 3.5) * 0.05;
         } else {
-          // Gentle idle breathing
-          this.waifuGroup.position.y = -0.4 + Math.sin(this.time * 1.6) * 0.05;
-          this.headGroup.rotation.y = Math.sin(this.time * 0.8) * 0.1;
-          this.headGroup.rotation.z = Math.cos(this.time * 0.5) * 0.03;
+          // Smooth idle breathing
+          this.waifuGroup.position.y = -0.35 + Math.sin(this.time * 1.5) * 0.04;
+          this.headGroup.rotation.y = Math.sin(this.time * 0.7) * 0.08;
+          this.headGroup.rotation.z = Math.cos(this.time * 0.5) * 0.025;
           if (this.hairGroup) this.hairGroup.rotation.z = 0;
         }
       }
 
-      // 2. Glowing Halo Spin & Bobbing
-      if (this.haloRing) {
-        this.haloRing.rotation.z += 0.03;
-        this.haloRing.position.y = 1.85 + Math.sin(this.time * 2) * 0.05;
+      // 2. Animated Top Ahoge Hair Antenna Bounce
+      if (this.ahogeMesh) {
+        this.ahogeMesh.rotation.z = Math.sin(this.time * 2.8) * 0.18;
       }
 
-      // 3. Dynamic Lip-Sync Mouth Morphing during AI Speech
-      if (this.mouthMesh) {
-        if (this.isSpeaking) {
-          const mouthOpenX = 1.2 + Math.abs(Math.sin(this.time * 12)) * 1.5;
-          const mouthOpenY = 1.0 + Math.abs(Math.cos(this.time * 15)) * 1.8;
-          this.mouthMesh.scale.set(mouthOpenX, mouthOpenY, 1);
-        } else {
-          this.mouthMesh.scale.set(1, 0.25, 1);
-        }
+      // 3. Dynamic Eye Pupil Tracking & Gentle Eye Darting
+      if (this.time > this.nextEyeLookTime) {
+        this.eyeTargetX = (Math.random() - 0.5) * 0.08;
+        this.eyeTargetY = (Math.random() - 0.5) * 0.05;
+        this.nextEyeLookTime = this.time + 2 + Math.random() * 3;
+      }
+      this.eyeCurrentX += (this.eyeTargetX - this.eyeCurrentX) * 0.1;
+      this.eyeCurrentY += (this.eyeTargetY - this.eyeCurrentY) * 0.1;
+
+      if (this.eyeLeftMesh && this.eyeRightMesh) {
+        this.eyeLeftMesh.position.x = -0.38 + this.eyeCurrentX;
+        this.eyeLeftMesh.position.y = 0.08 + this.eyeCurrentY;
+        this.eyeRightMesh.position.x = 0.38 + this.eyeCurrentX;
+        this.eyeRightMesh.position.y = 0.08 + this.eyeCurrentY;
       }
 
-      // 4. Natural Anime Eye Blinking Cycle
-      this.blinkTimer += 0.03;
-      if (this.blinkTimer > 3.5) {
-        if (this.eyeLeftMesh && this.eyeRightMesh) {
-          this.eyeLeftMesh.scale.y = 0.08;
-          this.eyeRightMesh.scale.y = 0.08;
+      // 4. Natural Blinking Animation Cycle
+      this.blinkTimer += 0.04;
+      if (this.blinkTimer > 3.8) {
+        this.isBlinking = true;
+        if (this.eyelidLeft && this.eyelidRight) {
+          this.eyelidLeft.scale.y = 1.0;
+          this.eyelidRight.scale.y = 1.0;
         }
-        if (this.blinkTimer > 3.7) {
+        if (this.blinkTimer > 4.02) {
           this.blinkTimer = 0;
-          if (this.eyeLeftMesh && this.eyeRightMesh) {
-            this.eyeLeftMesh.scale.y = 1.0;
-            this.eyeRightMesh.scale.y = 1.0;
+          this.isBlinking = false;
+          if (this.eyelidLeft && this.eyelidRight) {
+            this.eyelidLeft.scale.y = 0.01;
+            this.eyelidRight.scale.y = 0.01;
           }
         }
       }
 
-      // 5. Floating Ambient Cyber Particles
+      // 5. Dynamic Mouth Speech Lip-Sync Morphing
+      if (this.mouthMesh) {
+        if (this.isSpeaking) {
+          const mouthOpenX = 1.1 + Math.abs(Math.sin(this.time * 14)) * 1.4;
+          const mouthOpenY = 0.8 + Math.abs(Math.cos(this.time * 16)) * 1.8;
+          this.mouthMesh.scale.set(mouthOpenX, mouthOpenY, 1);
+        } else {
+          this.mouthMesh.scale.set(1.0, 0.28, 1.0);
+        }
+      }
+
+      // 6. Glowing Cyber Halo Spin & Float
+      if (this.haloRing) {
+        this.haloRing.rotation.z += 0.025;
+        this.haloRing.position.y = 1.85 + Math.sin(this.time * 2.2) * 0.05;
+      }
+
+      // 7. Ambient Particle Rise & Sway
       if (this.particlesGroup) {
         this.particlesGroup.children.forEach(p => {
           p.position.y += p.userData.speedY;
-          p.position.x += Math.sin(this.time + p.userData.seed) * 0.008;
-          if (p.position.y > 4) p.position.y = -3.5;
+          p.position.x += Math.sin(this.time + p.userData.seed) * 0.006;
+          if (p.position.y > 4.2) p.position.y = -3.5;
         });
       }
 
@@ -504,46 +616,56 @@ export class Waifu3DEngine {
     animate();
   }
 
-  // Update lighting & procedural texture palette based on AI emotion
+  // Update lighting, materials, and facial expressions cleanly based on AI emotion
+  // WITHOUT destroying loaded textures!
   updateEmotion(emotionStr) {
     const str = typeof emotionStr === 'string' ? emotionStr : '';
     this.currentEmotion = str || 'Neutral 😊';
 
-    let eyeColor = '#00f0ff';
-    let hairColor = '#ff007f';
-    let blushColor = '#ff66aa';
-    let lightHex = 0xff007f;
+    let rimColorHex = 0x00f0ff;
+    let dirColorHex = 0xff66bb;
+    let blushOpacity = 0.35;
+    let browAngleLeft = 0.05;
+    let browAngleRight = -0.05;
 
     if (str.includes('Flustered') || str.includes('Love')) {
-      eyeColor = '#ff00aa';
-      hairColor = '#ff007f';
-      blushColor = '#ff0055';
-      lightHex = 0xff00aa;
+      rimColorHex = 0xff00aa;
+      dirColorHex = 0xff0066;
+      blushOpacity = 0.75; // Heavy blush
+      browAngleLeft = -0.1;
+      browAngleRight = 0.1;
     } else if (str.includes('Playful') || str.includes('Smug')) {
-      eyeColor = '#00ffcc';
-      hairColor = '#ff9900';
-      blushColor = '#ff99aa';
-      lightHex = 0x00ffcc;
+      rimColorHex = 0x00ffcc;
+      dirColorHex = 0xff9900;
+      blushOpacity = 0.45;
+      browAngleLeft = 0.15;
+      browAngleRight = -0.05;
     } else if (str.includes('Angry') || str.includes('Tsundere')) {
-      eyeColor = '#ff3300';
-      hairColor = '#cc0033';
-      blushColor = '#ff3333';
-      lightHex = 0xff0033;
+      rimColorHex = 0xff2200;
+      dirColorHex = 0xcc0033;
+      blushOpacity = 0.6;
+      browAngleLeft = -0.25;
+      browAngleRight = 0.25;
     }
 
-    // Update procedural textures safely
-    if (this.eyeMaterial) this.eyeMaterial.map = this.generateAnimeEyeTexture(eyeColor);
-    if (this.hairMaterial) this.hairMaterial.map = this.generateHairTexture(hairColor);
-    if (this.faceMaterial) this.faceMaterial.map = this.generateFaceTexture(blushColor);
-    if (this.dirLight) this.dirLight.color.setHex(lightHex);
-    if (this.haloRing && this.haloRing.material) this.haloRing.material.color.setHex(lightHex);
+    // Safely update light colors
+    if (this.rimLight) this.rimLight.color.setHex(rimColorHex);
+    if (this.dirLight) this.dirLight.color.setHex(dirColorHex);
+    if (this.haloRing && this.haloRing.material) this.haloRing.material.color.setHex(rimColorHex);
+
+    // Safely update blush intensity
+    if (this.blushMaterial) this.blushMaterial.opacity = blushOpacity;
+
+    // Safely update eyebrow angles
+    if (this.eyebrowLeft) this.eyebrowLeft.rotation.z = browAngleLeft;
+    if (this.eyebrowRight) this.eyebrowRight.rotation.z = browAngleRight;
   }
 
   setSpeakingState(speaking) {
     this.isSpeaking = !!speaking;
   }
 
-  // Fetch cheapest OpenAI DALL-E 2 (256x256) waifu background texture
+  // Fetch AI DALL-E waifu background texture
   async loadWaifuTexture(characterName, emotion) {
     try {
       const endpoint = window.location.protocol === 'file:'
@@ -561,17 +683,35 @@ export class Waifu3DEngine {
         const loader = new THREE.TextureLoader();
         loader.load(data.url, (texture) => {
           this.bgTexturePlane.material.map = texture;
-          this.bgTexturePlane.material.opacity = 0.65;
+          this.bgTexturePlane.material.opacity = 0.6;
           this.bgTexturePlane.material.needsUpdate = true;
         });
       }
     } catch (e) {
-      console.warn("DALL-E waifu texture load failed:", e);
+      console.warn("Waifu texture load warning:", e);
     }
+  }
+
+  handleResize() {
+    if (!this.initialized || !this.container || !this.renderer || !this.camera) return;
+    const width = this.container.clientWidth || 340;
+    const height = this.container.clientHeight || 300;
+    if (width === 0 || height === 0) return;
+
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(width, height);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   }
 
   destroy() {
     this.initialized = false;
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+    window.removeEventListener('resize', this.onWindowResize);
+
     if (this.animFrameId) {
       cancelAnimationFrame(this.animFrameId);
     }

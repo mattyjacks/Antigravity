@@ -1626,6 +1626,8 @@
   font-family: var(--font-gaming);
   font-weight: 700;
   box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+
 .waifu-3d-container {
   position: absolute;
   inset: 0;
@@ -1651,6 +1653,22 @@
   z-index: 2;
 }
 
-
-
-
+@media (max-width: 640px) {
+  .vision-date-modal .vision-date-card {
+    width: 96%;
+    padding: 1rem;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .vision-date-actions {
+    justify-content: center;
+  }
+  .vision-date-actions button {
+    flex: 1 1 45%;
+    font-size: 0.75rem;
+    padding: 0.5rem;
+  }
+  .vision-title {
+    font-size: 0.8rem;
+  }
+}
