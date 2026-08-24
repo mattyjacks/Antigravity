@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import chatHandler from './api/chat.js';
+import camEmotionHandler from './api/cam-emotion.js';
+import ttsHandler from './api/tts.js';
 
 dotenv.config();
 
@@ -11,7 +13,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 // Resolve paths for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -20,9 +22,8 @@ const __dirname = path.dirname(__filename);
 // Serve static assets from the current directory
 app.use(express.static(__dirname));
 
-// Bind the Vercel serverless API handler to the local Express instance
-app.post('/api/chat', (req, res) => {
-  // Mock Vercel response helper methods
+// Helper for Vercel serverless compatible response mocks
+const mockVercelRes = (res) => {
   res.status = (code) => {
     res.statusCode = code;
     return res;
@@ -32,11 +33,15 @@ app.post('/api/chat', (req, res) => {
     res.end(JSON.stringify(data));
     return res;
   };
-  
-  chatHandler(req, res);
-});
+  return res;
+};
 
-// Serve index.html for any other route to handle client-side routing if added later
+// Bind API handlers
+app.post('/api/chat', (req, res) => chatHandler(req, mockVercelRes(res)));
+app.post('/api/cam-emotion', (req, res) => camEmotionHandler(req, mockVercelRes(res)));
+app.post('/api/tts', (req, res) => ttsHandler(req, mockVercelRes(res)));
+
+// Serve index.html for any other route
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });

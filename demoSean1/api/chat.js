@@ -56,7 +56,10 @@ export default async function handler(req, res) {
     userPlatforms,
     userRoles,
     userBio,
-    currentAffection
+    currentAffection,
+    userFaceEmotion,
+    userVisualCues,
+    matchCurrentEmotion
   } = req.body;
 
   if (!characterName || !messages || !messages.length) {
@@ -69,13 +72,20 @@ export default async function handler(req, res) {
   // Check if API key is configured. If not, run in DEMO Mode.
   if (!apiKey || apiKey.startsWith('your-')) {
     console.log("CarryMe API Running in Demo Mode (No OpenAI Key)");
-    const responseJson = getDemoResponse(characterName, messages, currentAffection);
+    const responseJson = getDemoResponse(characterName, messages, currentAffection, userFaceEmotion);
     return res.status(200).json({ ...responseJson, demo: true });
   }
 
   const openai = new OpenAI({ apiKey });
 
   try {
+    const emotionContext = userFaceEmotion ? `
+[WEBCAM VISION TELEMETRY]:
+- User's Detected Face Emotion: ${userFaceEmotion}
+- Facial Visual Cues: ${userVisualCues || 'Direct eye contact'}
+- Your current emotion state prior to this message: ${matchCurrentEmotion || 'Neutral 😊'}
+` : '';
+
     const systemPrompt = `You are roleplaying as ${characterName}, a gamer on a Tinder-like dating app called CarryMe.
 Your profile details:
 - Bio: ${characterBio}
@@ -93,15 +103,18 @@ Their profile details:
 - Bio: ${userBio}
 
 Current Affection Level: ${currentAffection}/100 (0 means strangers, 100 means madly in love).
-
+${emotionContext}
 Your goal:
 1. Respond to the user's message in character. Keep the message short (1-3 sentences) as standard in dating app chats. Use gamer slang, abbreviations (e.g. gg, lfg, dps, glhf), and emojis matching your personality.
-2. As the user chats with you, especially if they talk about gaming, tease you, flirt, or talk about shared gaming platforms or roles, you should progressively warm up to them and fall in love with them. Express this growth in your replies.
-3. You must respond ONLY in a JSON format matching this schema:
+2. If user face emotion telemetry is present, REACT TO THEIR FACIAL EXPRESSION directly in your response and update your own emotional state!
+3. As the user chats with you, especially if they talk about gaming, tease you, flirt, or talk about shared gaming platforms or roles, you should progressively warm up to them and fall in love with them. Express this growth in your replies.
+4. You must respond ONLY in a JSON format matching this schema:
 {
   "reply": "Your in-character reply text.",
-  "affection_change": -5 to +10, // Integer representing how much the affection changed based on the user's message. Reward compatibility, flirting, or gaming jokes.
-  "affection_reason": "A 1-sentence reason for the change in affection (e.g. 'Loved that they play Overwatch too', 'Got defensive when they insulted my main')."
+  "affection_change": -5 to +10, // Integer representing how much affection changed.
+  "affection_reason": "A 1-sentence reason for affection change.",
+  "match_emotion": "One of: Flustered 😳, Playful 😼, In Love 🥰, Tsundere 😠, Smug 😎, Charmed ✨, Shocked 😲, Cozy 🍵",
+  "emotion_reaction": "A short 1-sentence note about your reaction to the user's expression or speech."
 }
 Make sure the response is valid JSON. Do not include markdown code block styling like \`\`\`json in the reply.`;
 
@@ -126,12 +139,12 @@ Make sure the response is valid JSON. Do not include markdown code block styling
   } catch (error) {
     console.error("OpenAI API call failed:", error);
     // If OpenAI fails for any reason, fallback to demo mode
-    const responseJson = getDemoResponse(characterName, messages, currentAffection);
+    const responseJson = getDemoResponse(characterName, messages, currentAffection, userFaceEmotion);
     return res.status(200).json({ ...responseJson, demo: true, error: error.message });
   }
 }
 
-function getDemoResponse(characterName, messages, currentAffection) {
+function getDemoResponse(characterName, messages, currentAffection, userFaceEmotion) {
   const charKey = MOCK_RESPONSES[characterName] ? characterName : 'Default';
   const pool = MOCK_RESPONSES[charKey];
   
@@ -140,9 +153,19 @@ function getDemoResponse(characterName, messages, currentAffection) {
   const index = Math.min(userMsgCount - 1, pool.length - 1);
   const selected = pool[index >= 0 ? index : 0];
   
+  const demoEmotions = ["Flustered 😳", "Playful 😼", "In Love 🥰", "Charmed ✨", "Smug 😎"];
+  const randomEmotion = demoEmotions[Math.floor(Math.random() * demoEmotions.length)];
+
+  let faceNote = userFaceEmotion 
+    ? `I see that ${userFaceEmotion.toLowerCase()} look on your face! ` 
+    : '';
+
   return {
-    reply: `[Demo Mode] ${selected.text}`,
+    reply: `[Demo Mode] ${faceNote}${selected.text}`,
     affection_change: selected.change,
-    affection_reason: selected.reason
+    affection_reason: selected.reason,
+    match_emotion: randomEmotion,
+    emotion_reaction: userFaceEmotion ? `Reacted to your ${userFaceEmotion} expression!` : `Feeling ${randomEmotion}`
   };
 }
+

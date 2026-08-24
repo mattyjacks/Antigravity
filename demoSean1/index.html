@@ -138,6 +138,10 @@
             
             <div class="chat-input-row">
               <input type="text" class="chat-field" id="chat-input-field" placeholder="Transmit chat logs to player two..." autocomplete="off">
+              <button class="btn btn-secondary" id="chat-mic-btn" title="Hold/Click to Talk (Speech to Text)">
+                <i data-lucide="mic" style="width:16px;height:16px;"></i>
+                Talk
+              </button>
               <button class="btn btn-primary" id="chat-send-btn">
                 <i data-lucide="send" style="width:16px;height:16px;"></i>
                 Send
@@ -147,6 +151,91 @@
         </div>
       </div>
     </section>
+
+  <!-- ==========================================================================
+       AI VISION & VOICE DATE LAB HUD MODAL
+       ========================================================================== -->
+  <div class="hud-modal vision-date-modal" id="vision-date-modal" style="display: none;">
+    <div class="match-overlay-bg" id="vision-overlay-bg"></div>
+    <div class="vision-date-card">
+      <div class="vision-date-header">
+        <div class="vision-title">
+          <i data-lucide="video" style="width:20px;height:20px;color:var(--accent);"></i>
+          <span>AI VISION & DYNAMIC VOICE DATE LAB</span>
+        </div>
+        <div class="vision-header-controls">
+          <label class="auto-voice-toggle">
+            <input type="checkbox" id="vision-auto-voice-chk" checked>
+            <span>Auto OpenAI Voice</span>
+          </label>
+          <button class="btn-icon-close" id="close-vision-date-btn">&times;</button>
+        </div>
+      </div>
+
+      <!-- Split View Grid -->
+      <div class="vision-date-grid">
+        <!-- Left: User Webcam Feed & Face Cyber Scanner -->
+        <div class="vision-feed-box user-cam-box">
+          <div class="feed-badge">USER CAMERA TELEMETRY</div>
+          <div class="cam-wrapper">
+            <video id="vision-webcam-video" autoplay playsinline muted></video>
+            <canvas id="vision-webcam-canvas"></canvas>
+            <div class="cam-fallback-msg" id="cam-fallback-msg" style="display:none;">
+              <i data-lucide="camera-off" style="width:32px;height:32px;margin-bottom:0.5rem;color:var(--accent-secondary);"></i>
+              <span>Simulated Vision Mode Active</span>
+            </div>
+          </div>
+          <div class="emotion-telemetry-card">
+            <div class="telemetry-row">
+              <span class="telemetry-label">Your Detected Emotion:</span>
+              <span class="telemetry-val" id="user-emotion-val">Focused / Neutral</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">ChatGPT Nano Vision Cues:</span>
+              <span class="telemetry-desc" id="user-cues-val">Ready for co-op queue</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: AI Match Dynamic Hologram & Emotion Ring -->
+        <div class="vision-feed-box match-holo-box">
+          <div class="feed-badge" id="match-holo-badge">PLAYER TWO HOLOGRAM</div>
+          <div class="match-holo-wrapper" id="match-holo-wrapper">
+            <div class="match-holo-avatar" id="vision-match-avatar">☄️</div>
+            <div class="match-emotion-ring" id="match-emotion-ring">
+              <span class="match-mood-badge" id="vision-match-mood">Flustered 😳</span>
+            </div>
+            <!-- Emotion Particles Container -->
+            <div class="emotion-particles-layer" id="emotion-particles-layer"></div>
+          </div>
+          <div class="match-voice-card">
+            <div class="match-reaction-box" id="vision-match-reaction">"Reacting to your smile in real-time!"</div>
+            <!-- Live Audio Spectrum Visualizer Canvas -->
+            <div class="voice-spectrum-wrap">
+              <span class="spectrum-lbl">VOICE FREQUENCY SPECTRUM</span>
+              <canvas id="voice-spectrum-canvas" width="280" height="35"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Controls Bar -->
+      <div class="vision-date-actions">
+        <button class="btn btn-secondary" id="vision-scan-btn">
+          <i data-lucide="camera" style="width:16px;height:16px;"></i>
+          Scan My Face Emotion
+        </button>
+        <button class="btn btn-primary" id="vision-voice-talk-btn">
+          <i data-lucide="mic" style="width:16px;height:16px;"></i>
+          Push to Talk (Voice Date)
+        </button>
+        <button class="btn btn-secondary" id="vision-replay-voice-btn">
+          <i data-lucide="volume-2" style="width:16px;height:16px;"></i>
+          Replay AI Voice
+        </button>
+      </div>
+    </div>
+  </div>
 
     <!-- 3. PROFILE CUSTOMIZER / LOADOUT -->
     <section id="profile-section" class="app-section">

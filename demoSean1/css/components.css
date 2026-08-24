@@ -1259,3 +1259,318 @@
   }
 }
 
+/* ==========================================================================
+   AI VISION & DYNAMIC VOICE DATE LAB STYLES
+   ========================================================================== */
+
+.header-emotion-pill {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  background: rgba(255, 0, 127, 0.15);
+  border: 1px solid var(--accent-secondary);
+  color: var(--accent-secondary);
+  font-family: var(--font-primary);
+  vertical-align: middle;
+  margin-left: 0.5rem;
+}
+
+.header-actions-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+}
+
+.mic-active {
+  background: var(--accent-secondary) !important;
+  color: #fff !important;
+  border-color: var(--accent-secondary) !important;
+  animation: pulse 1s infinite;
+  box-shadow: 0 0 15px var(--accent-secondary) !important;
+}
+
+/* Vision Date Lab HUD Modal */
+.vision-date-modal .vision-date-card {
+  position: relative;
+  width: 90%;
+  max-width: 900px;
+  background: rgba(10, 12, 20, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 40px rgba(0, 240, 255, 0.25);
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  z-index: 1001;
+  animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.vision-date-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+
+.vision-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-gaming);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+}
+
+.vision-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.auto-voice-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.btn-icon-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.btn-icon-close:hover {
+  color: var(--accent-secondary);
+}
+
+/* Split Screen Grid */
+.vision-date-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .vision-date-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.vision-feed-box {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.feed-badge {
+  font-family: var(--font-gaming);
+  font-size: 0.65rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Webcam Container & Canvas Layer */
+.cam-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #05070a;
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+}
+
+.cam-wrapper video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cam-wrapper canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.cam-fallback-msg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 15, 25, 0.9);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+.emotion-telemetry-card {
+  background: rgba(0, 240, 255, 0.05);
+  border: 1px dashed var(--accent);
+  border-radius: var(--border-radius-sm);
+  padding: 0.6rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.telemetry-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.telemetry-label {
+  color: var(--text-muted);
+}
+
+.telemetry-val {
+  font-weight: 700;
+  color: var(--accent-secondary);
+  font-family: var(--font-gaming);
+}
+
+.telemetry-desc {
+  color: var(--text-primary);
+  font-style: italic;
+}
+
+/* Match Hologram Box */
+.match-holo-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: radial-gradient(circle at center, rgba(255, 0, 127, 0.15) 0%, rgba(5, 7, 10, 0.9) 70%);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid rgba(255, 0, 127, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.match-holo-avatar {
+  font-size: 4rem;
+  filter: drop-shadow(0 0 20px var(--accent-secondary));
+  animation: float 3s ease-in-out infinite;
+}
+
+.match-emotion-ring {
+  margin-top: 0.5rem;
+}
+
+.match-mood-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  background: var(--accent-secondary);
+  color: #fff;
+  font-family: var(--font-gaming);
+  font-size: 0.8rem;
+  font-weight: 700;
+  box-shadow: 0 0 15px var(--accent-secondary);
+}
+
+/* Particle layer */
+.emotion-particles-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.emotion-particle {
+  position: absolute;
+  font-size: 1.2rem;
+  animation: floatParticle 1.5s ease-out forwards;
+}
+
+@keyframes floatParticle {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(0.8);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-80px) scale(1.4);
+  }
+}
+
+/* Voice Card & Spectrum */
+.match-voice-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.match-reaction-box {
+  background: rgba(0, 0, 0, 0.5);
+  border-left: 3px solid var(--accent);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.voice-spectrum-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.spectrum-lbl {
+  font-size: 0.6rem;
+  font-family: var(--font-gaming);
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.voice-spectrum-wrap canvas {
+  width: 100%;
+  height: 35px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+
+/* Vision Action Controls */
+.vision-date-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
+}
+
+
