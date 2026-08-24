@@ -618,7 +618,7 @@ function initVisionDateModalHandlers() {
 }
 
 // Start Auto Live Date Mode (6 Turns, min 10s rate limit)
-function startAutoDateMode() {
+export function startAutoDateMode() {
   isAutoDateActive = true;
   autoTurnsLeft = 6;
   lastAutoTurnTime = 0;

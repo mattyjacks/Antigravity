@@ -1586,6 +1586,27 @@
   transform: translateY(-2px);
 }
 
+.btn-skip-good-part {
+  padding: 0.45rem 1.1rem;
+  font-size: 0.8rem;
+  font-family: var(--font-gaming);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+  animation: pulse 2.5s infinite;
+  transition: all var(--transition-normal);
+}
+
+.btn-skip-good-part:hover {
+  box-shadow: 0 0 30px #ff007f, 0 0 10px #00f0ff;
+  transform: scale(1.05);
+}
+
 .auto-date-active {
   background: #ff007f !important;
   box-shadow: 0 0 20px #ff007f !important;

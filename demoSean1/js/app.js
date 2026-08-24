@@ -1,7 +1,7 @@
 import { PROFILES } from './profiles.js';
 import { CardDeck, synth } from './swipe.js';
-import { initChatSystem, addMatch, getMatches } from './chat.js';
-import { initProfileSettings, getUserProfile } from './profile-settings.js';
+import { initChatSystem, addMatch, getMatches, selectMatchChat, openVisionDateModal, startAutoDateMode } from './chat.js';
+import { initProfileSettings, getUserProfile, showNotification } from './profile-settings.js';
 
 let deck = null;
 
@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Bind controls for buttons (Like/Pass/SuperLike) below the deck
   setupDeckActionButtons();
+  setupSkipToGoodPartButton();
 
   // Listen to profile change events to refresh deck scores
   window.addEventListener('carrymeUserProfileChanged', () => {
@@ -50,6 +51,36 @@ document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
   }
 });
+
+// Setup "Skip to Good Part ⚡" instant auto date button
+function setupSkipToGoodPartButton() {
+  const skipBtn = document.getElementById('skip-to-good-part-btn');
+  if (!skipBtn) return;
+
+  skipBtn.addEventListener('click', () => {
+    synth.playMatch();
+
+    // 1. Pick a random profile from PROFILES
+    const randomProfile = PROFILES[Math.floor(Math.random() * PROFILES.length)];
+
+    // 2. Add to active matches if not already present
+    addMatch(randomProfile, 98);
+
+    // 3. Switch view tab to Active Chats
+    const chatTabBtn = document.querySelector('.nav-links a[href="#chat-section"]');
+    if (chatTabBtn) chatTabBtn.click();
+
+    // 4. Select match chat
+    selectMatchChat(randomProfile.id);
+
+    // 5. Open AI Vision & Voice Date Lab Modal & start Auto Date Mode!
+    setTimeout(() => {
+      openVisionDateModal(randomProfile);
+      startAutoDateMode();
+      showNotification(`⚡ Skipped to Good Part! Live AI Vision & Voice Date active with ${randomProfile.tag}!`, 'heart');
+    }, 200);
+  });
+}
 
 // Refresh the cards queue in CardDeck
 function refreshDeck() {
