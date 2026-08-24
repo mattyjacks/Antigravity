@@ -394,17 +394,19 @@ export class Waifu3DEngine {
 
     this.waifuGroup.add(this.bodyGroup);
 
-    // 7. Background Hologram Texture Plane (DALL-E 2 Image Mapping)
-    const planeGeo = new THREE.PlaneGeometry(4.2, 4.2);
+    // 7. Background Hologram Texture Plane (Only visible once texture loads)
+    const planeGeo = new THREE.PlaneGeometry(5.0, 5.0);
     const planeMat = new THREE.MeshBasicMaterial({
       transparent: true,
-      opacity: 0.45,
+      opacity: 0, // Hidden until loaded
       side: THREE.DoubleSide
     });
     this.bgTexturePlane = new THREE.Mesh(planeGeo, planeMat);
-    this.bgTexturePlane.position.set(0, 0, -2.0);
+    this.bgTexturePlane.position.set(0, 0, -2.5);
     this.scene.add(this.bgTexturePlane);
 
+    // Frame Waifu model cleanly in viewport
+    this.waifuGroup.position.set(0, -0.4, 0);
     this.scene.add(this.waifuGroup);
   }
 

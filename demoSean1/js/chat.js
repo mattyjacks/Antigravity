@@ -704,13 +704,16 @@ async function executeAutoTurn() {
   const match = matches.find(m => m.id === activeMatchId);
   if (!match) return;
 
-  // 1. Capture webcam frame
-  const frameRes = await camScanner.analyzeCurrentFrame(match.tag);
+  // 1. Get latest face emotion telemetry instantly without blocking
+  const latestCam = camScanner.getLatestEmotion();
 
-  // 2. Formulate turn observation prompt based on emotion & cues
-  const prompt = `[Auto Vision Observation: My expression is "${frameRes.primary_emotion}" with visual cue "${frameRes.facial_cues}". Chat back with me dynamically based on how I look!]`;
+  // Trigger background frame refresh asynchronously without awaiting
+  camScanner.analyzeCurrentFrame(match.tag).catch(err => console.warn("Cam refresh:", err));
 
-  // 3. Send message & trigger voice reply
+  // 2. Formulate turn observation prompt based on current emotion & cues
+  const prompt = `[Auto Vision Observation: My expression is "${latestCam.primary_emotion}" with visual cue "${latestCam.facial_cues}". Chat back with me dynamically based on how I look!]`;
+
+  // 3. Send message & trigger voice reply immediately!
   await sendMessage(prompt);
 
   // 4. Decrement turns left
@@ -786,7 +789,8 @@ function updateVisionDateUI(match) {
   const reactionElem = document.getElementById('vision-match-reaction');
   const badgeElem = document.getElementById('match-holo-badge');
 
-  if (avatarElem) avatarElem.innerText = match.avatar;
+  // Hide raw emoji text avatar when 3D Waifu is active
+  if (avatarElem) avatarElem.style.display = 'none';
   if (moodElem) moodElem.innerText = match.currentEmotion || "Neutral 😊";
   if (reactionElem) reactionElem.innerText = `"${match.emotionReaction || 'Reacting to your presence'}"`;
   if (badgeElem) badgeElem.innerText = `${match.tag.toUpperCase()} 3D AI WAIFU`;
