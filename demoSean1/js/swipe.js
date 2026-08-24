@@ -263,8 +263,8 @@ export class CardDeck {
       card.innerHTML = `
         <div class="card-glow" style="background: radial-gradient(circle at center, rgba(${profile.color === '#ff007f' ? '255,0,127' : '0,255,204'},0.15) 0%, transparent 70%);"></div>
         <div class="card-visual-frame">
-          <div class="avatar-box" style="border-color: ${profile.color}; text-shadow: 0 0 10px ${profile.color};">
-            ${profile.avatar}
+          <div class="avatar-box" style="border-color: ${profile.color}; text-shadow: 0 0 10px ${profile.color}; overflow: hidden;">
+            ${profile.image ? `<img src="${profile.image}" alt="${profile.tag}" style="width:100%;height:100%;object-fit:cover;">` : profile.avatar}
           </div>
           <div class="card-synergy-badge" style="box-shadow: 0 0 15px rgba(${profile.color === '#ff007f' ? '255,0,127' : '0,255,204'},0.25); border-color: ${profile.color};">
             <span class="synergy-num">${compat}%</span>

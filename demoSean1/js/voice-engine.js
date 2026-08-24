@@ -48,7 +48,26 @@ export class VoiceTalkEngine {
 
     this.isListening = true;
 
+    this.recognition.onspeechstart = () => {
+      // Voice Barge-in Interruption: Stop AI speaking immediately if user begins talking!
+      if (this.isSpeaking) {
+        console.log("⚡ User speech detected! Interrupting AI voice...");
+        this.stopSpeaking();
+        if (typeof this.onInterruptCallback === 'function') {
+          this.onInterruptCallback();
+        }
+      }
+    };
+
     this.recognition.onresult = (event) => {
+      // Double check barge-in interruption on result frame
+      if (this.isSpeaking) {
+        this.stopSpeaking();
+        if (typeof this.onInterruptCallback === 'function') {
+          this.onInterruptCallback();
+        }
+      }
+
       let transcript = '';
       for (let i = event.resultIndex; i < event.results.length; i++) {
         transcript += event.results[i][0].transcript;
@@ -71,6 +90,13 @@ export class VoiceTalkEngine {
 
     this.recognition.start();
     return true;
+  }
+
+  // Register callback for when user voice interrupts AI speech
+  onInterrupt(callback) {
+    if (typeof callback === 'function') {
+      this.onInterruptCallback = callback;
+    }
   }
 
   // Stop listening

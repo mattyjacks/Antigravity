@@ -168,8 +168,8 @@ export function renderMatchesList() {
     item.className = `match-sidebar-item ${isSelected ? 'active' : ''}`;
     
     item.innerHTML = `
-      <div class="match-avatar" style="border-color:${match.color}; text-shadow: 0 0 5px ${match.color};">
-        ${match.avatar}
+      <div class="match-avatar" style="border-color:${match.color}; text-shadow: 0 0 5px ${match.color}; overflow: hidden;">
+        ${match.image ? `<img src="${match.image}" alt="${match.tag}" style="width:100%;height:100%;object-fit:cover;">` : match.avatar}
       </div>
       <div class="match-meta">
         <div class="match-name-row">
@@ -231,7 +231,9 @@ export function selectMatchChat(matchId) {
     chatHeader.innerHTML = `
       <div class="chat-header-wrap">
         <div class="chat-header-profile">
-          <span class="header-avatar">${match.avatar}</span>
+          <span class="header-avatar" style="overflow:hidden;">
+            ${match.image ? `<img src="${match.image}" alt="${match.tag}" style="width:100%;height:100%;object-fit:cover;">` : match.avatar}
+          </span>
           <div>
             <h3>${match.tag} <span class="header-emotion-pill" id="header-emotion-pill">${emotionBadge}</span></h3>
             <span class="header-status">${love.title} - ${love.desc}</span>
@@ -506,6 +508,15 @@ let isAutoDateActive = false;
 let autoTurnsLeft = 6;
 let autoLoopIntervalId = null;
 let lastAutoTurnTime = 0;
+
+// Register Voice Barge-In Interruption Callback
+voiceEngine.onInterrupt(() => {
+  synth.playClick();
+  showNotification("⚡ Interrupted AI speech! Listening to your voice...", "warning");
+  if (waifu3d.initialized) {
+    waifu3d.setSpeakingState(false);
+  }
+});
 
 // Vision & Voice Date Modal Handlers
 function initVisionDateModalHandlers() {
