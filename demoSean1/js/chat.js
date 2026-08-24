@@ -403,21 +403,21 @@ async function sendMessage(text) {
       },
       body: JSON.stringify({
         messages: contextMessages,
-        characterName: match.tag,
-        characterBio: match.bio,
-        characterGames: match.games.join(', '),
-        characterPlaystyle: match.playstyle,
-        characterPlatforms: match.platforms.join(', '),
-        characterRoles: match.roles.join(', '),
-        userGamerTag: userProfile.tag,
-        userGames: userProfile.games.join(', '),
-        userPlaystyle: userProfile.playstyle,
-        userPlatforms: userProfile.platforms.join(', '),
-        userRoles: userProfile.roles.join(', '),
-        userBio: userProfile.bio,
-        currentAffection: match.affection,
-        userFaceEmotion: latestCamTelemetry.primary_emotion,
-        userVisualCues: latestCamTelemetry.facial_cues,
+        characterName: match.tag || 'Player 2',
+        characterBio: match.bio || '',
+        characterGames: Array.isArray(match.games) ? match.games.join(', ') : (match.games || ''),
+        characterPlaystyle: match.playstyle || 'Casual',
+        characterPlatforms: Array.isArray(match.platforms) ? match.platforms.join(', ') : (match.platforms || ''),
+        characterRoles: Array.isArray(match.roles) ? match.roles.join(', ') : (match.roles || ''),
+        userGamerTag: userProfile.tag || 'Player 1',
+        userGames: Array.isArray(userProfile.games) ? userProfile.games.join(', ') : (userProfile.games || ''),
+        userPlaystyle: userProfile.playstyle || 'Casual',
+        userPlatforms: Array.isArray(userProfile.platforms) ? userProfile.platforms.join(', ') : (userProfile.platforms || ''),
+        userRoles: Array.isArray(userProfile.roles) ? userProfile.roles.join(', ') : (userProfile.roles || ''),
+        userBio: userProfile.bio || '',
+        currentAffection: match.affection || 10,
+        userFaceEmotion: latestCamTelemetry ? latestCamTelemetry.primary_emotion : 'Neutral 😊',
+        userVisualCues: latestCamTelemetry ? latestCamTelemetry.facial_cues : '',
         matchCurrentEmotion: match.currentEmotion || "Neutral 😊"
       })
     });
@@ -485,7 +485,13 @@ async function sendMessage(text) {
     const shouldSpeak = isVisionModalOpen || (autoVoiceChk && autoVoiceChk.checked);
 
     if (shouldSpeak) {
-      voiceEngine.speak(data.reply, match.tag);
+      if (waifu3d.initialized) waifu3d.setSpeakingState(true);
+      voiceEngine.speak(
+        data.reply,
+        match.tag,
+        () => { if (waifu3d.initialized) waifu3d.setSpeakingState(true); },
+        () => { if (waifu3d.initialized) waifu3d.setSpeakingState(false); }
+      );
     }
   } catch (error) {
     console.error("Failed to fetch response:", error);

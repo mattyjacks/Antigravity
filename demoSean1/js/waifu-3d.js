@@ -436,25 +436,37 @@ export class Waifu3DEngine {
     const animate = () => {
       if (!this.initialized) return;
 
-      this.time += 0.035;
+      this.time += 0.04;
 
-      // 1. Natural Anime Idle Breathing & Head Nodding
+      // 1. Expressive Anime Idle Breathing, Head Bouncing & Speaking Sway
       if (this.waifuGroup) {
-        this.waifuGroup.position.y = Math.sin(this.time * 1.6) * 0.08;
-        this.headGroup.rotation.y = Math.sin(this.time * 0.9) * 0.12;
-        this.headGroup.rotation.z = Math.cos(this.time * 0.6) * 0.04;
+        if (this.isSpeaking) {
+          // Energetic head tilt & sway while talking
+          this.waifuGroup.position.y = -0.4 + Math.abs(Math.sin(this.time * 4)) * 0.1;
+          this.headGroup.rotation.y = Math.sin(this.time * 3.5) * 0.18;
+          this.headGroup.rotation.z = Math.cos(this.time * 2.5) * 0.08;
+          if (this.hairGroup) this.hairGroup.rotation.z = Math.sin(this.time * 3) * 0.06;
+        } else {
+          // Gentle idle breathing
+          this.waifuGroup.position.y = -0.4 + Math.sin(this.time * 1.6) * 0.05;
+          this.headGroup.rotation.y = Math.sin(this.time * 0.8) * 0.1;
+          this.headGroup.rotation.z = Math.cos(this.time * 0.5) * 0.03;
+          if (this.hairGroup) this.hairGroup.rotation.z = 0;
+        }
       }
 
-      // 2. Halo Spin
+      // 2. Glowing Halo Spin & Bobbing
       if (this.haloRing) {
-        this.haloRing.rotation.z += 0.025;
+        this.haloRing.rotation.z += 0.03;
+        this.haloRing.position.y = 1.85 + Math.sin(this.time * 2) * 0.05;
       }
 
-      // 3. Lip-Sync Mouth Morphing during AI Voice Speech
+      // 3. Dynamic Lip-Sync Mouth Morphing during AI Speech
       if (this.mouthMesh) {
         if (this.isSpeaking) {
-          const mouthOpen = 1 + Math.abs(Math.sin(this.time * 14)) * 1.8;
-          this.mouthMesh.scale.set(mouthOpen, mouthOpen, 1);
+          const mouthOpenX = 1.2 + Math.abs(Math.sin(this.time * 12)) * 1.5;
+          const mouthOpenY = 1.0 + Math.abs(Math.cos(this.time * 15)) * 1.8;
+          this.mouthMesh.scale.set(mouthOpenX, mouthOpenY, 1);
         } else {
           this.mouthMesh.scale.set(1, 0.25, 1);
         }
@@ -462,12 +474,12 @@ export class Waifu3DEngine {
 
       // 4. Natural Anime Eye Blinking Cycle
       this.blinkTimer += 0.03;
-      if (this.blinkTimer > 3.8) {
+      if (this.blinkTimer > 3.5) {
         if (this.eyeLeftMesh && this.eyeRightMesh) {
           this.eyeLeftMesh.scale.y = 0.08;
           this.eyeRightMesh.scale.y = 0.08;
         }
-        if (this.blinkTimer > 3.95) {
+        if (this.blinkTimer > 3.7) {
           this.blinkTimer = 0;
           if (this.eyeLeftMesh && this.eyeRightMesh) {
             this.eyeLeftMesh.scale.y = 1.0;
@@ -476,11 +488,11 @@ export class Waifu3DEngine {
         }
       }
 
-      // 5. Floating Particle Movement
+      // 5. Floating Ambient Cyber Particles
       if (this.particlesGroup) {
         this.particlesGroup.children.forEach(p => {
           p.position.y += p.userData.speedY;
-          p.position.x += Math.sin(this.time + p.userData.seed) * 0.006;
+          p.position.x += Math.sin(this.time + p.userData.seed) * 0.008;
           if (p.position.y > 4) p.position.y = -3.5;
         });
       }
@@ -494,40 +506,41 @@ export class Waifu3DEngine {
 
   // Update lighting & procedural texture palette based on AI emotion
   updateEmotion(emotionStr) {
-    this.currentEmotion = emotionStr || 'Neutral 😊';
+    const str = typeof emotionStr === 'string' ? emotionStr : '';
+    this.currentEmotion = str || 'Neutral 😊';
 
     let eyeColor = '#00f0ff';
     let hairColor = '#ff007f';
     let blushColor = '#ff66aa';
     let lightHex = 0xff007f;
 
-    if (emotionStr.includes('Flustered') || emotionStr.includes('Love')) {
+    if (str.includes('Flustered') || str.includes('Love')) {
       eyeColor = '#ff00aa';
       hairColor = '#ff007f';
       blushColor = '#ff0055';
       lightHex = 0xff00aa;
-    } else if (emotionStr.includes('Playful') || emotionStr.includes('Smug')) {
+    } else if (str.includes('Playful') || str.includes('Smug')) {
       eyeColor = '#00ffcc';
       hairColor = '#ff9900';
       blushColor = '#ff99aa';
       lightHex = 0x00ffcc;
-    } else if (emotionStr.includes('Angry') || emotionStr.includes('Tsundere')) {
+    } else if (str.includes('Angry') || str.includes('Tsundere')) {
       eyeColor = '#ff3300';
       hairColor = '#cc0033';
       blushColor = '#ff3333';
       lightHex = 0xff0033;
     }
 
-    // Update procedural textures
+    // Update procedural textures safely
     if (this.eyeMaterial) this.eyeMaterial.map = this.generateAnimeEyeTexture(eyeColor);
     if (this.hairMaterial) this.hairMaterial.map = this.generateHairTexture(hairColor);
     if (this.faceMaterial) this.faceMaterial.map = this.generateFaceTexture(blushColor);
     if (this.dirLight) this.dirLight.color.setHex(lightHex);
-    if (this.haloRing) this.haloRing.material.color.setHex(lightHex);
+    if (this.haloRing && this.haloRing.material) this.haloRing.material.color.setHex(lightHex);
   }
 
   setSpeakingState(speaking) {
-    this.isSpeaking = speaking;
+    this.isSpeaking = !!speaking;
   }
 
   // Fetch cheapest OpenAI DALL-E 2 (256x256) waifu background texture
