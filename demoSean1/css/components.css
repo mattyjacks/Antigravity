@@ -1729,21 +1729,92 @@
 }
 
 @media (max-width: 640px) {
-  .vision-date-modal .vision-date-card {
-    width: 96%;
-    padding: 1rem;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  .vision-date-actions {
-    justify-content: center;
-  }
-  .vision-date-actions button {
-    flex: 1 1 45%;
-    font-size: 0.75rem;
+  /* Vision Date Modal Mobile Layout */
+  .vision-date-modal {
     padding: 0.5rem;
   }
+  .vision-date-modal .vision-date-card {
+    width: 98%;
+    padding: 0.85rem;
+    max-height: 94vh;
+    overflow-y: auto;
+    gap: 0.85rem;
+  }
+  .vision-date-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
   .vision-title {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+  }
+  .vision-header-controls {
+    gap: 0.5rem;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .vision-date-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .cam-wrapper,
+  .match-holo-wrapper {
+    aspect-ratio: 16 / 10;
+  }
+  .vision-chat-messages {
+    max-height: 100px;
+    min-height: 70px;
+  }
+  .vision-date-actions {
+    justify-content: stretch;
+    gap: 0.5rem;
+  }
+  .vision-date-actions button {
+    flex: 1 1 46%;
+    font-size: 0.72rem;
+    padding: 0.55rem 0.4rem;
+    justify-content: center;
+  }
+
+  /* Swipe Deck Mobile Layout */
+  .swipe-deck-container {
+    height: 440px;
+    max-width: 100%;
+  }
+  .swipe-card {
+    height: 440px;
+  }
+  .card-content-wrap {
+    padding: 1.25rem 1rem;
+  }
+  .card-header-main h2 {
+    font-size: 1.4rem;
+  }
+  .deck-actions-wrap {
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  .action-btn-circle {
+    width: 52px;
+    height: 52px;
+    font-size: 1.2rem;
+  }
+
+  /* Chat System Mobile Layout */
+  .chat-layout-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    height: auto;
+  }
+  .matches-sidebar {
+    max-height: 180px;
+  }
+  .chat-messages-container {
+    height: 350px;
+  }
+  .chat-input-wrapper {
+    flex-wrap: wrap;
+  }
+  .chat-input-wrapper input {
+    width: 100%;
   }
 }

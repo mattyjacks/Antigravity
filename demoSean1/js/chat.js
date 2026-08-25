@@ -517,6 +517,17 @@ let autoTurnsLeft = 6;
 let autoLoopIntervalId = null;
 let lastAutoTurnTime = 0;
 
+// Utility to safely sanitize string HTML
+function escapeHtml(str) {
+  if (typeof str !== 'string') return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 // Render embedded live date chat transcript inside Vision Date Modal
 function renderVisionDateChat(matchId) {
   const container = document.getElementById('vision-chat-messages');
