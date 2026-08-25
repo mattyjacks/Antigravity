@@ -3,6 +3,7 @@ import { synth } from './swipe.js';
 import { CameraEmotionScanner } from './cam-emotion.js';
 import { VoiceTalkEngine } from './voice-engine.js';
 import { Waifu3DEngine } from './waifu-3d.js';
+import { emotionFrameGen } from './emotion-frames.js';
 
 let activeMatchId = null;
 const camScanner = new CameraEmotionScanner();
@@ -682,55 +683,58 @@ function initVisionDateModalHandlers() {
   }
 }
 
-// Start Auto Live Date Mode (6 Turns, min 10s rate limit + Interactive Mic Listening)
-export function startAutoDateMode() {
-  isAutoDateActive = true;
-  autoTurnsLeft = 6;
-  lastAutoTurnTime = 0;
+let isContinuousVoiceActive = false;
+
+// Start Continuous Voice & Dialogue Mode (User-Driven Hands-Free Comms)
+export function startContinuousVoiceMode() {
+  if (isContinuousVoiceActive) return;
+
+  isContinuousVoiceActive = true;
 
   const autoBtn = document.getElementById('vision-auto-date-btn');
   const badge = document.getElementById('auto-session-badge');
-  const counter = document.getElementById('auto-turns-counter');
 
   if (autoBtn) {
     autoBtn.classList.add('auto-date-active');
-    autoBtn.innerHTML = `<i data-lucide="pause" style="width:16px;height:16px;"></i> Stop Auto Date`;
+    autoBtn.innerHTML = `<i data-lucide="pause" style="width:16px;height:16px;"></i> Pause Voice Mode`;
   }
-  if (badge) badge.style.display = 'flex';
-  if (counter) counter.innerText = autoTurnsLeft;
+  if (badge) {
+    badge.style.display = 'flex';
+    badge.innerHTML = `<i data-lucide="mic" style="width:14px;height:14px;"></i> CONTINUOUS VOICE DATE ACTIVE`;
+  }
   if (window.refreshIcons) window.refreshIcons();
 
-  showNotification("🤖 Auto Live Date Mode Started! Speak into your mic or watch the AI date react!", 'heart');
+  showNotification("🎙️ Continuous Voice Date Active! Speak naturally into your mic to chat.", 'heart');
 
-  // Activate Mic Listening so bot hears user voice in real-time during Auto Date
+  // Activate continuous listening loop
+  activateMicListening();
+}
+
+// Activate microphone listening for the user's turn
+function activateMicListening() {
+  if (!isContinuousVoiceActive || !isVisionModalOpen) return;
+
   if (voiceEngine.isSTTSupported()) {
     voiceEngine.startListening(
       (transcript, isFinal) => {
         if (isFinal && transcript.trim()) {
-          showNotification(`🎙️ Heard: "${transcript.trim()}"`, 'heart');
+          showNotification(`🎙️ Transmitting: "${transcript.trim()}"`, 'heart');
           sendMessage(transcript.trim());
         }
       },
-      (err) => {}
+      (err) => {
+        // If mic times out or closes, re-arm listening if continuous mode is still active
+        if (isContinuousVoiceActive && isVisionModalOpen && !voiceEngine.isSpeaking) {
+          setTimeout(() => activateMicListening(), 1000);
+        }
+      }
     );
   }
-
-  // Run immediate first auto turn
-  executeAutoTurn();
-
-  // Polling loop every 3 seconds to check rate limits & turn triggers
-  if (autoLoopIntervalId) clearInterval(autoLoopIntervalId);
-  autoLoopIntervalId = setInterval(checkAndRunAutoTurn, 3000);
 }
 
-// Stop Auto Live Date Mode
-function stopAutoDateMode(reason = "") {
-  isAutoDateActive = false;
-  if (autoLoopIntervalId) {
-    clearInterval(autoLoopIntervalId);
-    autoLoopIntervalId = null;
-  }
-
+// Stop Continuous Voice Date Mode
+export function stopContinuousVoiceMode(reason = "") {
+  isContinuousVoiceActive = false;
   voiceEngine.stopListening();
 
   const autoBtn = document.getElementById('vision-auto-date-btn');
@@ -738,7 +742,7 @@ function stopAutoDateMode(reason = "") {
 
   if (autoBtn) {
     autoBtn.classList.remove('auto-date-active');
-    autoBtn.innerHTML = `<i data-lucide="zap" style="width:16px;height:16px;"></i> Auto Live Date (6 Turns)`;
+    autoBtn.innerHTML = `<i data-lucide="mic" style="width:16px;height:16px;"></i> Continuous Voice Date`;
   }
   if (badge) badge.style.display = 'none';
   if (window.refreshIcons) window.refreshIcons();
@@ -746,67 +750,13 @@ function stopAutoDateMode(reason = "") {
   if (reason) {
     showNotification(reason, 'warning');
   } else {
-    showNotification("Auto Live Date Paused", 'warning');
+    showNotification("Continuous Voice Date Paused", 'warning');
   }
 }
 
-// Check rate limiting (minimum 10s between turns) & AI speech state
-async function checkAndRunAutoTurn() {
-  if (!isAutoDateActive || !isVisionModalOpen) {
-    stopAutoDateMode();
-    return;
-  }
-
-  if (autoTurnsLeft <= 0) {
-    stopAutoDateMode("Auto Live Date Session Complete! (6 Turns Limit Reached)");
-    return;
-  }
-
-  // Rate Limiting: Minimum 10 seconds (10,000ms) between turns
-  const now = Date.now();
-  if (now - lastAutoTurnTime < 10000) {
-    return; // Rate limit hold
-  }
-
-  // Do not interrupt if AI is currently speaking or user mic is active
-  if (voiceEngine.isSpeaking || voiceEngine.isListening) {
-    return;
-  }
-
-  executeAutoTurn();
-}
-
-// Execute one auto turn
-async function executeAutoTurn() {
-  lastAutoTurnTime = Date.now();
-  
-  const matches = getMatches();
-  const match = matches.find(m => m.id === activeMatchId);
-  if (!match) return;
-
-  // 1. Get latest face emotion telemetry instantly without blocking
-  const latestCam = camScanner.getLatestEmotion();
-
-  // Trigger background frame refresh asynchronously without awaiting
-  camScanner.analyzeCurrentFrame(match.tag).catch(err => console.warn("Cam refresh:", err));
-
-  // 2. Formulate turn observation prompt based on current emotion & cues
-  const prompt = `[Auto Vision Observation: My expression is "${latestCam.primary_emotion}" with visual cue "${latestCam.facial_cues}". Chat back with me dynamically based on how I look!]`;
-
-  // 3. Send message & trigger voice reply immediately!
-  await sendMessage(prompt);
-
-  // 4. Decrement turns left
-  autoTurnsLeft--;
-  const counter = document.getElementById('auto-turns-counter');
-  if (counter) counter.innerText = autoTurnsLeft;
-
-  if (autoTurnsLeft <= 0) {
-    setTimeout(() => {
-      stopAutoDateMode("Auto Live Date Session Complete! (6 Turns Limit Reached)");
-    }, 5000);
-  }
-}
+// Export legacy aliases for backwards compatibility
+export const startAutoDateMode = startContinuousVoiceMode;
+export const stopAutoDateMode = stopContinuousVoiceMode;
 
 // Open Vision Date Mode Modal
 export function openVisionDateModal(match) {
@@ -869,12 +819,18 @@ function updateVisionDateUI(match) {
   const moodElem = document.getElementById('vision-match-mood');
   const reactionElem = document.getElementById('vision-match-reaction');
   const badgeElem = document.getElementById('match-holo-badge');
+  const stopMotionImg = document.getElementById('emotion-256-stopmotion-frame');
 
   // Hide raw emoji text avatar when 3D Waifu is active
   if (avatarElem) avatarElem.style.display = 'none';
   if (moodElem) moodElem.innerText = match.currentEmotion || "Neutral 😊";
   if (reactionElem) reactionElem.innerText = `"${match.emotionReaction || 'Reacting to your presence'}"`;
   if (badgeElem) badgeElem.innerText = `${match.tag.toUpperCase()} 3D AI WAIFU`;
+
+  // Start 256x256 Animated Stop-Motion Emotion Frame Stream (8 FPS)
+  if (stopMotionImg) {
+    emotionFrameGen.startStopMotionSequence(stopMotionImg, match, match.currentEmotion || "Neutral 😊");
+  }
 
   // Update 3D Waifu Mesh Emotion & Speech Lip-Sync State
   if (waifu3d.initialized) {

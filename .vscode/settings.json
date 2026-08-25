@@ -1,3 +1,6 @@
 {
-    "cmake.sourceDirectory": "C:/GitHub5/Antigravity/OBSplug/plug1"
+    "cmake.sourceDirectory": "C:/GitHub5/Antigravity/OBSplug/plug1",
+    "cmake.configureOnOpen": false,
+    "cmake.configureOnEdit": false,
+    "cmake.automaticReconfigure": false
 }

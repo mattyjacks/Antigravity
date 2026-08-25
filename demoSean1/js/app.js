@@ -1,5 +1,5 @@
 import { PROFILES } from './profiles.js';
-import { CardDeck, synth } from './swipe.js';
+import { CardDeck, synth, triggerConfetti } from './swipe.js';
 import { initChatSystem, addMatch, getMatches, selectMatchChat, openVisionDateModal, startAutoDateMode } from './chat.js';
 import { initProfileSettings, getUserProfile, showNotification } from './profile-settings.js';
 
@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabNavigation();
   initProfileSettings();
   initChatSystem();
+  initAudioControls();
   
   // Set up the Swipe Card Deck
   const deckContainer = document.getElementById('swipe-deck-container');
@@ -32,9 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshDeck();
   }
 
-  // Bind controls for buttons (Like/Pass/SuperLike) below the deck
+  // Bind controls for buttons (Like/Pass/SuperLike/Rewind) below the deck
   setupDeckActionButtons();
   setupSkipToGoodPartButton();
+  setupDeckFilterBar();
 
   // Listen to profile change events to refresh deck scores
   window.addEventListener('carrymeUserProfileChanged', () => {
@@ -52,6 +54,38 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// Setup Master Audio Mute Button
+function initAudioControls() {
+  const muteBtn = document.getElementById('audio-mute-toggle-btn');
+  const icon = document.getElementById('audio-icon');
+
+  if (muteBtn) {
+    muteBtn.addEventListener('click', () => {
+      const enabled = synth.toggleMute();
+      if (icon) {
+        icon.setAttribute('data-lucide', enabled ? 'volume-2' : 'volume-x');
+        if (window.refreshIcons) window.refreshIcons();
+      }
+      showNotification(enabled ? "Audio sound effects unmuted" : "Audio sound effects muted", enabled ? "volume-2" : "volume-x");
+    });
+  }
+}
+
+// Setup Deck Filter Chips
+function setupDeckFilterBar() {
+  const filterChips = document.querySelectorAll('#deck-filter-bar .filter-chip');
+  filterChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      synth.playClick();
+      filterChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+
+      const filterVal = chip.getAttribute('data-filter');
+      if (deck) deck.setFilter(filterVal);
+    });
+  });
+}
+
 // Setup "Skip to Good Part ⚡" instant auto date button
 function setupSkipToGoodPartButton() {
   const skipBtn = document.getElementById('skip-to-good-part-btn');
@@ -59,6 +93,7 @@ function setupSkipToGoodPartButton() {
 
   skipBtn.addEventListener('click', () => {
     synth.playMatch();
+    triggerConfetti();
 
     // 1. Pick a random profile from PROFILES
     const randomProfile = PROFILES[Math.floor(Math.random() * PROFILES.length)];
@@ -114,11 +149,12 @@ function trackSwipedProfile(profileId) {
   }
 }
 
-// Setup deck manual controller buttons (Dislike / Superlike / Like)
+// Setup deck manual controller buttons (Dislike / Superlike / Like / Rewind)
 function setupDeckActionButtons() {
   const btnPass = document.getElementById('action-pass');
   const btnSuper = document.getElementById('action-super');
   const btnLike = document.getElementById('action-like');
+  const btnRewind = document.getElementById('action-rewind');
 
   if (btnPass) {
     btnPass.addEventListener('click', () => {
@@ -132,21 +168,28 @@ function setupDeckActionButtons() {
     });
   }
 
+  if (btnRewind) {
+    btnRewind.addEventListener('click', () => {
+      if (deck) deck.rewindSwipe();
+    });
+  }
+
   if (btnSuper) {
     btnSuper.addEventListener('click', () => {
-      synth.playClick();
+      synth.playMatch();
+      triggerConfetti();
+
       // Superlike matches instantly with higher initial affection!
-      const card = document.querySelector('.swipe-card.top-card');
-      if (card && deck) {
-        const topProfile = deck.deck[deck.currentIndex];
+      const visibleDeck = deck ? deck.getFilteredDeck() : [];
+      if (deck && visibleDeck.length > deck.currentIndex) {
+        const topProfile = visibleDeck[deck.currentIndex];
         if (topProfile) {
           deck.triggerSwipe(1);
-          // Wait briefly, then increase affection
           setTimeout(() => {
             const matches = getMatches();
             const idx = matches.findIndex(m => m.id === topProfile.id);
             if (idx !== -1) {
-              matches[idx].affection = 40; // Starts higher
+              matches[idx].affection = 45; // Starts higher
               matches[idx].affectionReason = "Super Liked by Player 1! Instant connection.";
               localStorage.setItem('carryme_matches', JSON.stringify(matches));
               window.dispatchEvent(new Event('carrymeMatchesUpdated'));
@@ -195,7 +238,7 @@ function initTabNavigation() {
   });
 }
 
-// Cyberpunk Theme Switcher logic
+// Theme Switcher logic
 function initThemeEngine() {
   const themeBtns = document.querySelectorAll('.theme-btn');
   const body = document.body;
@@ -212,7 +255,7 @@ function initThemeEngine() {
   });
   
   function applyTheme(themeName) {
-    body.classList.remove('theme-cyberpunk', 'theme-tactical', 'theme-guild');
+    body.classList.remove('theme-cyberpunk', 'theme-tactical', 'theme-guild', 'theme-synthwave');
     themeBtns.forEach(b => b.classList.remove('active'));
     
     const activeBtn = document.querySelector(`.theme-btn[data-theme="${themeName}"]`);
@@ -222,3 +265,4 @@ function initThemeEngine() {
     localStorage.setItem('carryme-theme', themeName);
   }
 }
+

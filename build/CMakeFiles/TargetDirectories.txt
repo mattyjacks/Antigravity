@@ -1,2 +1,0 @@
-C:/GitHub5/Antigravity/build/CMakeFiles/ALL_BUILD.dir
-C:/GitHub5/Antigravity/build/CMakeFiles/ZERO_CHECK.dir

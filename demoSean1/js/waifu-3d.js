@@ -564,23 +564,50 @@ export class Waifu3DEngine {
   }
 
   startAnimationLoop() {
+    // Mouse Parallax Pointer listener
+    this.mouseTargetX = 0;
+    this.mouseTargetY = 0;
+    this.mouseCurrentX = 0;
+    this.mouseCurrentY = 0;
+
+    if (this.container) {
+      this.container.addEventListener('mousemove', (e) => {
+        const rect = this.container.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        this.mouseTargetX = x * 0.35;
+        this.mouseTargetY = y * 0.25;
+      });
+
+      this.container.addEventListener('mouseleave', () => {
+        this.mouseTargetX = 0;
+        this.mouseTargetY = 0;
+      });
+    }
+
     const animate = () => {
       if (!this.initialized) return;
 
       this.time += 0.04;
 
-      // 1. Idle Breathing, Head Sway & Speech Movement
+      // Smooth Mouse Parallax Interpolation
+      this.mouseCurrentX += (this.mouseTargetX - this.mouseCurrentX) * 0.08;
+      this.mouseCurrentY += (this.mouseTargetY - this.mouseCurrentY) * 0.08;
+
+      // 1. Idle Breathing, Head Sway & Speech Movement + Mouse Parallax
       if (this.waifuGroup) {
         if (this.isSpeaking) {
           // Energetic head tilt & bounce while talking
           this.waifuGroup.position.y = -0.35 + Math.abs(Math.sin(this.time * 4.5)) * 0.09;
-          this.headGroup.rotation.y = Math.sin(this.time * 3.2) * 0.16;
+          this.headGroup.rotation.y = Math.sin(this.time * 3.2) * 0.16 + this.mouseCurrentX;
+          this.headGroup.rotation.x = this.mouseCurrentY;
           this.headGroup.rotation.z = Math.cos(this.time * 2.4) * 0.07;
           if (this.hairGroup) this.hairGroup.rotation.z = Math.sin(this.time * 3.5) * 0.05;
         } else {
           // Smooth idle breathing
           this.waifuGroup.position.y = -0.35 + Math.sin(this.time * 1.5) * 0.04;
-          this.headGroup.rotation.y = Math.sin(this.time * 0.7) * 0.08;
+          this.headGroup.rotation.y = Math.sin(this.time * 0.7) * 0.08 + this.mouseCurrentX;
+          this.headGroup.rotation.x = this.mouseCurrentY;
           this.headGroup.rotation.z = Math.cos(this.time * 0.5) * 0.025;
           if (this.hairGroup) this.hairGroup.rotation.z = 0;
         }
@@ -601,10 +628,10 @@ export class Waifu3DEngine {
       this.eyeCurrentY += (this.eyeTargetY - this.eyeCurrentY) * 0.1;
 
       if (this.eyeLeftMesh && this.eyeRightMesh) {
-        this.eyeLeftMesh.position.x = -0.38 + this.eyeCurrentX;
-        this.eyeLeftMesh.position.y = 0.08 + this.eyeCurrentY;
-        this.eyeRightMesh.position.x = 0.38 + this.eyeCurrentX;
-        this.eyeRightMesh.position.y = 0.08 + this.eyeCurrentY;
+        this.eyeLeftMesh.position.x = -0.38 + this.eyeCurrentX + (this.mouseCurrentX * 0.15);
+        this.eyeLeftMesh.position.y = 0.08 + this.eyeCurrentY - (this.mouseCurrentY * 0.15);
+        this.eyeRightMesh.position.x = 0.38 + this.eyeCurrentX + (this.mouseCurrentX * 0.15);
+        this.eyeRightMesh.position.y = 0.08 + this.eyeCurrentY - (this.mouseCurrentY * 0.15);
       }
 
       // 4. Natural Blinking Animation Cycle

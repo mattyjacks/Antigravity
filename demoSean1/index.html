@@ -29,10 +29,22 @@
         <li><a href="#profile-section">My Loadout</a></li>
       </ul>
       
+      <!-- Telemetry Server Status Pill -->
+      <div class="server-telemetry-pill" title="Live Server Latency & Frame Rate">
+        <span class="ping-dot"></span>
+        <span class="ping-text">14ms</span>
+        <span class="fps-text">60 FPS</span>
+      </div>
+
       <!-- Skip to Good Part Instant Trigger Button -->
-      <button class="btn btn-accent btn-skip-good-part" id="skip-to-good-part-btn" title="Instant AI Vision & Voice Date with a random match!">
+      <button class="btn btn-accent btn-skip-good-part" id="skip-to-good-part-btn" title="Instant AI Vision & Voice Date with a random match! [Hotkey: Space]">
         <i data-lucide="zap" style="width:16px;height:16px;"></i>
         Skip to Good Part ⚡
+      </button>
+
+      <!-- Audio Synth Control Toggle -->
+      <button class="btn-icon-audio" id="audio-mute-toggle-btn" title="Toggle Synth Sound Effects">
+        <i data-lucide="volume-2" id="audio-icon" style="width:18px;height:18px;"></i>
       </button>
 
       <!-- Theme Skin Switcher -->
@@ -49,6 +61,10 @@
           <i data-lucide="swords" style="width:14px;height:14px;"></i>
           Guild
         </button>
+        <button class="theme-btn" data-theme="synthwave" title="Synthwave Arcane Purple">
+          <i data-lucide="flame" style="width:14px;height:14px;"></i>
+          Synth
+        </button>
       </div>
     </div>
   </header>
@@ -60,6 +76,15 @@
     
     <!-- 1. SWIPE DECK SECTION -->
     <section id="swipe-section" class="app-section active">
+      <!-- Gamer Deck Category Filter Bar -->
+      <div class="deck-filter-bar" id="deck-filter-bar">
+        <span class="filter-lbl"><i data-lucide="filter" style="width:12px;height:12px;"></i> Queue Filter:</span>
+        <button class="filter-chip active" data-filter="All">All Players</button>
+        <button class="filter-chip" data-filter="Competitive">Ranked Sweats 🏆</button>
+        <button class="filter-chip" data-filter="Casual">Cozy / Casual ☕</button>
+        <button class="filter-chip" data-filter="Achievements">Completionists 🎯</button>
+      </div>
+
       <div class="deck-section-wrap">
         <div class="card-stack-container" id="swipe-deck-container">
           <!-- Populated dynamically by swipe.js -->
@@ -67,13 +92,16 @@
         
         <!-- Controls at bottom of deck -->
         <div class="deck-controls">
-          <button class="control-btn" id="action-pass" title="Pass / Dislike">
+          <button class="control-btn control-rewind" id="action-rewind" title="Undo Last Swipe (Rewind)">
+            <i data-lucide="rotate-ccw" style="color:var(--text-secondary);"></i>
+          </button>
+          <button class="control-btn" id="action-pass" title="Pass / Dislike [Hotkey: ←]">
             <i data-lucide="x" style="color:var(--accent-secondary);"></i>
           </button>
-          <button class="control-btn" id="action-super" title="Super Like! Instant High Affection">
+          <button class="control-btn" id="action-super" title="Super Like! Instant Connection [Hotkey: ↑]">
             <i data-lucide="star"></i>
           </button>
-          <button class="control-btn" id="action-like" title="Match / Like">
+          <button class="control-btn" id="action-like" title="Match / Like [Hotkey: →]">
             <i data-lucide="heart" style="color:var(--accent);fill:rgba(0, 240, 255, 0.1);"></i>
           </button>
         </div>
@@ -213,6 +241,13 @@
           <div class="match-holo-wrapper" id="match-holo-wrapper">
             <div class="waifu-3d-container" id="waifu-3d-container"></div>
             <div class="match-holo-avatar" id="vision-match-avatar">☄️</div>
+            
+            <!-- 256x256px Animated Stop-Motion AI Emotion Reaction Frame -->
+            <div class="emotion-256-frame-wrap" title="256x256 Live AI Reaction Stream">
+              <span class="frame-label">256px Live Stream</span>
+              <img id="emotion-256-stopmotion-frame" class="emotion-256-img" width="256" height="256" alt="AI Reaction Frame" />
+            </div>
+
             <div class="match-emotion-ring" id="match-emotion-ring">
               <span class="match-mood-badge" id="vision-match-mood">Flustered 😳</span>
             </div>
@@ -249,8 +284,8 @@
       <!-- Action Controls Bar -->
       <div class="vision-date-actions">
         <button class="btn btn-accent" id="vision-auto-date-btn">
-          <i data-lucide="zap" style="width:16px;height:16px;"></i>
-          Auto Live Date (6 Turns)
+          <i data-lucide="mic" style="width:16px;height:16px;"></i>
+          Continuous Voice Date
         </button>
         <button class="btn btn-secondary" id="vision-scan-btn">
           <i data-lucide="camera" style="width:16px;height:16px;"></i>
@@ -289,6 +324,17 @@
             <div class="profile-form-group">
               <label for="edit-location">Location / Outpost</label>
               <input type="text" id="edit-location" required placeholder="e.g. Concord, NH">
+            </div>
+
+            <div class="profile-form-group">
+              <label for="edit-rank">Competitive Rank Division</label>
+              <select id="edit-rank">
+                <option value="Bronze">Bronze / Silver (Learning the ropes)</option>
+                <option value="Gold">Gold / Platinum (Solid core duo)</option>
+                <option value="Diamond">Diamond / Ascendant (High rank grind)</option>
+                <option value="Radiant" selected>Radiant / Immortal (Top tier sweat ⚡)</option>
+                <option value="Elden Lord">Elden Lord / God Rank (Mythic raid leader)</option>
+              </select>
             </div>
 
             <div class="profile-form-group">

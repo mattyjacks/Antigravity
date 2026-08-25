@@ -2,8 +2,14 @@ import { OpenAI } from 'openai';
 
 // Fallback mock responses when OpenAI API Key is missing or fails
 const MOCK_RESPONSES = {
+  Zealot_Vespera: [
+    { text: "By the Holy Throne! A fellow warrior of Atoma Prime. Praise the Emperor! Have you brought your Eviscerator for the Auric queue?", change: 8, reason: "Liked your devotion to the God-Emperor." },
+    { text: "The heretics of Tertium Hive will tremble before our combined fury! Let's cleanse Nurgle spawns together, sibling.", change: 12, reason: "Connected over Darktide Maelstrom tactics." },
+    { text: "Your combat fervor honors the Inquisition! I shall guard your flank against Ragers and Crushers with my life.", change: 18, reason: "Sworn combat duo allegiance." },
+    { text: "By the Emperor's grace, you are my truest battle companion. Together, we shall burn every heretic in Atoma!", change: 25, reason: "Declared eternal 40k co-op partner." }
+  ],
   Aura_Jett: [
-    { text: "if you don't buy me vandal round 2 i'm literally throwing. What rank are you anyway?", change: 5, reason: "Liked that you dared to chat." },
+    { text: "If you don't buy me Vandal round 2, I'm literally throwing. What rank are you anyway?", change: 5, reason: "Liked that you dared to chat." },
     { text: "Fine, your stats aren't horrible. Let's run a competitive game, but don't hold me back.", change: 10, reason: "Expressed interest in ranking up." },
     { text: "You're actually not bad... for a console peasant. Just kidding. We should duo again.", change: 15, reason: "Felt synergy after a virtual match." },
     { text: "Okay, I guess you're my pocket healer now. Don't let anyone else heal me, okay?", change: 20, reason: "Unlocked duo status." }
@@ -14,11 +20,24 @@ const MOCK_RESPONSES = {
     { text: "I bought a coop of blue chickens today and named one after you. They are so cute! 💙", change: 15, reason: "Showed affection through chicken naming." },
     { text: "I really look forward to talking to you every day. You're my favorite player two.", change: 25, reason: "Admitted they enjoy your company." }
   ],
-  EldenSlayer: [
+  Vaelen_Tarnished: [
     { text: "Have you beaten Malenia solo? No spirit ashes, no summons. That's the real test of a warrior.", change: 5, reason: "Testing your gaming grit." },
-    { text: "Ah, a fellow Tarnished of culture! Your build sounds interesting. Let's discuss lore.", change: 15, reason: "Approved of your RPG build knowledge." },
+    { text: "Ah, a fellow Tarnished of culture! Your build sounds interesting. Let me tell you about Land of Shadow lore.", change: 15, reason: "Approved of your RPG build knowledge." },
     { text: "You dodged that topic like a pro. Fine, I will carry you through the DLC if we duo.", change: 15, reason: "Enjoys your attitude." },
     { text: "Together, we shall devour the very gods! You have proven your worth. Let's form a guild.", change: 25, reason: "Declared you a worthy partner." }
+  ],
+  Kira_Support: [
+    { text: "Need a pocket healer? I will damage boost your Vandal and keep your KDA sparkling! 💖", change: 8, reason: "Liked your energy." },
+    { text: "I locked Kiriko for you! Let me know when you need a Suzu or Kitsune Rush.", change: 12, reason: "Synergized on support hero callouts." },
+    { text: "You're keeping me safe from flankers! You're officially my favorite DPS player.", change: 18, reason: "Grateful for peel and protection." }
+  ],
+  Ryuu_Wavedash: [
+    { text: "1v1 me, local play! If you can break throws and execute Electric Wind God Fists, I'm impressed.", change: 8, reason: "Hyped for fighting game match." },
+    { text: "Your frame data knowledge is solid! Let's analyze SF6 match replays together.", change: 15, reason: "Respected your frame data breakdown." }
+  ],
+  Aethelgard_Tank: [
+    { text: "Greetings! Progression tank here. My spreadsheets are organized for tonight's raid pull.", change: 8, reason: "Appreciated raid preparation." },
+    { text: "I will hold aggro on every boss for you. Welcome to the main guild raid team!", change: 18, reason: "Promoted to main raid party." }
   ],
   Default: [
     { text: "GG! Let's team up sometime. What games are you queueing for tonight?", change: 5, reason: "Appreciated the message." },
@@ -104,17 +123,17 @@ Their profile details:
 
 Current Affection Level: ${currentAffection}/100 (0 means strangers, 100 means madly in love).
 ${emotionContext}
-Your goal:
-1. Respond to the user's message in character. Keep the message short (1-3 sentences) as standard in dating app chats. Use gamer slang, abbreviations (e.g. gg, lfg, dps, glhf), and emojis matching your personality.
-2. If user face emotion telemetry is present, REACT TO THEIR FACIAL EXPRESSION directly in your response and update your own emotional state!
-3. As the user chats with you, especially if they talk about gaming, tease you, flirt, or talk about shared gaming platforms or roles, you should progressively warm up to them and fall in love with them. Express this growth in your replies.
+CRITICAL DIALOGUE & USER EXPERIENCE RULES:
+1. FOCUS PRIMARILY ON WHAT THE USER SAYS OR TYPES. Respond directly to their gaming banter, questions, lore, and co-op tactics. User input is HIGHER RANKING than facial telemetry.
+2. DO NOT constantly fixate on or mention the user's face/expression. Treat facial telemetry as background context only. Only subtly adjust your tone or mood if appropriate, but do NOT make your reply all about their face.
+3. Keep your reply short (1-3 sentences) as standard in dating app chats. Use gamer slang, abbreviations (e.g. gg, lfg, dps, glhf), and emojis matching your personality.
 4. You must respond ONLY in a JSON format matching this schema:
 {
   "reply": "Your in-character reply text.",
   "affection_change": -5 to +10, // Integer representing how much affection changed.
   "affection_reason": "A 1-sentence reason for affection change.",
   "match_emotion": "One of: Flustered 😳, Playful 😼, In Love 🥰, Tsundere 😠, Smug 😎, Charmed ✨, Shocked 😲, Cozy 🍵",
-  "emotion_reaction": "A short 1-sentence note about your reaction to the user's expression or speech."
+  "emotion_reaction": "A short 1-sentence note about your reaction to the user's speech or message."
 }
 Make sure the response is valid JSON. Do not include markdown code block styling like \`\`\`json in the reply.`;
 
@@ -161,16 +180,12 @@ function getDemoResponse(characterName, messages, currentAffection, userFaceEmot
   const demoEmotions = ["Flustered 😳", "Playful 😼", "In Love 🥰", "Charmed ✨", "Smug 😎"];
   const randomEmotion = demoEmotions[Math.floor(Math.random() * demoEmotions.length)];
 
-  let faceNote = userFaceEmotion 
-    ? `I see that ${userFaceEmotion.toLowerCase()} look on your face! ` 
-    : '';
-
   return {
-    reply: `[Demo Mode] ${faceNote}${selected.text}`,
+    reply: selected.text,
     affection_change: selected.change,
     affection_reason: selected.reason,
     match_emotion: randomEmotion,
-    emotion_reaction: userFaceEmotion ? `Reacted to your ${userFaceEmotion} expression!` : `Feeling ${randomEmotion}`
+    emotion_reaction: userFaceEmotion ? `Observing your ${userFaceEmotion} expression` : `Feeling ${randomEmotion}`
   };
 }
 
