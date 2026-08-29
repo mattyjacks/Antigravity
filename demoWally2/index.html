@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>It's Wally's World | The Curated Collector's Vault & Vintage Archives NY</title>
+  <meta name="description" content="An elevated sanctuary for rare pop culture artifacts, CGC-graded comic slabs, vaulted Funko grails, archival vintage streetwear, and museum-tier collectibles. Lindenhurst & Copiague, NY.">
+  <meta name="keywords" content="Wally's World, It's Wally's World NY, luxury collectibles, vintage archives Lindenhurst, graded comics NY, Funko grails, estate collection buyouts">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- TOP MATTYJACKS CLIENT DEMO PROMO BANNER -->
+  <div class="luxe-mattyjacks-banner">
+    <div class="container luxe-banner-inner">
+      <div style="display: flex; align-items: center; gap: 0.65rem;">
+        <span class="luxe-banner-badge">CLIENT DEMO</span>
+        <span>✨ DEMO SITE FOR CLIENT MADE BY MATTYJACKS.COM — GET YOUR WEBSITE TODAY!</span>
+      </div>
+      <a href="https://mattyjacks.com" target="_blank" rel="noopener noreferrer" class="luxe-banner-btn">
+        <i class="fa-solid fa-gem"></i> Get Your Website Today
+      </a>
+    </div>
+  </div>
+
+  <!-- 1. TOP CURATOR STATUS BAR -->
+  <div class="top-curator-bar">
+    <div class="container curator-bar-inner">
+      <div class="curator-status">
+        <span class="curator-status-dot"></span>
+        <span>GALLERY ACTIVE • 234 E MONTAUK HWY, LINDENHURST, NY</span>
+      </div>
+      <div>
+        <span>AUTHENTICATED VINTAGE & POP-CULTURE RARITIES • EST. 2011</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. LUXURY NAVIGATION HEADER -->
+  <header class="luxe-header">
+    <div class="container luxe-nav-container">
+      <a href="#" class="brand-monogram">
+        <div class="monogram-crest">W</div>
+        <div class="brand-text-block">
+          <span class="brand-name">WALLY'S WORLD</span>
+          <span class="brand-tag">THE COLLECTOR'S ARCHIVE</span>
+        </div>
+      </a>
+
+      <ul class="luxe-nav-menu">
+        <li><a href="#disciplines" class="luxe-nav-link">Disciplines</a></li>
+        <li><a href="#gallery" class="luxe-nav-link">The Registry</a></li>
+        <li><a href="#locations" class="luxe-nav-link">Destinations</a></li>
+        <li><a href="#consignment" class="luxe-nav-link">Acquisition</a></li>
+        <li><a href="#vip-pass" class="luxe-nav-link">VIP Pass</a></li>
+        <li><a href="#heritage" class="luxe-nav-link">Heritage</a></li>
+      </ul>
+
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <button class="btn btn-gold btn-sm" onclick="openConsignmentModal()">
+          <i class="fa-solid fa-gem"></i> Sell Collection
+        </button>
+        <button class="mobile-menu-btn" aria-label="Toggle Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. EDITORIAL HERO SECTION -->
+  <section class="hero-editorial" id="hero">
+    <div class="container hero-editorial-grid">
+      <div class="hero-editorial-left">
+        <div class="hero-editorial-tag">
+          <span class="luxe-badge"><i class="fa-solid fa-award"></i> Long Island's Premier Curated Vault</span>
+        </div>
+
+        <h1 class="hero-editorial-title">
+          THE ARCHIVE OF <span class="text-gold">NOSTALGIA</span> & TIMELESS RARITIES
+        </h1>
+
+        <p class="hero-editorial-desc">
+          Curating the intersection of comic book heritage, high-grade pop culture grails, and authentic 1980s–90s vintage apparel. Every piece in our collection is hand-vetted for uncompromising provenance.
+        </p>
+
+        <div class="hero-action-row">
+          <a href="#gallery" class="btn btn-gold">
+            <i class="fa-solid fa-compass"></i> Explore The Registry
+          </a>
+          <a href="#consignment" class="btn btn-luxury-outline">
+            <i class="fa-solid fa-scale-balanced"></i> Consign Your Archive
+          </a>
+        </div>
+
+        <div class="hero-pillars">
+          <div class="pillar-item">
+            <span class="pillar-metric">$2.5M+</span>
+            <span class="pillar-label">In Rarities Sourced</span>
+          </div>
+          <div class="pillar-item">
+            <span class="pillar-metric">15+</span>
+            <span class="pillar-label">Years of Heritage</span>
+          </div>
+          <div class="pillar-item">
+            <span class="pillar-metric">2</span>
+            <span class="pillar-label">NY Destinations</span>
+          </div>
+          <div class="pillar-item">
+            <span class="pillar-metric">100%</span>
+            <span class="pillar-label">Verified Provenance</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Interactive Magnifier Showcase Frame -->
+      <div class="hero-curated-showcase">
+        <div class="curated-frame">
+          <div class="inspect-hint-badge">
+            <i class="fa-solid fa-magnifying-glass"></i> Hover to Magnify Details
+          </div>
+
+          <div class="curated-img-container" id="inspectContainer">
+            <img src="assets/images/funko_comics.jpg" alt="Curated Comic Slabs & Funko Pop Case" id="inspectImg">
+            <div class="magnifier-loupe" id="inspectLoupe"></div>
+          </div>
+
+          <div class="curated-frame-caption">
+            <div>
+              <div class="caption-title">The Master Showcase: Comics & Grails</div>
+              <div class="caption-meta">CGC GRADED SLABS & CONVENTION EXCLUSIVES</div>
+            </div>
+            <button class="btn btn-luxury-outline btn-sm" onclick="openLightbox('assets/images/funko_comics.jpg', 'Master Showcase: Graded Comics & Rare Funko Grails')">
+              <i class="fa-solid fa-expand"></i> Inspect
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. THE CURATED DISCIPLINES (EXHIBITION ROOMS) -->
+  <section class="luxe-section" id="disciplines">
+    <div class="container">
+      <div class="luxe-section-header">
+        <span class="luxe-subhead">EXHIBITION SECTORS</span>
+        <h2 class="luxe-section-title">The Curated <span class="text-gold">Disciplines</span></h2>
+        <p class="luxe-lead">Structured across six specialized exhibition chambers, encompassing the finest spectrum of 20th-century pop iconography.</p>
+      </div>
+
+      <div class="disciplines-grid">
+        <!-- Chamber 1: Comics -->
+        <div class="discipline-card">
+          <div class="discipline-media">
+            <img src="assets/images/funko_comics.jpg" alt="Comic Book Slabs">
+            <span class="room-index">ROOM I</span>
+          </div>
+          <div class="discipline-content">
+            <h3 class="discipline-title">Graded Comic Slabs & Key Issues</h3>
+            <p class="discipline-desc">Certified CGC, CBCS, and pristine raw specimens spanning the Golden, Silver, and Modern ages of Marvel and DC publishing.</p>
+            <ul class="discipline-tags">
+              <li>CGC 9.8 Slabs</li>
+              <li>1st Character Appearances</li>
+              <li>Archival Sleeves</li>
+            </ul>
+            <div class="discipline-footer">
+              <span style="font-size: 0.78rem; color: var(--gold-light);">5,000+ Sourced</span>
+              <a href="#gallery" class="view-archive-btn">View Chamber <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chamber 2: Funko Grails -->
+        <div class="discipline-card">
+          <div class="discipline-media">
+            <img src="assets/images/funko_comics.jpg" alt="Funko Pop Wall">
+            <span class="room-index">ROOM II</span>
+          </div>
+          <div class="discipline-content">
+            <h3 class="discipline-title">The Vaulted Funko Pop Collection</h3>
+            <p class="discipline-desc">A curated wall of retired, vaulted, and San Diego Comic-Con exclusive figurines encased in archival acrylic armors.</p>
+            <ul class="discipline-tags">
+              <li>Convention Exclusives</li>
+              <li>Stan Lee Tributes</li>
+              <li>Hard Pop Armors</li>
+            </ul>
+            <div class="discipline-footer">
+              <span style="font-size: 0.78rem; color: var(--gold-light);">Pristine Boxes</span>
+              <a href="#gallery" class="view-archive-btn">View Chamber <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chamber 3: Vintage Figures -->
+        <div class="discipline-card">
+          <div class="discipline-media">
+            <img src="assets/images/figures_collectibles.jpg" alt="Action Figures and Vintage Diecast">
+            <span class="room-index">ROOM III</span>
+          </div>
+          <div class="discipline-content">
+            <h3 class="discipline-title">1980s–90s Action Figures & Diecast</h3>
+            <p class="discipline-desc">Carded Toy Biz Spider-Man figures, Corgi diecast superhero editions, Pez dispensers, and vintage desk statues.</p>
+            <ul class="discipline-tags">
+              <li>Spider-Man Archives</li>
+              <li>Corgi Diecast</li>
+              <li>Carded Specimens</li>
+            </ul>
+            <div class="discipline-footer">
+              <span style="font-size: 0.78rem; color: var(--gold-light);">Museum Display</span>
+              <a href="#gallery" class="view-archive-btn">View Chamber <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chamber 4: Vintage Apparel -->
+        <div class="discipline-card">
+          <div class="discipline-media">
+            <img src="assets/images/storefront.jpg" alt="Vintage Apparel Racks">
+            <span class="room-index">ROOM IV</span>
+          </div>
+          <div class="discipline-content">
+            <h3 class="discipline-title">Archival Vintage Streetwear & Tees</h3>
+            <p class="discipline-desc">Heirloom single-stitch concert graphics, authentic Starter athletic outerwear, Carhartt workwear, and 90s cultural staples.</p>
+            <ul class="discipline-tags">
+              <li>Single-Stitch Cotton</li>
+              <li>Starter Bombers</li>
+              <li>90s Band Tees</li>
+            </ul>
+            <div class="discipline-footer">
+              <span style="font-size: 0.78rem; color: var(--gold-light);">1-of-1 Pieces</span>
+              <a href="#gallery" class="view-archive-btn">View Chamber <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chamber 5: Sports Memorabilia -->
+        <div class="discipline-card">
+          <div class="discipline-media">
+            <img src="assets/images/storefront.jpg" alt="Sports Memorabilia">
+            <span class="room-index">ROOM V</span>
+          </div>
+          <div class="discipline-content">
+            <h3 class="discipline-title">New York Sports Heritage</h3>
+            <p class="discipline-desc">Authentic game jerseys, vintage stadium pennants, signed rookie cards, and historic championship memorabilia.</p>
+            <ul class="discipline-tags">
+              <li>Knicks & Yankees Gear</li>
+              <li>Autographed Rarities</li>
+              <li>Vintage Pennants</li>
+            </ul>
+            <div class="discipline-footer">
+              <span style="font-size: 0.78rem; color: var(--gold-light);">NY Heritage</span>
+              <a href="#gallery" class="view-archive-btn">View Chamber <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chamber 6: Vinyl & Antiques -->
+        <div class="discipline-card">
+          <div class="discipline-media">
+            <img src="assets/images/storefront.jpg" alt="Vinyl & Antiques">
+            <span class="room-index">ROOM VI</span>
+          </div>
+          <div class="discipline-content">
+            <h3 class="discipline-title">Vinyl First Pressings & Antiques</h3>
+            <p class="discipline-desc">Curated crates of iconic vinyl records, vintage commercial signage, historic artifacts, and unique curiosities.</p>
+            <ul class="discipline-tags">
+              <li>First Press LP Records</li>
+              <li>Vintage Signage</li>
+              <li>Curated Curios</li>
+            </ul>
+            <div class="discipline-footer">
+              <span style="font-size: 0.78rem; color: var(--gold-light);">Continuous Intake</span>
+              <a href="#gallery" class="view-archive-btn">View Chamber <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. THE MUSEUM REGISTRY & CURATED GALLERY -->
+  <section class="luxe-section" id="gallery" style="background: var(--bg-surface);">
+    <div class="container">
+      <div class="luxe-section-header">
+        <span class="luxe-subhead">THE REGISTRY OF PIECES</span>
+        <h2 class="luxe-section-title">Current <span class="text-gold">Archival Holdings</span></h2>
+        <p class="luxe-lead">Select authenticated pieces available for private acquisition in our Lindenhurst showcase galleries.</p>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="gallery-selector-bar">
+        <button class="gallery-tab-btn active" data-discipline="all">All Holdings</button>
+        <button class="gallery-tab-btn" data-discipline="comics">Comic Book Slabs</button>
+        <button class="gallery-tab-btn" data-discipline="funkos">Funko Pop Vault</button>
+        <button class="gallery-tab-btn" data-discipline="figures">Action Figures & Toys</button>
+        <button class="gallery-tab-btn" data-discipline="apparel">Vintage Apparel</button>
+      </div>
+
+      <!-- Dynamic Gallery Grid -->
+      <div class="gallery-grid" id="curatedGalleryGrid">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. DUAL-LOCATION DESTINATION SWITCHER -->
+  <section class="luxe-section" id="locations">
+    <div class="container">
+      <div class="luxe-section-header">
+        <span class="luxe-subhead">DESTINATIONS</span>
+        <h2 class="luxe-section-title">Two Long Island <span class="text-gold">Collector Hubs</span></h2>
+        <p class="luxe-lead">Explore our two distinct destination properties, each tailored with a dedicated curatorial focus.</p>
+      </div>
+
+      <div class="locations-container">
+        <!-- Nav Switcher -->
+        <div class="location-nav-tabs">
+          <button class="loc-tab-btn active" data-loc="lindenhurst">
+            <div class="loc-icon-circle"><i class="fa-solid fa-landmark"></i></div>
+            <div>
+              <div style="font-family: var(--font-serif); font-size: 1.15rem; font-weight: 700;">Lindenhurst Flagship Gallery</div>
+              <div style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px;">Vintage Apparel, Comic Slabs & High-End Grails</div>
+            </div>
+          </button>
+
+          <button class="loc-tab-btn" data-loc="copiague">
+            <div class="loc-icon-circle"><i class="fa-solid fa-couch"></i></div>
+            <div>
+              <div style="font-family: var(--font-serif); font-size: 1.15rem; font-weight: 700;">Copiague Secondhand Hub</div>
+              <div style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px;">Estate Furniture, Electronics & Vinyl Digging</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Pane 1: Lindenhurst -->
+        <div class="loc-content-pane active" id="pane-lindenhurst">
+          <div class="loc-details-col">
+            <span class="luxe-badge" style="margin-bottom: 1rem;"><i class="fa-solid fa-star"></i> Flagship Property</span>
+            <h3>It's Wally's World Flagship</h3>
+            <div class="loc-address">📍 234 East Montauk Highway, Lindenhurst, NY 11757</div>
+            <p>
+              The iconic Lindenhurst location housing our crown jewel collections: multi-tier glass cases of CGC comic slabs, vaulted Funko Pops, pristine 90s action figures, and exterior vintage clothing racks.
+            </p>
+
+            <ul class="loc-specs-list">
+              <li><i class="fa-solid fa-clock"></i> <strong>Hours:</strong> Tuesday – Saturday 10:00 AM – 6:00 PM | Sunday 10:00 AM – 5:00 PM</li>
+              <li><i class="fa-solid fa-car"></i> <strong>Parking:</strong> Dedicated on-site parking lot directly in front of store</li>
+              <li><i class="fa-solid fa-shield-check"></i> <strong>Services:</strong> Immediate cash appraisal desk, comic sleeving & private holds</li>
+            </ul>
+
+            <a href="https://maps.google.com/?q=234+E+Montauk+Hwy+Lindenhurst+NY" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-sm">
+              <i class="fa-solid fa-diamond-turn-right"></i> Open Navigation Map
+            </a>
+          </div>
+
+          <div class="loc-media-col">
+            <img src="assets/images/storefront.jpg" alt="Lindenhurst Storefront">
+          </div>
+        </div>
+
+        <!-- Pane 2: Copiague -->
+        <div class="loc-content-pane" id="pane-copiague">
+          <div class="loc-details-col">
+            <span class="luxe-badge" style="margin-bottom: 1rem;"><i class="fa-solid fa-boxes-stacked"></i> Secondhand & Home Center</span>
+            <h3>Copiague Secondhand Emporium</h3>
+            <div class="loc-address">📍 Copiague, Long Island, NY</div>
+            <p>
+              Our expansive second location dedicated to treasure-hunting across fine pre-owned furniture, vintage electronics, audio gear, bulk vinyl collections, and unique estate liquidation items.
+            </p>
+
+            <ul class="loc-specs-list">
+              <li><i class="fa-solid fa-clock"></i> <strong>Hours:</strong> Wednesday – Sunday 10:00 AM – 5:00 PM</li>
+              <li><i class="fa-solid fa-truck-ramp-box"></i> <strong>Specialty:</strong> Heavy furniture intake, bulk lots & vintage audio equipment</li>
+              <li><i class="fa-solid fa-handshake"></i> <strong>Services:</strong> Full estate cleanouts & storage unit acquisitions</li>
+            </ul>
+
+            <button class="btn btn-gold btn-sm" onclick="openConsignmentModal()">
+              <i class="fa-solid fa-phone"></i> Inquire About Copiague Intake
+            </button>
+          </div>
+
+          <div class="loc-media-col">
+            <img src="assets/images/figures_collectibles.jpg" alt="Collectibles & Estate Finds">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. CONSIGNMENT & COLLECTION ACQUISITION WIZARD -->
+  <section class="luxe-section" id="consignment">
+    <div class="container">
+      <div class="acquisition-card">
+        <div class="luxe-section-header" style="margin-bottom: 2.5rem;">
+          <span class="luxe-subhead">CONSIGNMENT & BUYOUTS</span>
+          <h2 class="luxe-section-title">Acquire Top Dollar For Your <span class="text-gold">Archive</span></h2>
+          <p class="luxe-lead">Whether liquidating an estate collection or trading single grails, our valuation team provides immediate transparent disbursements.</p>
+        </div>
+
+        <form id="consignmentWizardForm">
+          <div style="margin-bottom: 1.5rem;">
+            <label style="font-family: var(--font-heading); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold-light); display: block; margin-bottom: 0.75rem;">
+              Step 1: Select Archive Scope
+            </label>
+            <div class="wizard-options-grid">
+              <div class="wizard-select-card selected">
+                <i class="fa-solid fa-box-open"></i>
+                <h4>Curated Singles</h4>
+                <p>1 to 15 rare comics, grails, or tees</p>
+              </div>
+              <div class="wizard-select-card">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <h4>Bulk Collection</h4>
+                <p>Multiple long boxes or toy archives</p>
+              </div>
+              <div class="wizard-select-card">
+                <i class="fa-solid fa-house-laptop"></i>
+                <h4>Estate Liquidation</h4>
+                <p>Full storage lockers or estate contents</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 1.5rem;">
+            <label style="font-family: var(--font-heading); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold-light); display: block; margin-bottom: 0.75rem;">
+              Step 2: Preferred Disbursement Format
+            </label>
+            <div class="wizard-options-grid">
+              <div class="wizard-select-card selected">
+                <i class="fa-solid fa-money-bill-wave"></i>
+                <h4>Instant Cash</h4>
+                <p>Immediate on-the-spot payment</p>
+              </div>
+              <div class="wizard-select-card">
+                <i class="fa-solid fa-receipt"></i>
+                <h4>Consignment (85/15)</h4>
+                <p>Maximum market value via gallery</p>
+              </div>
+              <div class="wizard-select-card">
+                <i class="fa-solid fa-credit-card"></i>
+                <h4>Store Trade (+25%)</h4>
+                <p>Elevated gallery credit multiplier</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.75rem;">
+            <div>
+              <label style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.35rem;">Your Name</label>
+              <input type="text" required placeholder="Collector Name" style="width: 100%; background: rgba(10,10,14,0.8); border: 1px solid var(--border-subtle); color: #fff; padding: 0.85rem; border-radius: var(--radius-sm);">
+            </div>
+            <div>
+              <label style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.35rem;">Contact Information</label>
+              <input type="text" required placeholder="Email or Phone" style="width: 100%; background: rgba(10,10,14,0.8); border: 1px solid var(--border-subtle); color: #fff; padding: 0.85rem; border-radius: var(--radius-sm);">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-gold" style="width: 100%;">
+            <i class="fa-solid fa-paper-plane"></i> Request Valuation Assessment
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. VIP DIGITAL COLLECTOR PASS GENERATOR -->
+  <section class="luxe-section" id="vip-pass" style="background: var(--bg-surface);">
+    <div class="container pass-generator-grid">
+      <!-- Left: Form Controls -->
+      <div>
+        <span class="luxe-subhead">COLLECTOR PATRONAGE</span>
+        <h2 class="luxe-section-title">The Digital <span class="text-gold">Collector Pass</span></h2>
+        <p class="luxe-lead" style="margin-bottom: 2rem;">
+          Generate your personalized digital membership credentials for priority access to Friday drops, private vault inspections, and collector-exclusive trade nights.
+        </p>
+
+        <div style="margin-bottom: 1.25rem;">
+          <label style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.4rem;">Passholder Name</label>
+          <input type="text" id="vipNameInput" value="VICTORIA STERLING" placeholder="Enter your name..." style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border-gold); color: #fff; padding: 0.85rem; border-radius: var(--radius-sm); font-family: var(--font-heading);">
+        </div>
+
+        <div style="margin-bottom: 2rem;">
+          <label style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.4rem;">Collector Tier</label>
+          <select id="vipTierSelect" style="width: 100%; background: #08080a; border: 1px solid var(--border-gold); color: var(--gold-light); padding: 0.85rem; border-radius: var(--radius-sm); font-family: var(--font-heading);">
+            <option value="ARCHIVIST TIER">ARCHIVIST TIER (Standard Access)</option>
+            <option value="VAULT HUNTER ELITE" selected>VAULT HUNTER ELITE (Priority Friday Access)</option>
+            <option value="DIAMOND GRAIL PATRON">DIAMOND GRAIL PATRON (Private Appraisals)</option>
+          </select>
+        </div>
+
+        <button class="btn btn-gold" onclick="downloadVipPass()">
+          <i class="fa-solid fa-download"></i> Save Digital Pass
+        </button>
+      </div>
+
+      <!-- Right: Live Interactive Pass Preview -->
+      <div class="vip-card-preview-wrap">
+        <div class="vip-digital-card">
+          <div class="vip-card-header">
+            <div>
+              <div style="font-family: var(--font-serif); font-size: 1.15rem; color: #fff; letter-spacing: 2px;">WALLY'S WORLD</div>
+              <div style="font-size: 0.65rem; color: var(--gold-light); letter-spacing: 1.5px;">ESTABLISHED 2011 • NEW YORK</div>
+            </div>
+            <div class="vip-tier-tag" id="vipCardTier">VAULT HUNTER ELITE</div>
+          </div>
+
+          <div class="vip-member-info">
+            <div class="vip-chip-symbol"></div>
+            <div style="margin-top: 1.25rem;">
+              <div class="vip-member-name" id="vipCardName">VICTORIA STERLING</div>
+              <div class="vip-member-number" id="vipMemberNumber">WW-849204</div>
+            </div>
+          </div>
+
+          <div class="vip-card-footer">
+            <div>VALID AT LINDENHURST & COPIAGUE</div>
+            <div>VERIFIED ARCHIVE PASS</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. FOUNDER HERITAGE & STORY -->
+  <section class="luxe-section" id="heritage">
+    <div class="container heritage-split">
+      <div class="heritage-photo-frame">
+        <img src="assets/images/storefront.jpg" alt="It's Wally's World Storefront">
+      </div>
+
+      <div>
+        <span class="luxe-subhead">THE PROVENANCE</span>
+        <h2 class="luxe-section-title">Fifteen Years of <span class="text-gold">Relentless Pursuit</span></h2>
+        
+        <p>
+          Founded by Wally Stack, It's Wally's World originated from a deep-seated passion for unearthing forgotten American pop culture treasures from estate liquidations and storage unit auctions across New York.
+        </p>
+
+        <div class="quote-badge-box">
+          "Every comic slab, vintage jacket, and diecast model has a story. Our mission is preserving that history and placing it into the hands of passionate collectors."
+        </div>
+
+        <p>
+          Today, what began as a tireless quest has evolved into two premier Long Island hubs housing over 25,000 carefully curated nostalgic artifacts, uniting vintage lovers, comic historians, and grail hunters worldwide.
+        </p>
+
+        <div style="margin-top: 2rem;">
+          <a href="#locations" class="btn btn-luxury-outline">
+            <i class="fa-solid fa-location-dot"></i> Visit Our Flagship
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MATTYJACKS.COM BESPOKE AGENCY ADVERTISEMENT -->
+  <section class="mattyjacks-luxe-ad-section" id="mattyjacks-agency">
+    <div class="container">
+      <div class="mattyjacks-luxe-card">
+        <div>
+          <span class="luxe-badge" style="margin-bottom: 1rem;"><i class="fa-solid fa-code"></i> Digital Architecture & Agency</span>
+          <div style="font-family: var(--font-serif); font-size: 1.15rem; color: var(--gold-light); letter-spacing: 2px; margin-bottom: 0.5rem;">
+            DO AND/OR DIE TRYING!!!
+          </div>
+          <h2 style="font-size: clamp(2rem, 3.5vw, 2.75rem); line-height: 1.2; margin-bottom: 1.25rem;">
+            ELEVATE YOUR ENTERPRISE WITH <span class="text-gold">MATTYJACKS.COM</span>
+          </h2>
+          <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.8; margin-bottom: 1.5rem;">
+            <strong>MattyJacks</strong> is a full-service agency & holding company engineering high-converting bespoke digital platforms, deploying proprietary custom AI tools, and scaling outbound revenue pipelines with elite global talent.
+          </p>
+
+          <div class="ad-luxe-features">
+            <div class="ad-luxe-feature">
+              <i class="fa-solid fa-gem"></i>
+              <span>High-Performance Custom Web Development</span>
+            </div>
+            <div class="ad-luxe-feature">
+              <i class="fa-solid fa-brain"></i>
+              <span>Custom AI Copilots & Workflow Tools</span>
+            </div>
+            <div class="ad-luxe-feature">
+              <i class="fa-solid fa-headset"></i>
+              <span>B2B Cold Calling Operations & Pipeline</span>
+            </div>
+            <div class="ad-luxe-feature">
+              <i class="fa-solid fa-vault"></i>
+              <span>High-Risk & Low-Risk Merchant Accounts</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ad-luxe-action-box">
+          <div style="font-family: var(--font-serif); color: #ffffff; font-size: 1.2rem; margin-bottom: 0.5rem; letter-spacing: 1px;">
+            COMMISSION YOUR PLATFORM
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 1.75rem; line-height: 1.6;">
+            Transform your business with unmatched digital craftsmanship and conversion-focused design.
+          </p>
+          
+          <a href="https://mattyjacks.com" target="_blank" rel="noopener noreferrer" class="btn btn-gold" style="width: 100%; margin-bottom: 1.25rem;">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Visit MattyJacks.com
+          </a>
+
+          <div style="font-size: 0.82rem; color: var(--text-dim);">
+            Concierge Direct: <a href="tel:16039999420" style="color: var(--gold-light); font-weight: 600;">(603) 999-9420</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. EDITORIAL FOOTER -->
+  <footer class="luxe-footer">
+    <div class="container footer-curator-grid">
+      <div>
+        <div class="brand-monogram" style="margin-bottom: 1.25rem;">
+          <div class="monogram-crest">W</div>
+          <div class="brand-text-block">
+            <span class="brand-name">WALLY'S WORLD</span>
+            <span class="brand-tag">THE COLLECTOR'S ARCHIVE</span>
+          </div>
+        </div>
+        <p style="font-size: 0.88rem; max-width: 320px;">
+          Long Island's authenticated repository for vintage apparel, graded comic slabs, rare action figures, and sports memorabilia.
+        </p>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Exhibitions</div>
+        <ul class="footer-nav-list">
+          <li><a href="#disciplines">Graded Comic Slabs</a></li>
+          <li><a href="#disciplines">Vaulted Funko Pops</a></li>
+          <li><a href="#disciplines">Action Figures & Toys</a></li>
+          <li><a href="#disciplines">Archival Vintage Apparel</a></li>
+          <li><a href="#disciplines">Sports Memorabilia</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Navigation</div>
+        <ul class="footer-nav-list">
+          <li><a href="#hero">The Archive</a></li>
+          <li><a href="#gallery">The Registry</a></li>
+          <li><a href="#locations">Dual Locations</a></li>
+          <li><a href="#consignment">Consign Collection</a></li>
+          <li><a href="#vip-pass">Digital VIP Pass</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Flagship Gallery</div>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+          📍 234 East Montauk Highway<br>Lindenhurst, NY 11757
+        </p>
+        <p style="font-size: 0.88rem; color: var(--gold-light); margin-bottom: 1rem;">
+          📞 (631) 555-WALLY
+        </p>
+        <div style="display: flex; gap: 0.75rem;">
+          <a href="#" style="color: var(--gold-primary);"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" style="color: var(--gold-primary);"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" style="color: var(--gold-primary);"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container footer-bottom-luxe">
+      <div>&copy; 2026 It's Wally's World NY. Curated with museum-grade excellence.</div>
+      <div>Obsidian & Champagne Gold Edition</div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       LUXURY MODALS
+       ========================================================================== -->
+
+  <!-- Modal 1: Piece Acquisition -->
+  <div class="luxe-modal-backdrop" id="acquisitionModal">
+    <div class="luxe-modal-card">
+      <button class="luxe-modal-close" onclick="closeLuxeModals()" aria-label="Close Modal">&times;</button>
+      <span class="luxe-badge" style="margin-bottom: 0.75rem;">ARCHIVE ACQUISITION</span>
+      <h2 style="color: var(--text-platinum); margin-bottom: 0.5rem;">Acquire <span class="text-gold">Holding Piece</span></h2>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+        Reserve this authenticated piece or arrange an in-person viewing at our Lindenhurst Flagship.
+      </p>
+
+      <form id="acqForm">
+        <div style="margin-bottom: 1rem;">
+          <label style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.35rem;">Selected Specimen</label>
+          <input type="text" id="acqPieceTitle" readonly style="width: 100%; background: #0a0a0d; border: 1px solid var(--border-gold); color: var(--gold-light); padding: 0.75rem; border-radius: var(--radius-sm); font-weight: 600;">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.35rem;">Valuation Price</label>
+          <input type="text" id="acqPiecePrice" readonly style="width: 100%; background: #0a0a0d; border: 1px solid var(--border-gold); color: #fff; padding: 0.75rem; border-radius: var(--radius-sm); font-family: var(--font-serif);">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+          <div>
+            <label style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.35rem;">Collector Name</label>
+            <input type="text" required placeholder="Name" style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); color: #fff; padding: 0.75rem; border-radius: var(--radius-sm);">
+          </div>
+          <div>
+            <label style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.35rem;">Direct Contact</label>
+            <input type="text" required placeholder="Phone / Email" style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); color: #fff; padding: 0.75rem; border-radius: var(--radius-sm);">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-gold" style="width: 100%;">
+          <i class="fa-solid fa-lock"></i> Submit Acquisition Hold
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Consignment Consultation -->
+  <div class="luxe-modal-backdrop" id="consignmentModal">
+    <div class="luxe-modal-card">
+      <button class="luxe-modal-close" onclick="closeLuxeModals()" aria-label="Close Modal">&times;</button>
+      <span class="luxe-badge" style="margin-bottom: 0.75rem;">PRIVATE APPRAISAL</span>
+      <h2 style="color: var(--text-platinum); margin-bottom: 0.5rem;">Consign Or Sell An <span class="text-gold">Archive</span></h2>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+        Wally Stack provides professional appraisal and immediate direct disbursements for comic, vintage toy, and estate archives.
+      </p>
+
+      <form id="consignmentForm">
+        <div style="margin-bottom: 1rem;">
+          <label style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.35rem;">Archive Contents Summary</label>
+          <input type="text" required placeholder="e.g. Graded Marvel Comics, 90s Spider-Man Toy Collection, Vintage Starter Jackets" style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); color: #fff; padding: 0.75rem; border-radius: var(--radius-sm);">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+          <div>
+            <label style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.35rem;">Full Name</label>
+            <input type="text" required placeholder="Collector Name" style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); color: #fff; padding: 0.75rem; border-radius: var(--radius-sm);">
+          </div>
+          <div>
+            <label style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.35rem;">Phone Number</label>
+            <input type="tel" required placeholder="(631) 555-0199" style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); color: #fff; padding: 0.75rem; border-radius: var(--radius-sm);">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-gold" style="width: 100%;">
+          <i class="fa-solid fa-calendar-check"></i> Schedule Private Consultation
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Lightbox Image Zoom -->
+  <div class="luxe-modal-backdrop" id="luxeLightbox">
+    <div class="luxe-modal-card" style="max-width: 900px; padding: 1.25rem; background: #000;">
+      <button class="luxe-modal-close" onclick="closeLuxeModals()" aria-label="Close Lightbox">&times;</button>
+      <div style="width: 100%; max-height: 75vh; display: flex; align-items: center; justify-content: center;">
+        <img src="" alt="Enlarged Archive View" id="luxeLightboxImg" style="max-width: 100%; max-height: 75vh; object-fit: contain; border-radius: var(--radius-sm);">
+      </div>
+      <div id="luxeLightboxCaption" style="text-align: center; padding-top: 1rem; color: var(--gold-light); font-family: var(--font-serif); font-size: 1rem;"></div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript File -->
+  <script src="js/main.js"></script>
+</body>
+</html>

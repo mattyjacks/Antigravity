@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>It's Wally's World | Vintage Clothing, Comics, Funko Grails & Toys in Lindenhurst, NY</title>
+  <meta name="description" content="Long Island's ultimate time machine for 80s & 90s vintage clothing, graded comic slabs, rare Funko Pops, retro action figures, sports memorabilia, and vinyl. 234 E Montauk Hwy, Lindenhurst, NY.">
+  <meta name="keywords" content="Wally's World, It's Wally's World, Lindenhurst NY vintage, comic books Long Island, Funko Pops NY, vintage clothing Long Island, retro toys, sports memorabilia">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕹️</text></svg>">
+  
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- TOP MATTYJACKS CLIENT DEMO PROMO BANNER -->
+  <div class="mattyjacks-top-banner">
+    <div class="container mattyjacks-banner-inner">
+      <div class="mattyjacks-banner-text">
+        <span class="mattyjacks-banner-badge">CLIENT DEMO</span>
+        <span>✨ DEMO SITE FOR CLIENT MADE BY MATTYJACKS.COM — GET YOUR WEBSITE TODAY!</span>
+      </div>
+      <a href="https://mattyjacks.com" target="_blank" rel="noopener noreferrer" class="mattyjacks-banner-btn">
+        <i class="fa-solid fa-rocket"></i> Get Your Site Today
+      </a>
+    </div>
+  </div>
+
+  <!-- 1. TOP LIVE STATUS TICKER -->
+  <div class="top-ticker">
+    <div class="container ticker-wrapper">
+      <div class="ticker-live-status" id="liveStatusText">
+        <span class="live-pulse"></span> <strong>OPEN TODAY</strong> 10:00 AM – 6:00 PM
+      </div>
+      <div class="ticker-marquee">
+        <div class="ticker-content">
+          <span>🔥 FRESH STORAGE LOCKER DROP EVERY FRIDAY!</span>
+          <span>⚡ WE PAY CASH ON THE SPOT FOR VINTAGE TEES, COMICS & FUNKOS</span>
+          <span>📍 234 E MONTAUK HWY, LINDENHURST, NY</span>
+          <span>⭐ 15+ YEARS AS NEW YORK'S PREMIER NOSTALGIA VAULT</span>
+        </div>
+      </div>
+      <div class="ticker-tools">
+        <button class="audio-toggle-btn" id="soundToggle" title="Toggle retro arcade sounds">
+          <i class="fa-solid fa-volume-xmark"></i> SFX OFF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. MAIN NAVIGATION HEADER -->
+  <header class="main-header">
+    <div class="container nav-container">
+      <a href="#" class="brand-logo">
+        <div class="logo-badge">W</div>
+        <div class="logo-text">
+          <span class="logo-title">IT'S WALLY'S WORLD</span>
+          <span class="logo-sub">Collectibles • Vintage • Pop Culture</span>
+        </div>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="#departments" class="nav-link">Departments</a></li>
+        <li><a href="#grail-vault" class="nav-link">Grail Vault</a></li>
+        <li><a href="#mystery-crates" class="nav-link">Mystery Crates</a></li>
+        <li><a href="#trade-in" class="nav-link">Cash Appraisal</a></li>
+        <li><a href="#visit" class="nav-link">Visit & Hours</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="btn btn-primary btn-sm" onclick="openAppraisalModal()">
+          <i class="fa-solid fa-hand-holding-dollar"></i> Sell Your Gear
+        </button>
+        <button class="mobile-toggle" aria-label="Toggle mobile menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. HERO SECTION -->
+  <section class="hero-section" id="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="hero-badge-wrap">
+          <span class="badge badge-neon"><i class="fa-solid fa-sparkles"></i> Long Island's #1 Vintage Hub</span>
+          <span class="badge badge-pink"><i class="fa-solid fa-fire"></i> Est. 15+ Years</span>
+          <span class="badge badge-lime"><i class="fa-solid fa-rotate"></i> Buy • Sell • Trade</span>
+        </div>
+
+        <h1 class="hero-title">
+          NEW YORK'S ULTIMATE <span class="text-gradient">TIME MACHINE</span> FOR VINTAGE & GRAILS
+        </h1>
+
+        <p class="hero-desc">
+          Step off Montauk Highway into a wonderland of authentic 80s & 90s vintage clothing, rare graded comic slabs, vaulted Funko Pops, retro superhero action figures, and sports memorabilia.
+        </p>
+
+        <div class="hero-ctas">
+          <a href="#grail-vault" class="btn btn-primary">
+            <i class="fa-solid fa-gamepad"></i> Explore The Grail Vault
+          </a>
+          <a href="#trade-in" class="btn btn-outline">
+            <i class="fa-solid fa-dollar-sign"></i> Get Cash For Your Collection
+          </a>
+        </div>
+
+        <div class="hero-stats-row">
+          <div class="stat-item">
+            <span class="stat-num">25K+</span>
+            <span class="stat-label">Vintage Items</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">15+</span>
+            <span class="stat-label">Years Curating</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">2</span>
+            <span class="stat-label">NY Locations</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">100%</span>
+            <span class="stat-label">Authentic Grails</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Storefront Showcase Card -->
+      <div class="hero-media-wrap">
+        <div class="hero-media-card">
+          <div class="retro-sticker sticker-top-left">⚡ FRESH DROPS DAILY</div>
+          <div class="retro-sticker sticker-bottom-right">ROUTE 12 VIBES 🛹</div>
+          
+          <div class="media-frame">
+            <img src="assets/images/storefront.jpg" alt="It's Wally's World Storefront on Montauk Hwy Lindenhurst NY" id="heroStoreImg">
+            <div class="media-overlay-badge">
+              <i class="fa-solid fa-location-dot" style="color: var(--neon-pink);"></i> 234 E Montauk Hwy
+            </div>
+            <div class="media-overlay-bottom">
+              <div>
+                <div class="media-caption-title">The Lindenhurst Flagship</div>
+                <div class="media-caption-sub">Open 6 Days a Week • Walk-ins Welcome</div>
+              </div>
+              <button class="btn btn-cyan btn-sm btn-icon" onclick="openLightbox('assets/images/storefront.jpg', 'It\'s Wally\'s World Storefront - Lindenhurst NY')" title="Enlarge Storefront View">
+                <i class="fa-solid fa-expand"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. EXPLORE DEPARTMENTS -->
+  <section class="section" id="departments">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">WHAT'S INSIDE THE VAULT</span>
+        <h2 class="section-title">Explore Our <span class="text-gradient">Core Departments</span></h2>
+        <p class="section-subtitle">From wall-to-wall single-stitch tees to locked glass cases of comic history and diecast toys.</p>
+      </div>
+
+      <div class="departments-grid">
+        <!-- Dept 1: Vintage Clothing -->
+        <div class="dept-card">
+          <div class="dept-media">
+            <img src="assets/images/storefront.jpg" alt="Vintage Clothing Racks">
+            <span class="badge badge-neon dept-badge"><i class="fa-solid fa-shirt"></i> Apparel</span>
+          </div>
+          <div class="dept-body">
+            <h3 class="dept-title">Vintage Streetwear & Tees</h3>
+            <p class="dept-desc">Authentic 80s/90s single-stitch graphic tees, Starter bomber jackets, band shirts, Carhartt workwear, and throwback hoodies.</p>
+            <ul class="dept-highlights">
+              <li>Single-Stitch Racks</li>
+              <li>Starter Jackets</li>
+              <li>Band & Tour Tees</li>
+            </ul>
+            <div class="dept-action">
+              <span class="text-pink font-display">1,500+ In Stock</span>
+              <a href="#grail-vault" class="dept-link">Browse Racks <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dept 2: Comics & Slabs -->
+        <div class="dept-card">
+          <div class="dept-media">
+            <img src="assets/images/funko_comics.jpg" alt="Comic Book Slabs and Cases">
+            <span class="badge badge-pink dept-badge"><i class="fa-solid fa-book-open"></i> Comics</span>
+          </div>
+          <div class="dept-body">
+            <h3 class="dept-title">Rare Comics & Graded Slabs</h3>
+            <p class="dept-desc">From Marvel Silver Age classics to CGC graded modern key issues (Ultimate Avengers, Batman, Hulk, Joker, Green Lantern).</p>
+            <ul class="dept-highlights">
+              <li>CGC Graded Slabs</li>
+              <li>Key 1st Appearances</li>
+              <li>Dollar Back-Issues</li>
+            </ul>
+            <div class="dept-action">
+              <span class="text-cyan font-display">5,000+ Comics</span>
+              <a href="#grail-vault" class="dept-link">View Slabs <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dept 3: Funko Pop Grails -->
+        <div class="dept-card">
+          <div class="dept-media">
+            <img src="assets/images/funko_comics.jpg" alt="Funko Pop Wall Display">
+            <span class="badge badge-gold dept-badge"><i class="fa-solid fa-crown"></i> Funko Vault</span>
+          </div>
+          <div class="dept-body">
+            <h3 class="dept-title">The Funko Pop Wall</h3>
+            <p class="dept-desc">Wall-to-wall Marvel, DC, Disney, Anime, and convention exclusives. Vaulted grails including Stan Lee, Sylvie, and Groot.</p>
+            <ul class="dept-highlights">
+              <li>Convention Exclusives</li>
+              <li>Vaulted Retired Grails</li>
+              <li>Hard Pop Armors</li>
+            </ul>
+            <div class="dept-action">
+              <span class="text-yellow font-display">Hundreds of Pops</span>
+              <a href="#grail-vault" class="dept-link">Hunt Grails <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dept 4: Action Figures & Retro Toys -->
+        <div class="dept-card">
+          <div class="dept-media">
+            <img src="assets/images/figures_collectibles.jpg" alt="Spider-Man Action Figures and Diecast Toys">
+            <span class="badge badge-lime dept-badge"><i class="fa-solid fa-robot"></i> Action Figures</span>
+          </div>
+          <div class="dept-body">
+            <h3 class="dept-title">80s/90s Toys & Figures</h3>
+            <p class="dept-desc">Vintage Toy Biz Spider-Man, Batman, Corgi diecast vehicles, Pez superhero sets, Hot Wheels redlines, and sealed carded toys.</p>
+            <ul class="dept-highlights">
+              <li>Spider-Man Archives</li>
+              <li>Corgi Diecast Vehicles</li>
+              <li>Mint On Card Toys</li>
+            </ul>
+            <div class="dept-action">
+              <span class="text-lime font-display">Collector Shelves</span>
+              <a href="#grail-vault" class="dept-link">Inspect Toys <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dept 5: Sports Memorabilia -->
+        <div class="dept-card">
+          <div class="dept-media">
+            <img src="assets/images/storefront.jpg" alt="NY Sports Memorabilia">
+            <span class="badge badge-neon dept-badge"><i class="fa-solid fa-baseball-bat-ball"></i> Sports</span>
+          </div>
+          <div class="dept-body">
+            <h3 class="dept-title">NY Sports Memorabilia</h3>
+            <p class="dept-desc">Authentic New York Knicks, Yankees, Mets, Jets & Giants jerseys, vintage pennants, autographed photos, and graded sports cards.</p>
+            <ul class="dept-highlights">
+              <li>Vintage NY Jerseys</li>
+              <li>Classic Pennants</li>
+              <li>Graded Rookie Cards</li>
+            </ul>
+            <div class="dept-action">
+              <span class="text-yellow font-display">NY Team Gear</span>
+              <a href="#grail-vault" class="dept-link">Shop Sports <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dept 6: Vinyl & Antiques -->
+        <div class="dept-card">
+          <div class="dept-media">
+            <img src="assets/images/storefront.jpg" alt="Vinyl and Antiques">
+            <span class="badge badge-pink dept-badge"><i class="fa-solid fa-compact-disc"></i> Vinyl & Curios</span>
+          </div>
+          <div class="dept-body">
+            <h3 class="dept-title">Vinyl Records & Antiques</h3>
+            <p class="dept-desc">Dig through curated crates of classic rock, hip-hop, metal, and retro signs, neon lights, and nostalgic curiosities.</p>
+            <ul class="dept-highlights">
+              <li>Crate Digging LP Records</li>
+              <li>Retro Advertising Signs</li>
+              <li>Unique Curiosities</li>
+            </ul>
+            <div class="dept-action">
+              <span class="text-pink font-display">Constantly Refreshed</span>
+              <a href="#grail-vault" class="dept-link">Dig Crates <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. THE GRAIL VAULT (LIVE INVENTORY SHOWCASE) -->
+  <section class="section" id="grail-vault">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">LIVE SHOWCASE</span>
+        <h2 class="section-title">The <span class="text-gradient">Grail Vault</span></h2>
+        <p class="section-subtitle">Real items available in our Lindenhurst showcases. Click any item to inspect photos or place a hold inquiry.</p>
+      </div>
+
+      <!-- Controls: Category Filter + Search -->
+      <div class="vault-controls">
+        <div class="filter-tabs">
+          <button class="filter-btn active" data-filter="all">All Grails</button>
+          <button class="filter-btn" data-filter="comics">Comics & Slabs</button>
+          <button class="filter-btn" data-filter="funkos">Funko Pops</button>
+          <button class="filter-btn" data-filter="figures">Action Figures</button>
+          <button class="filter-btn" data-filter="clothing">Vintage Apparel</button>
+          <button class="filter-btn" data-filter="sports">Sports Gear</button>
+          <button class="filter-btn" data-filter="vinyl">Vinyl & Antiques</button>
+        </div>
+
+        <div class="vault-search-wrap">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="vaultSearch" placeholder="Search Marvel, Spider-Man, Starter..." aria-label="Search Vault">
+        </div>
+      </div>
+
+      <!-- Vault Grid rendered via JS -->
+      <div class="vault-grid" id="vaultGrid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. INTERACTIVE 90S MYSTERY CRATE UNBOXER -->
+  <section class="mystery-section" id="mystery-crates">
+    <div class="container">
+      <div class="mystery-box-card">
+        <span class="badge badge-gold" style="margin-bottom: 1rem;"><i class="fa-solid fa-gamepad"></i> Retro Arcade Mini-Game</span>
+        <h2 style="margin-bottom: 0.75rem;">Dig Into The <span class="text-gradient">Mystery Crates</span></h2>
+        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 2rem;">
+          Wally bought another secret storage locker! Tap the glowing crate below to unbox secret in-store discounts, free collector accessories, or trade-in bonuses.
+        </p>
+
+        <div class="mystery-chest-visual" id="mysteryChest" title="Click to pop open!">
+          <i class="fa-solid fa-gift"></i>
+        </div>
+
+        <div>
+          <button class="btn btn-primary" id="unboxTriggerBtn">
+            <i class="fa-solid fa-key"></i> Pop A Mystery Crate!
+          </button>
+        </div>
+
+        <!-- Result Box (Hidden until opened) -->
+        <div class="mystery-result-box" id="mysteryResult">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. CASH IN YOUR NOSTALGIA: TRADE-IN & APPRAISAL ESTIMATOR -->
+  <section class="section" id="trade-in">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">WE BUY COLLECTIONS FOR CASH</span>
+        <h2 class="section-title">Instant <span class="text-gradient">Trade-In & Appraisal</span> Estimator</h2>
+        <p class="section-subtitle">Got vintage tees in the attic, comic long boxes in the closet, or boxes of Funko Pops? Calculate instant cash or store credit.</p>
+      </div>
+
+      <div class="estimator-grid">
+        <!-- Left: Interactive Form -->
+        <div class="estimator-card">
+          <div class="calc-step">
+            <div class="calc-step-label">
+              <i class="fa-solid fa-1" style="color: var(--neon-pink);"></i> Select Item Category:
+            </div>
+            <div class="category-select-grid">
+              <div class="calc-radio-card selected" data-base-val="35">
+                <i class="fa-solid fa-book-journal-whills"></i>
+                <div>
+                  <strong>Comic Books</strong>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Slabs & Back Issues</div>
+                </div>
+              </div>
+              <div class="calc-radio-card" data-base-val="25">
+                <i class="fa-solid fa-crown"></i>
+                <div>
+                  <strong>Funko Pops</strong>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Vaulted & Exclusives</div>
+                </div>
+              </div>
+              <div class="calc-radio-card" data-base-val="40">
+                <i class="fa-solid fa-shirt"></i>
+                <div>
+                  <strong>Vintage Tees</strong>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">80s/90s Graphic & Tour</div>
+                </div>
+              </div>
+              <div class="calc-radio-card" data-base-val="30">
+                <i class="fa-solid fa-robot"></i>
+                <div>
+                  <strong>Action Figures</strong>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Carded & Boxed Toys</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="calc-step">
+            <div class="calc-step-label">
+              <i class="fa-solid fa-2" style="color: var(--neon-cyan);"></i> Estimated Quantity:
+            </div>
+            <div class="range-slider-wrap">
+              <input type="range" id="itemCountSlider" min="1" max="50" value="8" aria-label="Item Quantity">
+              <div class="range-count-badge" id="itemCountDisplay">8</div>
+            </div>
+          </div>
+
+          <div class="calc-step">
+            <div class="calc-step-label">
+              <i class="fa-solid fa-3" style="color: var(--neon-lime);"></i> Overall Condition:
+            </div>
+            <select id="conditionSelect" style="width: 100%; background: #0c0a17; border: 1px solid var(--border-neon); color: #fff; padding: 0.75rem; border-radius: var(--radius-sm); font-family: var(--font-heading); outline: none;">
+              <option value="1.5">🔥 Pristine / Mint In Box / Graded Slabs (Top Tier)</option>
+              <option value="1.0" selected>✨ Excellent / Near Mint (Standard High Grade)</option>
+              <option value="0.7">👍 Good / Lightly Handled / Pre-owned</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Right: Output Card -->
+        <div class="estimator-output-card">
+          <span class="badge badge-lime"><i class="fa-solid fa-coins"></i> Instant Estimate</span>
+          <h3 style="margin-top: 1rem; color: #fff;">Estimated Cash Payout</h3>
+          
+          <div class="est-payout-box">
+            <div class="est-payout-value" id="estCashValue">$280</div>
+            <div class="est-credit-bonus">Or <span id="estCreditValue" style="color: var(--neon-cyan);">$350</span> In Store Credit (+25% Bonus!)</div>
+          </div>
+
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+            *Estimates are ballpark guidelines. Wally inspects and pays top-dollar cash in person at our Lindenhurst store.
+          </p>
+
+          <button class="btn btn-primary" onclick="openAppraisalModal()" style="width: 100%;">
+            <i class="fa-solid fa-calendar-check"></i> Book Free In-Store Appraisal
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. CUSTOMER HALL OF FAME & REVIEWS -->
+  <section class="section" style="background: rgba(18, 14, 34, 0.5);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">COMMUNITY PROOF</span>
+        <h2 class="section-title">Grail Hunters <span class="text-gradient">Hall of Fame</span></h2>
+        <p class="section-subtitle">See what Long Island collectors and vintage lovers have to say about digging at Wally's World.</p>
+      </div>
+
+      <div class="community-grid">
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-quote">
+            "Wally’s World is hands down the best hidden gem on Long Island! Walked in looking for 90s Spider-Man toys and walked out with a pristine Corgi diecast car and three mint Funko Pops for my display."
+          </p>
+          <div class="review-author">
+            <div class="author-avatar">MJ</div>
+            <div class="author-info">
+              <h4>Marcus Jenkins</h4>
+              <span>Marvel & Comic Collector</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-quote">
+            "The vintage clothing racks outside and inside are insane. Found an original single-stitch 1994 Starter jacket and an authentic vintage Knicks jersey in unbelievable shape. Wally knows his stuff."
+          </p>
+          <div class="review-author">
+            <div class="author-avatar">SR</div>
+            <div class="author-info">
+              <h4>Samantha Rivera</h4>
+              <span>Vintage Apparel Enthusiast</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-quote">
+            "Sold my childhood comic collection here. Wally offered a super fair cash payout on the spot with zero hassle. Respectful, passionate, and the friendliest shop owner in NY!"
+          </p>
+          <div class="review-author">
+            <div class="author-avatar">DK</div>
+            <div class="author-info">
+              <h4>Dave Kowalski</h4>
+              <span>Long Island Local</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. VISIT US & STORE DETAILS -->
+  <section class="section" id="visit">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">PLAN YOUR VISIT</span>
+        <h2 class="section-title">Visit The <span class="text-gradient">Lindenhurst Store</span></h2>
+        <p class="section-subtitle">Located right on East Montauk Highway with easy parking and fresh crates arriving weekly.</p>
+      </div>
+
+      <div class="visit-grid">
+        <!-- Store Details & Hours Table -->
+        <div class="visit-info-card">
+          <div>
+            <h3 style="color: #fff; margin-bottom: 0.5rem;"><i class="fa-solid fa-store" style="color: var(--neon-pink);"></i> It's Wally's World Flagship</h3>
+            <p style="color: var(--neon-cyan); font-weight: 600; margin-bottom: 1.5rem;">
+              📍 234 E Montauk Hwy, Lindenhurst, NY 11757
+            </p>
+
+            <table class="hours-table">
+              <tr id="day-0">
+                <td>Sunday</td>
+                <td>10:00 AM – 5:00 PM</td>
+              </tr>
+              <tr id="day-1">
+                <td>Monday</td>
+                <td>Closed (Storage Pick Days)</td>
+              </tr>
+              <tr id="day-2">
+                <td>Tuesday</td>
+                <td>10:00 AM – 6:00 PM</td>
+              </tr>
+              <tr id="day-3">
+                <td>Wednesday</td>
+                <td>10:00 AM – 6:00 PM</td>
+              </tr>
+              <tr id="day-4">
+                <td>Thursday</td>
+                <td>10:00 AM – 6:00 PM</td>
+              </tr>
+              <tr id="day-5">
+                <td>Friday (Fresh Drops!)</td>
+                <td>10:00 AM – 7:00 PM</td>
+              </tr>
+              <tr id="day-6">
+                <td>Saturday</td>
+                <td>10:00 AM – 6:00 PM</td>
+              </tr>
+            </table>
+
+            <div class="amenities-list">
+              <div class="amenity-item"><i class="fa-solid fa-square-parking"></i> Free On-Site Parking</div>
+              <div class="amenity-item"><i class="fa-solid fa-credit-card"></i> Cash, Cards & Apple Pay</div>
+              <div class="amenity-item"><i class="fa-solid fa-shield-halved"></i> Comic Sleeving Station</div>
+              <div class="amenity-item"><i class="fa-solid fa-handshake"></i> Immediate Cash Buyouts</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 2rem;">
+            <a href="https://maps.google.com/?q=234+E+Montauk+Hwy+Lindenhurst+NY" target="_blank" rel="noopener noreferrer" class="btn btn-cyan" style="width: 100%;">
+              <i class="fa-solid fa-diamond-turn-right"></i> Open In Google Maps
+            </a>
+          </div>
+        </div>
+
+        <!-- Storefront Photo Card -->
+        <div class="storefront-feature-card">
+          <div class="storefront-img-wrap">
+            <img src="assets/images/storefront.jpg" alt="Storefront It's Wally's World">
+          </div>
+          <div class="storefront-details-bar">
+            <div>
+              <div style="font-family: var(--font-display); color: #fff; font-size: 1.1rem;">Look for the Purple Wally's World Sign!</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Route 12 Sign & Outdoor Vintage Racks</div>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="openLightbox('assets/images/storefront.jpg', 'Storefront Details')">
+              <i class="fa-solid fa-eye"></i> View
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. NEWSLETTER DROP SIGNUP -->
+  <section class="section" style="padding: 3.5rem 0; border-top: 1px solid var(--border-neon);">
+    <div class="container" style="max-width: 760px; text-align: center;">
+      <span class="badge badge-pink" style="margin-bottom: 0.75rem;">VIP DROP NOTIFICATIONS</span>
+      <h2 style="margin-bottom: 0.75rem;">Never Miss A <span class="text-gradient">Fresh Storage Pick</span></h2>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+        Get an SMS or email alert before rare comic slabs, vintage Starter jackets, and vaulted Funko Pops hit the sales floor.
+      </p>
+
+      <form class="newsletter-form">
+        <input type="email" placeholder="Enter your email address..." required aria-label="Email for VIP alerts">
+        <button type="submit" class="btn btn-primary">
+          <i class="fa-solid fa-bell"></i> Join VIP Club
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- MATTYJACKS.COM FULL ADVERTISEMENT SECTION -->
+  <section class="mattyjacks-ad-section" id="mattyjacks-ad">
+    <div class="container">
+      <div class="mattyjacks-ad-card">
+        <div>
+          <div class="ad-pill-tag">
+            <i class="fa-solid fa-bolt"></i> Official Agency Partner
+          </div>
+          <div class="ad-slogan">DO AND/OR DIE TRYING!!!</div>
+          <h2 style="color: #ffffff; margin-bottom: 1rem; font-size: clamp(1.8rem, 3.2vw, 2.5rem);">
+            NEED A HIGH-CONVERTING <span style="background: linear-gradient(135deg, #10b981, #0284c7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">WEBSITE LIKE THIS?</span>
+          </h2>
+          <p style="color: #cbd5e1; font-size: 1rem; line-height: 1.7; margin-bottom: 1.25rem;">
+            <strong>MattyJacks</strong> is a full-service agency & holding company building custom high-performance websites that convert, deploying custom AI copilots & tools, and managing high-growth cold calling teams. Based in NH, serving clients worldwide.
+          </p>
+
+          <div class="ad-features-grid">
+            <div class="ad-feature-item">
+              <i class="fa-solid fa-laptop-code"></i>
+              <span>High-Converting Custom Web Design</span>
+            </div>
+            <div class="ad-feature-item">
+              <i class="fa-solid fa-robot"></i>
+              <span>Custom AI Tools & Automations</span>
+            </div>
+            <div class="ad-feature-item">
+              <i class="fa-solid fa-phone-volume"></i>
+              <span>B2B Cold Calling & Lead Gen</span>
+            </div>
+            <div class="ad-feature-item">
+              <i class="fa-solid fa-credit-card"></i>
+              <span>High & Low-Risk Payment Processing</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ad-cta-box">
+          <div style="font-family: var(--font-arcade); color: #39ff14; font-size: 1.25rem; margin-bottom: 0.5rem;">GET STARTED TODAY</div>
+          <div style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 1.5rem;">Launch your brand, revamp your web presence, or scale your sales pipeline with MattyJacks.</div>
+          
+          <a href="https://mattyjacks.com" target="_blank" rel="noopener noreferrer" class="btn-mattyjacks">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Visit MattyJacks.com
+          </a>
+
+          <div style="margin-top: 1.25rem; font-size: 0.85rem; color: #94a3b8;">
+            Direct Call/Text: <a href="tel:16039999420" style="color: #38bdf8; font-weight: 700;">(603) 999-9420</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <div class="brand-logo" style="margin-bottom: 1rem;">
+          <div class="logo-badge">W</div>
+          <div class="logo-text">
+            <span class="logo-title">IT'S WALLY'S WORLD</span>
+            <span class="logo-sub">NY Time Machine</span>
+          </div>
+        </div>
+        <p>Long Island's leading destination for vintage clothing, rare comic slabs, pop culture toys, and sports memorabilia since 2011.</p>
+        <div class="social-links">
+          <a href="#" class="social-btn" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="social-btn" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-btn" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="#" class="social-btn" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Departments</h4>
+        <ul class="footer-links">
+          <li><a href="#departments">Vintage Clothing</a></li>
+          <li><a href="#departments">Comic Books & Slabs</a></li>
+          <li><a href="#departments">Funko Pop Vault</a></li>
+          <li><a href="#departments">80s/90s Action Figures</a></li>
+          <li><a href="#departments">Sports Memorabilia</a></li>
+          <li><a href="#departments">Vinyl & Antiques</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="#grail-vault">Grail Vault Inventory</a></li>
+          <li><a href="#mystery-crates">Mystery Crate Game</a></li>
+          <li><a href="#trade-in">Sell Your Collection</a></li>
+          <li><a href="#visit">Hours & Location</a></li>
+          <li><a href="javascript:void(0)" onclick="openAppraisalModal()">Free Appraisal</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Flagship Location</h4>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+          📍 234 E Montauk Hwy<br>Lindenhurst, NY 11757
+        </p>
+        <p style="font-size: 0.88rem; color: var(--neon-cyan); margin-bottom: 0.5rem;">
+          📞 (631) 555-WALLY
+        </p>
+        <p style="font-size: 0.82rem; color: var(--text-dim);">
+          Also visit our Copiague secondhand & furniture location!
+        </p>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <div>&copy; 2026 It's Wally's World NY. All Rights Reserved.</div>
+      <div>Designed with 90s Cyber Arcade Power.</div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       MODALS
+       ========================================================================== -->
+
+  <!-- Modal 1: Item Hold / Inquiry -->
+  <div class="modal-backdrop" id="inquiryModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeAllModals()" aria-label="Close Modal">&times;</button>
+      <span class="badge badge-pink" style="margin-bottom: 0.5rem;">ITEM HOLD REQUEST</span>
+      <h2 style="color: #fff; margin-bottom: 0.5rem;">Reserve A <span class="text-gradient">Vault Grail</span></h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+        Items in the Grail Vault move fast! Submit your contact info to place a 24-hour hold or request detailed condition photos.
+      </p>
+
+      <form id="inquiryForm">
+        <div style="margin-bottom: 1rem;">
+          <label style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.3rem;">Selected Item</label>
+          <input type="text" id="inquiryItemTitle" readonly style="width: 100%; background: #0c0a17; border: 1px solid var(--border-neon); color: var(--neon-cyan); padding: 0.75rem; border-radius: var(--radius-sm); font-weight: 700;">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.3rem;">Listed Price</label>
+          <input type="text" id="inquiryItemPrice" readonly style="width: 100%; background: #0c0a17; border: 1px solid var(--border-neon); color: var(--neon-yellow); padding: 0.75rem; border-radius: var(--radius-sm); font-family: var(--font-arcade);">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.3rem;">Your Name</label>
+            <input type="text" required placeholder="Alex Parker" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-neon); color: #fff; padding: 0.75rem; border-radius: var(--radius-sm);">
+          </div>
+          <div>
+            <label style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.3rem;">Phone Number</label>
+            <input type="tel" required placeholder="(631) 555-0199" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-neon); color: #fff; padding: 0.75rem; border-radius: var(--radius-sm);">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+          <i class="fa-solid fa-lock"></i> Request 24-Hour Item Hold
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Appraisal Booking -->
+  <div class="modal-backdrop" id="appraisalModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeAllModals()" aria-label="Close Modal">&times;</button>
+      <span class="badge badge-lime" style="margin-bottom: 0.5rem;">CASH APPRAISAL</span>
+      <h2 style="color: #fff; margin-bottom: 0.5rem;">Sell Your <span class="text-gradient">Collection</span></h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+        Wally pays top dollar in immediate cash for vintage apparel, comics, Funko collections, action figures, and sports memorabilia.
+      </p>
+
+      <form id="appraisalForm">
+        <div style="margin-bottom: 1rem;">
+          <label style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.3rem;">What Are You Selling?</label>
+          <input type="text" required placeholder="e.g. 50+ 90s Spider-Man Figures & 2 Long Boxes of Comics" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-neon); color: #fff; padding: 0.75rem; border-radius: var(--radius-sm);">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.3rem;">Your Name</label>
+            <input type="text" required placeholder="Your Name" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-neon); color: #fff; padding: 0.75rem; border-radius: var(--radius-sm);">
+          </div>
+          <div>
+            <label style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.3rem;">Contact Email or Phone</label>
+            <input type="text" required placeholder="phone or email" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-neon); color: #fff; padding: 0.75rem; border-radius: var(--radius-sm);">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.25rem;">
+          <label style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.3rem;">Preferred Option</label>
+          <select style="width: 100%; background: #0c0a17; border: 1px solid var(--border-neon); color: #fff; padding: 0.75rem; border-radius: var(--radius-sm); font-family: var(--font-heading);">
+            <option>💵 Cash Payout On The Spot</option>
+            <option>💳 Store Credit (+25% Extra Trade Value)</option>
+            <option>🏠 Request A House Call for Large Estates</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          <i class="fa-solid fa-paper-plane"></i> Submit Appraisal Request
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Lightbox Image Zoom -->
+  <div class="modal-backdrop lightbox-modal" id="lightboxModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeAllModals()" aria-label="Close Lightbox">&times;</button>
+      <div class="lightbox-img-wrap">
+        <img src="" alt="Enlarged View" id="lightboxImg">
+      </div>
+      <div id="lightboxCaption" style="text-align: center; padding-top: 0.75rem; color: var(--neon-cyan); font-family: var(--font-heading); font-size: 0.95rem;"></div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript File -->
+  <script src="js/main.js"></script>
+</body>
+</html>
