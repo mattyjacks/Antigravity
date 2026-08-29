@@ -145,114 +145,153 @@ function initMobileMenu() {
 /* ==========================================================================
    3. GRAIL VAULT FILTER & SEARCH
    ========================================================================== */
+/* ==========================================================================
+   3. GRAIL VAULT FILTER & SEARCH
+   ========================================================================== */
 const VAULT_DATA = [
   {
     id: 1,
-    title: "1994 Ultimate Avengers & Classic Comic Slabs",
+    title: "1994 Authentic New York Knicks Ewing Single-Stitch Sweater",
+    category: "clothing",
+    condition: "Authentic 1994 / Mint Single-Stitch",
+    price: "$320",
+    numericPrice: 320,
+    tag: "FOUNDER GRAIL",
+    tagClass: "badge-neon",
+    image: "assets/images/wally_founder_knicks.jpg",
+    desc: "The holy grail of 90s New York sports heritage. Features heavyweight single-stitch construction and bold royal blue/orange graphic typography. Hand-curated by Walter Stack."
+  },
+  {
+    id: 2,
+    title: "1999 Pokémon Base Set Charizard & PSA/CGC Graded Slabs",
+    category: "cards",
+    condition: "PSA 9 Mint / Gem Slabs",
+    price: "$1,250",
+    numericPrice: 1250,
+    tag: "HOLY GRAIL",
+    tagClass: "badge-gold",
+    image: "assets/images/pokemon_graded_cards.jpg",
+    desc: "Pristine holographic 1st Edition and Shadowless Pokémon card slabs, alongside Veefriends physical collectibles and graded sports rookies in locked UV armor."
+  },
+  {
+    id: 3,
+    title: "1989 TMNT Ninja Turtles Mint-On-Card Figure Collection",
+    category: "figures",
+    condition: "Original Carded / Unpunched Blister",
+    price: "$275",
+    numericPrice: 275,
+    tag: "MINT ON CARD",
+    tagClass: "badge-lime",
+    image: "assets/images/tmnt_retro_toys.jpg",
+    desc: "Original vintage Playmates TMNT action figures (Leonardo, Raphael, Donatello, Michelangelo, Shredder) in crisp unpunched packaging from private storage vaults."
+  },
+  {
+    id: 4,
+    title: "Designer Madness: Certified Luxury Leather Pocketbooks & Shoes",
+    category: "designer",
+    condition: "Pre-Owned / Authenticated AAA",
+    price: "$680",
+    numericPrice: 680,
+    tag: "AUTHENTICATED",
+    tagClass: "badge-pink",
+    image: "assets/images/designer_madness_luxury.jpg",
+    desc: "Curated luxury designer pocketbooks, handbags, vintage pumps, and gold hardware accessories. Backed by our 100% In-House Physical Authentication Guarantee."
+  },
+  {
+    id: 5,
+    title: "1990s Hip-Hop, Rock Band & Y2K Single-Stitch Tees",
+    category: "clothing",
+    condition: "Authentic 90s / Fade & Single-Stitch",
+    price: "$145",
+    numericPrice: 145,
+    tag: "1-OF-1 VINTAGE",
+    tagClass: "badge-neon",
+    image: "assets/images/vintage_apparel_racks.jpg",
+    desc: "Over 1,500 curated vintage garments on multi-level racks. Wu-Tang, Nirvana, Starter bomber jackets, and 90s streetwear handpicked across Long Island estates."
+  },
+  {
+    id: 6,
+    title: "Retro Gaming Vault: Atari 2600 Woodgrain & Nintendo DS Consoles",
+    category: "media",
+    condition: "Tested / Cleaned / 100% Working",
+    price: "$240",
+    numericPrice: 240,
+    tag: "RETRO HARDWARE",
+    tagClass: "badge-cyan",
+    image: "assets/images/retro_gaming_consoles.jpg",
+    desc: "Original faux-woodgrain Atari 2600 system, Nintendo DS handhelds, CRT retro monitor gear, 16-bit SNES cartridges, and custom illuminated gamer setups."
+  },
+  {
+    id: 7,
+    title: "Mid-Century Modern Teak Credenza & Atomic Vintage Lamps",
+    category: "antiques",
+    condition: "Restored Mid-Century Teak",
+    price: "$580",
+    numericPrice: 580,
+    tag: "IN-STORE PICKUP",
+    tagClass: "badge-gold",
+    image: "assets/images/midcentury_antiques_decor.jpg",
+    desc: "Mid-century credenza, colorful hand-blown glass art, and authentic glowing neon signs. Available for Buy Online, Pick Up In-Store (BOPIS) at Lindenhurst & Copiague."
+  },
+  {
+    id: 8,
+    title: "Whatnot Live Feature: 1993 Vintage Graphic Bulls/Knicks Tee",
+    category: "clothing",
+    condition: "Vaulted Grail / $1 Live Drop",
+    price: "$160",
+    numericPrice: 160,
+    tag: "$1 WHATNOT DROP",
+    tagClass: "badge-pink",
+    image: "assets/images/whatnot_livestream_madness.jpg",
+    desc: "Scheduled for live auction during our next Whatnot broadcast! Shopify real-time inventory synchronization ensures instantaneous reservation."
+  },
+  {
+    id: 9,
+    title: "1994 WWE Pro Wrestling Legends Autographed Replica Belt",
+    category: "sports",
+    condition: "Signed & Authenticated / Near Mint",
+    price: "$390",
+    numericPrice: 390,
+    tag: "EVENT EXCLUSIVE",
+    tagClass: "badge-lime",
+    image: "assets/images/celebrity_wrestling_event.jpg",
+    desc: "Commemorative wrestling championship belt and SummerSlam event poster signed during our in-store celebrity signing at the Lindenhurst store."
+  },
+  {
+    id: 10,
+    title: "Copiague Annex: Curated Stained Glass Lamps & Antique Curios",
+    category: "antiques",
+    condition: "Estate Selection / Restored",
+    price: "$225",
+    numericPrice: 225,
+    tag: "COPIAGUE ANNEX",
+    tagClass: "badge-cyan",
+    image: "assets/images/copiague_auxiliary_location.jpg",
+    desc: "Sourced exclusively from our auxiliary Copiague secondhand & antique annex. Mid-century furniture, stained-glass hanging lamps, and vintage oil paintings."
+  },
+  {
+    id: 11,
+    title: "1994 Ultimate Avengers & Marvel CGC 9.6 Graded Slabs",
     category: "comics",
-    condition: "CGC 9.6 NM+",
+    condition: "CGC 9.6 NM+ White Pages",
     price: "$285",
     numericPrice: 285,
     tag: "GRAIL SLAB",
     tagClass: "badge-pink",
     image: "assets/images/funko_comics.jpg",
-    desc: "Key collector issue in museum-grade UV sealed case. Features classic cover art and pristine page quality from a private Long Island estate."
+    desc: "Key comic issue in museum-grade UV sealed case. Features classic cover art and pristine page quality. New comics arrive every Wednesday."
   },
   {
-    id: 2,
-    title: "Vintage Marvel Funko Pop Grails: Stan Lee & Sylvie",
-    category: "funkos",
-    condition: "Vaulted / Mint 10",
-    price: "$145",
-    numericPrice: 145,
-    tag: "VAULTED",
-    tagClass: "badge-gold",
-    image: "assets/images/funko_comics.jpg",
-    desc: "Authentic original production run with official convention stickers and heavy-duty pop armor casing included."
-  },
-  {
-    id: 3,
-    title: "Retro 90s Spider-Man Action Figures & Corgi Diecast",
+    id: 12,
+    title: "Retro 90s Toy Biz Spider-Man & Corgi Diecast Classics",
     category: "figures",
-    condition: "Original Carded / Near Mint",
+    condition: "Carded Mint / Display Ready",
     price: "$195",
     numericPrice: 195,
-    tag: "HOLY GRAIL",
-    tagClass: "badge-lime",
-    image: "assets/images/figures_collectibles.jpg",
-    desc: "Authentic 90s Spider-Man adventure vehicles, Corgi diecast editions, and Marvel hero figures in collector-grade display condition."
-  },
-  {
-    id: 4,
-    title: "Vintage 90s Starter & Streetwear Bomber Jackets",
-    category: "clothing",
-    condition: "Vintage 1994 / Mint",
-    price: "$120",
-    numericPrice: 120,
-    tag: "1-OF-1 VINTAGE",
-    tagClass: "badge-neon",
-    image: "assets/images/storefront.jpg",
-    desc: "Authentic single-stitch heavyweight vintage jackets and vintage tees hand-picked from New York storage archives."
-  },
-  {
-    id: 5,
-    title: "Marvel Avengers Groot & Taskmaster Exclusive Pops",
-    category: "funkos",
-    condition: "Mint In Box",
-    price: "$65",
-    numericPrice: 65,
     tag: "HOT DROP",
-    tagClass: "badge-pink",
-    image: "assets/images/funko_comics.jpg",
-    desc: "Exclusive retailer stickers, window box in flawless 9.5+ condition. Ready for display in your Marvel collection."
-  },
-  {
-    id: 6,
-    title: "Vintage NY Sports Memorabilia & Pennants",
-    category: "sports",
-    condition: "Authentic 80s/90s",
-    price: "$175",
-    numericPrice: 175,
-    tag: "NY HERITAGE",
-    tagClass: "badge-gold",
-    image: "assets/images/storefront.jpg",
-    desc: "Classic New York Knicks, Mets, and Yankees apparel, vintage pins, signed cards, and authentic stadium memorabilia."
-  },
-  {
-    id: 7,
-    title: "Batman, Joker & DC Graphic Novel Showcase Slabs",
-    category: "comics",
-    condition: "Graded Near Mint",
-    price: "$210",
-    numericPrice: 210,
-    tag: "KEY ISSUE",
     tagClass: "badge-lime",
-    image: "assets/images/funko_comics.jpg",
-    desc: "Iconic Joker 'Kill You' tribute foil editions, Green Lantern, and DC vintage archive issues carefully preserved."
-  },
-  {
-    id: 8,
-    title: "Vintage Pez Superhero Dispensers & Marvel Batmobiles",
-    category: "figures",
-    condition: "Collectible Shelf Set",
-    price: "$88",
-    numericPrice: 88,
-    tag: "RETRO TOY",
-    tagClass: "badge-neon",
     image: "assets/images/figures_collectibles.jpg",
-    desc: "Original 90s Spider-Man Pez heads, diecast speedsters, and superhero desk displays all preserved intact."
-  },
-  {
-    id: 9,
-    title: "Original Vinyl LP Records & Retro Store Collectibles",
-    category: "vinyl",
-    condition: "VG+ to Mint Slabs",
-    price: "$45",
-    numericPrice: 45,
-    tag: "CRATE GEM",
-    tagClass: "badge-gold",
-    image: "assets/images/storefront.jpg",
-    desc: "Classic rock, 90s hip hop, and nostalgic vinyl records direct from the Lindenhurst crates."
+    desc: "Authentic 90s Spider-Man action figures, Corgi diecast superhero edition speedsters, and vintage blister-packed figures in pristine showcase condition."
   }
 ];
 
@@ -577,6 +616,55 @@ function initForms() {
   });
 }
 
+window.openEventModal = function(eventName, eventDate) {
+  const modal = document.getElementById('eventModal');
+  const eventTitleField = document.getElementById('eventModalTitle');
+  const eventDateField = document.getElementById('eventModalDate');
+  if (!modal) return;
+
+  if (eventTitleField) eventTitleField.value = eventName || 'Wally\'s World Special Event';
+  if (eventDateField) eventDateField.value = eventDate || 'Upcoming Weekend';
+  modal.classList.add('active');
+};
+
+/* ==========================================================================
+   9. WHATNOT LIVE STREAM SIMULATOR (Dynamic $1 Bids & Chat)
+   ========================================================================== */
+function initWhatnotLiveSim() {
+  const mockChatContainer = document.getElementById('mockStreamChat');
+  if (!mockChatContainer) return;
+
+  const mockUsers = [
+    { name: "NYKnicks_94", bid: 145 },
+    { name: "GrailHunter_LI", bid: 155 },
+    { name: "VintageVault_NY", bid: 165 },
+    { name: "SlabCollector99", bid: 175 },
+    { name: "TMNT_Master", bid: 185 },
+    { name: "Suffolk_Picks", bid: 200 }
+  ];
+
+  let currentIndex = 0;
+  setInterval(() => {
+    const user = mockUsers[currentIndex % mockUsers.length];
+    const newBidPill = document.createElement('div');
+    newBidPill.className = 'mock-bid-pill';
+    newBidPill.innerHTML = `
+      <span><span class="mock-bid-user">@${user.name}</span>: BID SUBMITTED 🔥</span>
+      <span class="mock-bid-amount">$${user.bid + Math.floor(Math.random() * 15)}</span>
+    `;
+
+    mockChatContainer.appendChild(newBidPill);
+    if (mockChatContainer.children.length > 4) {
+      mockChatContainer.removeChild(mockChatContainer.children[0]);
+    }
+    currentIndex++;
+  }, 3200);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initWhatnotLiveSim();
+});
+
 function showToast(msg) {
   let toast = document.getElementById('toastNotice');
   if (!toast) {
@@ -592,3 +680,4 @@ function showToast(msg) {
     toast.classList.remove('show');
   }, 4000);
 }
+

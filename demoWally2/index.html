@@ -56,7 +56,7 @@
       </a>
 
       <ul class="luxe-nav-menu">
-        <li><a href="#wally-3d-world" class="luxe-nav-link" style="color: var(--gold-light);"><i class="fa-solid fa-cube"></i> 3D World</a></li>
+        <li><a href="#wally-3d-world" class="luxe-nav-link" style="color: var(--gold-light);"><i class="fa-solid fa-gamepad"></i> 3D Speedrun</a></li>
         <li><a href="#disciplines" class="luxe-nav-link">Disciplines</a></li>
         <li><a href="#gallery" class="luxe-nav-link">The Registry</a></li>
         <li><a href="#locations" class="luxe-nav-link">Destinations</a></li>
@@ -147,13 +147,13 @@
     </div>
   </section>
 
-  <!-- 3D INTERACTIVE WALLY BOY RUNNING EXPERIENCE -->
+  <!-- 3D INTERACTIVE WALLY BOY RUNNING SPEEDRUN EXPERIENCE -->
   <section class="luxe-section" id="wally-3d-world" style="padding-top: 1.5rem; padding-bottom: 4rem;">
     <div class="container">
       <div class="luxe-section-header" style="margin-bottom: 2rem;">
-        <span class="luxe-subhead">INTERACTIVE 3D SIMULATION</span>
-        <h2 class="luxe-section-title">Wally's World <span class="text-gold">In Motion</span></h2>
-        <p class="luxe-lead">Experience the full 3D neon storefront with the animated Wally boy sprinting laps around the store in real-time. Use orbit controls, camera presets, and speed toggles to explore the scene.</p>
+        <span class="luxe-subhead"><i class="fa-solid fa-gamepad"></i> INTERACTIVE 3D SPEEDRUN RACE</span>
+        <h2 class="luxe-section-title">Wally's World <span class="text-gold">Speedrun 3D</span></h2>
+        <p class="luxe-lead">Take direct 3rd-person control of the animated Wally Boy in this full PC & mobile speedrun game! Sprint down the neon boulevard, dodge lowballer scalper drones that slow you down, snatch rare CGC graded comics & Funko grails, and hit the finish line at Wally's World Store in record time.</p>
       </div>
 
       <div class="wally-3d-stage-wrap">
@@ -793,16 +793,15 @@
   <!-- Main JavaScript File -->
   <script src="js/main.js"></script>
 
-  <!-- Initialize 3D Running Wally Experience -->
+  <!-- Initialize 3D Speedrun Wally Experience -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      new WallyWorld3D('wally3dCanvas', {
+      window.wallySpeedrunInstance = new WallyWorld3D('wally3dCanvas', {
         theme: 'luxe',
         storeModelPath: 'assets/models/wally_store.glb',
         boyModelPath: 'assets/models/wally_boy_running.glb',
-        orbitRadiusX: 4.6,
-        orbitRadiusZ: 3.6,
-        runSpeed: 1.15
+        trackLength: 160,
+        trackWidth: 16
       });
     });
   </script>

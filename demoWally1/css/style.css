@@ -287,6 +287,7 @@ a {
 .text-gradient {
   background: var(--gradient-retro);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -2090,4 +2091,613 @@ a {
   background: var(--gradient-arcade);
   transition: width 0.3s ease;
 }
+
+/* ==========================================================================
+   FOUNDER SPOTLIGHT & THE ARCHITECT OF NOSTALGIA
+   ========================================================================== */
+.founder-section {
+  position: relative;
+  background: radial-gradient(circle at 80% 20%, rgba(157, 78, 221, 0.15) 0%, transparent 60%),
+              radial-gradient(circle at 10% 80%, rgba(0, 240, 255, 0.1) 0%, transparent 60%);
+  padding: 5rem 0;
+  border-top: 1px solid var(--border-neon);
+  border-bottom: 1px solid var(--border-neon);
+}
+
+.founder-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+.founder-media-wrap {
+  position: relative;
+}
+
+.founder-media-card {
+  position: relative;
+  background: var(--gradient-card);
+  border: 2px solid var(--border-cyan);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 240, 255, 0.25);
+  overflow: hidden;
+}
+
+.founder-media-card img {
+  width: 100%;
+  height: 480px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  display: block;
+}
+
+.founder-media-badge {
+  position: absolute;
+  top: 1.75rem;
+  left: 1.75rem;
+  background: rgba(12, 10, 23, 0.9);
+  border: 1px solid var(--neon-yellow);
+  color: var(--neon-yellow);
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 15px rgba(255, 230, 0, 0.3);
+}
+
+.founder-media-caption {
+  position: absolute;
+  bottom: 1.75rem;
+  left: 1.75rem;
+  right: 1.75rem;
+  background: rgba(12, 10, 23, 0.92);
+  border: 1px solid var(--border-pink);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.25rem;
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.founder-quote-box {
+  background: linear-gradient(135deg, rgba(157, 78, 221, 0.15), rgba(255, 0, 127, 0.1));
+  border-left: 4px solid var(--neon-pink);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin: 1.5rem 0;
+  font-style: italic;
+  font-size: 1.12rem;
+  color: #ffffff;
+  line-height: 1.6;
+}
+
+.founder-quote-author {
+  font-family: var(--font-heading);
+  font-style: normal;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.founder-pillars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.founder-pillar-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-neon);
+  border-radius: var(--radius-md);
+  padding: 1.15rem;
+  transition: all 0.25s ease;
+}
+
+.founder-pillar-item:hover {
+  border-color: var(--neon-cyan);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 240, 255, 0.15);
+}
+
+.pillar-icon {
+  font-size: 1.4rem;
+  color: var(--neon-pink);
+  margin-bottom: 0.5rem;
+}
+
+.pillar-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 0.95rem;
+  margin-bottom: 0.35rem;
+}
+
+.pillar-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   WHATNOT LIVESTREAM & "THE MADNESS METHODOLOGY"
+   ========================================================================== */
+.live-madness-section {
+  position: relative;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 0, 127, 0.15) 0%, rgba(12, 10, 23, 0.98) 75%);
+  padding: 5.5rem 0;
+  overflow: hidden;
+  border-top: 2px solid var(--neon-pink);
+  border-bottom: 2px solid var(--neon-purple);
+}
+
+.madness-hero-card {
+  background: linear-gradient(145deg, rgba(28, 16, 44, 0.95) 0%, rgba(14, 10, 24, 0.98) 100%);
+  border: 2px solid var(--neon-pink);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 35px var(--neon-pink-glow);
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3rem;
+  align-items: center;
+  margin-bottom: 3.5rem;
+}
+
+.madness-live-tag {
+  background: #ff0000;
+  color: #ffffff;
+  font-family: var(--font-arcade);
+  font-size: 0.85rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: pulseGlow 1.5s infinite;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+  margin-bottom: 1rem;
+}
+
+.madness-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  color: #ffffff;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+
+.madness-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin: 1.5rem 0;
+}
+
+.madness-feat-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.92rem;
+  color: var(--text-main);
+}
+
+.madness-feat-item i {
+  color: var(--neon-lime);
+  font-size: 1.1rem;
+  margin-top: 0.2rem;
+}
+
+.madness-stream-preview {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 2px solid var(--neon-cyan);
+  box-shadow: 0 10px 30px rgba(0, 240, 255, 0.3);
+}
+
+.madness-stream-preview img {
+  width: 100%;
+  height: 380px;
+  object-fit: cover;
+  display: block;
+}
+
+.stream-overlay-chat {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(0deg, rgba(12, 10, 23, 0.96) 0%, rgba(12, 10, 23, 0.7) 60%, transparent 100%);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.mock-bid-pill {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-family: var(--font-heading);
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #ffffff;
+}
+
+.mock-bid-user {
+  color: var(--neon-yellow);
+  font-weight: 700;
+}
+
+.mock-bid-amount {
+  color: var(--neon-lime);
+  font-family: var(--font-arcade);
+  font-size: 0.85rem;
+}
+
+/* Madness Show Types Grid */
+.madness-shows-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.show-card {
+  background: var(--gradient-card);
+  border: 1px solid var(--border-neon);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.show-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--neon-pink);
+  box-shadow: 0 15px 35px rgba(255, 0, 127, 0.25);
+}
+
+.show-icon-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 0, 127, 0.15);
+  border: 1px solid var(--neon-pink);
+  color: var(--neon-pink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  margin-bottom: 1rem;
+}
+
+.show-title {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.show-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.show-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 0.75rem;
+  font-size: 0.75rem;
+  font-family: var(--font-heading);
+  color: var(--neon-yellow);
+}
+
+/* ==========================================================================
+   COMMUNITY EVENTS & POP-CULTURE SIGNINGS
+   ========================================================================== */
+.events-section {
+  padding: 5rem 0;
+  background: rgba(15, 12, 28, 0.6);
+  border-bottom: 1px solid var(--border-neon);
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.event-feature-card {
+  position: relative;
+  background: var(--gradient-card);
+  border: 2px solid var(--border-neon);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.event-feature-card img {
+  width: 100%;
+  height: 380px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  display: block;
+}
+
+.event-badge-tag {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  background: var(--neon-pink);
+  color: #ffffff;
+  font-family: var(--font-arcade);
+  font-size: 0.75rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 0 15px var(--neon-pink-glow);
+}
+
+.events-schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.event-list-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-neon);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  transition: all 0.25s ease;
+}
+
+.event-list-item:hover {
+  border-color: var(--neon-cyan);
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateX(5px);
+}
+
+.event-date-badge {
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  min-width: 75px;
+}
+
+.event-date-month {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.event-date-day {
+  font-family: var(--font-arcade);
+  font-size: 1.35rem;
+  color: #ffffff;
+  line-height: 1;
+  margin-top: 0.2rem;
+}
+
+.event-details h4 {
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  margin-bottom: 0.3rem;
+}
+
+.event-details p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-bottom: 0.4rem;
+}
+
+.event-details .event-meta {
+  font-size: 0.75rem;
+  color: var(--neon-yellow);
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* ==========================================================================
+   DUAL LOCATION SHOWCASE (Lindenhurst Flagship & Copiague Auxiliary)
+   ========================================================================== */
+.dual-locations-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+}
+
+.location-hub-card {
+  background: var(--gradient-card);
+  border: 1px solid var(--border-neon);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.location-hub-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 20px 45px rgba(0, 240, 255, 0.2);
+}
+
+.location-hub-media {
+  position: relative;
+  height: 260px;
+  overflow: hidden;
+}
+
+.location-hub-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.location-hub-card:hover .location-hub-media img {
+  transform: scale(1.04);
+}
+
+.location-hub-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(12, 10, 23, 0.88);
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  padding: 0.35rem 0.8rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
+}
+
+.location-hub-body {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.location-hub-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.location-hub-address {
+  color: var(--neon-cyan);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.location-hub-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.location-hub-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.location-hub-features li i {
+  color: var(--neon-lime);
+  font-size: 0.85rem;
+}
+
+.location-hub-footer {
+  margin-top: auto;
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Authentication Guarantee Badges */
+.auth-guarantee-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(57, 255, 20, 0.12);
+  border: 1px solid var(--neon-lime);
+  color: var(--neon-lime);
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.72rem;
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.bopis-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(0, 240, 255, 0.12);
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.72rem;
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .founder-grid,
+  .madness-hero-card,
+  .events-grid,
+  .dual-locations-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .founder-media-card img,
+  .madness-stream-preview img {
+    height: 340px;
+  }
+}
+
+@media (max-width: 600px) {
+  .founder-pillars {
+    grid-template-columns: 1fr;
+  }
+
+  .madness-hero-card {
+    padding: 1.5rem;
+  }
+  
+  .event-list-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 
