@@ -56,6 +56,7 @@
       </a>
 
       <ul class="luxe-nav-menu">
+        <li><a href="#wally-3d-world" class="luxe-nav-link" style="color: var(--gold-light);"><i class="fa-solid fa-cube"></i> 3D World</a></li>
         <li><a href="#disciplines" class="luxe-nav-link">Disciplines</a></li>
         <li><a href="#gallery" class="luxe-nav-link">The Registry</a></li>
         <li><a href="#locations" class="luxe-nav-link">Destinations</a></li>
@@ -142,6 +143,21 @@
             </button>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3D INTERACTIVE WALLY BOY RUNNING EXPERIENCE -->
+  <section class="luxe-section" id="wally-3d-world" style="padding-top: 1.5rem; padding-bottom: 4rem;">
+    <div class="container">
+      <div class="luxe-section-header" style="margin-bottom: 2rem;">
+        <span class="luxe-subhead">INTERACTIVE 3D SIMULATION</span>
+        <h2 class="luxe-section-title">Wally's World <span class="text-gold">In Motion</span></h2>
+        <p class="luxe-lead">Experience the full 3D neon storefront with the animated Wally boy sprinting laps around the store in real-time. Use orbit controls, camera presets, and speed toggles to explore the scene.</p>
+      </div>
+
+      <div class="wally-3d-stage-wrap">
+        <div class="wally-3d-canvas-container" id="wally3dCanvas"></div>
       </div>
     </div>
   </section>
@@ -355,8 +371,8 @@
               <li><i class="fa-solid fa-shield-check"></i> <strong>Services:</strong> Immediate cash appraisal desk, comic sleeving & private holds</li>
             </ul>
 
-            <a href="https://maps.google.com/?q=234+E+Montauk+Hwy+Lindenhurst+NY" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-sm">
-              <i class="fa-solid fa-diamond-turn-right"></i> Open Navigation Map
+            <a href="https://share.google/DCasYu3WShs6pD9Ob" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-sm">
+              <i class="fa-brands fa-google"></i> Open Google Business Page & Reviews
             </a>
           </div>
 
@@ -651,18 +667,22 @@
           <li><a href="#locations">Dual Locations</a></li>
           <li><a href="#consignment">Consign Collection</a></li>
           <li><a href="#vip-pass">Digital VIP Pass</a></li>
+          <li><a href="https://share.google/DCasYu3WShs6pD9Ob" target="_blank" rel="noopener noreferrer" style="color: var(--gold-light);"><i class="fa-brands fa-google"></i> Google Business Profile</a></li>
         </ul>
       </div>
 
       <div>
         <div class="footer-col-title">Flagship Gallery</div>
         <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-          📍 234 East Montauk Highway<br>Lindenhurst, NY 11757
+          <a href="https://share.google/DCasYu3WShs6pD9Ob" target="_blank" rel="noopener noreferrer" style="color: inherit;" title="View Google Business Page">
+            📍 234 East Montauk Highway<br>Lindenhurst, NY 11757
+          </a>
         </p>
         <p style="font-size: 0.88rem; color: var(--gold-light); margin-bottom: 1rem;">
           📞 (631) 555-WALLY
         </p>
         <div style="display: flex; gap: 0.75rem;">
+          <a href="https://share.google/DCasYu3WShs6pD9Ob" target="_blank" rel="noopener noreferrer" style="color: var(--gold-primary);" title="Official Google Business Page"><i class="fa-brands fa-google"></i></a>
           <a href="#" style="color: var(--gold-primary);"><i class="fa-brands fa-instagram"></i></a>
           <a href="#" style="color: var(--gold-primary);"><i class="fa-brands fa-facebook"></i></a>
           <a href="#" style="color: var(--gold-primary);"><i class="fa-brands fa-tiktok"></i></a>
@@ -764,7 +784,27 @@
     </div>
   </div>
 
+  <!-- Three.js 3D Engine & Loaders -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="js/wally-3d.js"></script>
+  
   <!-- Main JavaScript File -->
   <script src="js/main.js"></script>
+
+  <!-- Initialize 3D Running Wally Experience -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      new WallyWorld3D('wally3dCanvas', {
+        theme: 'luxe',
+        storeModelPath: 'assets/models/wally_store.glb',
+        boyModelPath: 'assets/models/wally_boy_running.glb',
+        orbitRadiusX: 4.6,
+        orbitRadiusZ: 3.6,
+        runSpeed: 1.15
+      });
+    });
+  </script>
 </body>
 </html>

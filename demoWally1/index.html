@@ -65,6 +65,7 @@
       </a>
 
       <ul class="nav-menu">
+        <li><a href="#wally-3d-arcade" class="nav-link" style="color: var(--neon-cyan);"><i class="fa-solid fa-gamepad"></i> 3D Arcade</a></li>
         <li><a href="#departments" class="nav-link">Departments</a></li>
         <li><a href="#grail-vault" class="nav-link">Grail Vault</a></li>
         <li><a href="#mystery-crates" class="nav-link">Mystery Crates</a></li>
@@ -152,6 +153,21 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3D INTERACTIVE RUNNING WALLY ARCADE WORLD -->
+  <section class="section" id="wally-3d-arcade" style="padding-top: 1.5rem; padding-bottom: 4rem;">
+    <div class="container">
+      <div class="section-header" style="margin-bottom: 2rem;">
+        <span class="section-tag"><i class="fa-solid fa-cube"></i> REAL-TIME 3D SIMULATOR</span>
+        <h2 class="section-title">Wally Boy <span class="text-gradient">Running Around The Store</span></h2>
+        <p class="section-subtitle">Real-time 3D neon simulation featuring the animated Wally boy sprinting laps around the store building. Orbit with your mouse, change camera angles, or switch into Turbo & Hyper running mode!</p>
+      </div>
+
+      <div class="wally-3d-stage-wrap">
+        <div class="wally-3d-canvas-container" id="wally3dCanvas"></div>
       </div>
     </div>
   </section>
@@ -561,9 +577,12 @@
             </div>
           </div>
 
-          <div style="margin-top: 2rem;">
-            <a href="https://maps.google.com/?q=234+E+Montauk+Hwy+Lindenhurst+NY" target="_blank" rel="noopener noreferrer" class="btn btn-cyan" style="width: 100%;">
-              <i class="fa-solid fa-diamond-turn-right"></i> Open In Google Maps
+          <div style="margin-top: 2rem; display: flex; flex-direction: column; gap: 0.75rem;">
+            <a href="https://share.google/DCasYu3WShs6pD9Ob" target="_blank" rel="noopener noreferrer" class="btn btn-cyan" style="width: 100%;">
+              <i class="fa-brands fa-google"></i> Open Google Business Page & Reviews
+            </a>
+            <a href="https://share.google/DCasYu3WShs6pD9Ob" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm" style="width: 100%;">
+              <i class="fa-solid fa-diamond-turn-right"></i> Get Directions to Store
             </a>
           </div>
         </div>
@@ -578,9 +597,9 @@
               <div style="font-family: var(--font-display); color: #fff; font-size: 1.1rem;">Look for the Purple Wally's World Sign!</div>
               <div style="font-size: 0.8rem; color: var(--text-muted);">Route 12 Sign & Outdoor Vintage Racks</div>
             </div>
-            <button class="btn btn-outline btn-sm" onclick="openLightbox('assets/images/storefront.jpg', 'Storefront Details')">
-              <i class="fa-solid fa-eye"></i> View
-            </button>
+            <a href="https://share.google/DCasYu3WShs6pD9Ob" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+              <i class="fa-brands fa-google"></i> Google Page
+            </a>
           </div>
         </div>
       </div>
@@ -670,6 +689,7 @@
         </div>
         <p>Long Island's leading destination for vintage clothing, rare comic slabs, pop culture toys, and sports memorabilia since 2011.</p>
         <div class="social-links">
+          <a href="https://share.google/DCasYu3WShs6pD9Ob" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Google Business Page" title="Official Google Business Page"><i class="fa-brands fa-google"></i></a>
           <a href="#" class="social-btn" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
           <a href="#" class="social-btn" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
           <a href="#" class="social-btn" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
@@ -696,6 +716,7 @@
           <li><a href="#mystery-crates">Mystery Crate Game</a></li>
           <li><a href="#trade-in">Sell Your Collection</a></li>
           <li><a href="#visit">Hours & Location</a></li>
+          <li><a href="https://share.google/DCasYu3WShs6pD9Ob" target="_blank" rel="noopener noreferrer" style="color: var(--neon-cyan);"><i class="fa-brands fa-google"></i> Google Business Page</a></li>
           <li><a href="javascript:void(0)" onclick="openAppraisalModal()">Free Appraisal</a></li>
         </ul>
       </div>
@@ -703,10 +724,17 @@
       <div class="footer-col">
         <h4>Flagship Location</h4>
         <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-          📍 234 E Montauk Hwy<br>Lindenhurst, NY 11757
+          <a href="https://share.google/DCasYu3WShs6pD9Ob" target="_blank" rel="noopener noreferrer" style="color: inherit;" title="Open in Google Business Page">
+            📍 234 E Montauk Hwy<br>Lindenhurst, NY 11757
+          </a>
         </p>
         <p style="font-size: 0.88rem; color: var(--neon-cyan); margin-bottom: 0.5rem;">
           📞 (631) 555-WALLY
+        </p>
+        <p style="font-size: 0.82rem; color: var(--text-dim); margin-bottom: 0.5rem;">
+          <a href="https://share.google/DCasYu3WShs6pD9Ob" target="_blank" rel="noopener noreferrer" style="color: var(--neon-lime); text-decoration: underline;">
+            ⭐ Read Our Verified Google Reviews
+          </a>
         </p>
         <p style="font-size: 0.82rem; color: var(--text-dim);">
           Also visit our Copiague secondhand & furniture location!
@@ -817,7 +845,27 @@
     </div>
   </div>
 
+  <!-- Three.js 3D Engine & Loaders -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="js/wally-3d.js"></script>
+
   <!-- Main JavaScript File -->
   <script src="js/main.js"></script>
+
+  <!-- Initialize 3D Running Wally Experience -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      new WallyWorld3D('wally3dCanvas', {
+        theme: 'neon',
+        storeModelPath: 'assets/models/wally_store.glb',
+        boyModelPath: 'assets/models/wally_boy_running.glb',
+        orbitRadiusX: 4.8,
+        orbitRadiusZ: 3.8,
+        runSpeed: 1.25
+      });
+    });
+  </script>
 </body>
 </html>
