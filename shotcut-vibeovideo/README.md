@@ -1,6 +1,10 @@
-# 🎬 vibeoVideo - OpenAI AI Studio for Shotcut
+<p align="center">
+  <img src="logo.svg" alt="vibeoVideo Logo" width="180" />
+</p>
 
-**vibeoVideo** is a native AI plugin and companion suite for **Shotcut Video Editor**, bringing the power of **OpenAI GPT-4o, DALL-E 3, and Whisper** directly into your video editing workflow.
+# 🎬 vibeoVideo - Next-Gen OpenAI AI Studio for Shotcut
+
+**vibeoVideo** is a native AI plugin and companion suite for **Shotcut Video Editor**, bringing the power of **OpenAI GPT-5.6 Luna, DALL-E 3, and Whisper** directly into your video editing workflow.
 
 ---
 
@@ -8,11 +12,19 @@
 
 | Feature | Powered By | Description |
 | :--- | :--- | :--- |
-| **Viral Titles & Hooks** | OpenAI GPT-4o / GPT-4o-mini | Generate high-converting YouTube titles and 3-second opening video hooks directly in your video timeline. |
-| **Lower Thirds & Captions** | OpenAI GPT-4o | Create clean 2-line name/title lower thirds, scene summaries, and call-to-action (CTA) overlays. |
-| **Instant Translation** | OpenAI GPT-4o | Translate video scripts, lower thirds, and captions into Spanish, French, German, Japanese, and more. |
+| **Agentic Command Center** | Autonomous Agent & Win32 Dock | Pinned "Open vibeoVideo" option at the top of the screen right next to "Help", opening an autonomous agent command center window. |
+| **Viral Titles & Hooks** | OpenAI GPT-5.6 Luna | Generate high-converting YouTube titles and 3-second opening video hooks directly in your video timeline. |
+| **Lower Thirds & Captions** | OpenAI GPT-5.6 Luna | Create clean 2-line name/title lower thirds, scene summaries, and call-to-action (CTA) overlays. |
+| **Instant Translation** | OpenAI GPT-5.6 Luna | Translate video scripts, lower thirds, and captions into Spanish, French, German, Japanese, and more. |
 | **B-Roll & Backgrounds** | OpenAI DALL-E 3 | Generate 16:9 cinematic widescreen, 9:16 vertical Shorts, or square concept images directly in the editor. |
 | **Interactive Video Gizmo** | Shotcut `TextFilterVui` | On-screen interactive drag, drop, and resize handles right in the Shotcut video player window. |
+| **Conversation Memory** | Sliding Token Window | Full multi-turn conversational memory with smart token pruning to preserve context across long sessions. |
+| **⚠️ Dangerous High-Token Mode** | Custom Token Thresholds | Unlock extended context windows (up to 128k tokens) and expanded outputs (up to 8,192 tokens) beyond defaults. |
+| **Video Modification Engine** | In-Filter & FFmpeg Tools | Complete live control over on-screen typography, geometry, styles, colors, presets, and FFmpeg video transformations. |
+| **Auto-Director & Roughcut** | Intelligent Silence Stripper | 1-Click magic roughcut: removes dead air/silences and generates a ready-to-open Shotcut `.mlt` timeline. |
+| **Viral Shorts Repurposer** | AI Highlight Hunter | Analyzes dialogue, extracts the top 30-45s retention hook, converts to 9:16 vertical, and burns subtitles. |
+| **Cinematic SFX Synthesizer** | Procedural Audio DSP | Generate broadcast-quality sound effects (Whooshes, Sub Booms, Risers, Pops, Camera Shutters) with live audition. |
+| **Shotcut Timeline Remote** | Win32 Hotkey Engine | Direct timeline transport bar (Play/Pause, Split `S`, Ripple Delete `X`, Step Frames, Undo) without leaving the agent. |
 | **Whisper Auto-Subtitles** | OpenAI Whisper-1 | Auto-transcribe audio/video speech into standard `.srt` subtitle files with millisecond timestamps. |
 | **AI Voiceovers (TTS)** | OpenAI TTS (`tts-1`) | Generate crystal-clear AI narration tracks (`alloy`, `echo`, `fable`, `onyx`, `nova`, `shimmer`) ready for your timeline. |
 | **Secure Key Storage** | SQLite / LocalStorage | Your OpenAI API key is stored locally on your machine with masked inputs and connection testing. |
@@ -82,11 +94,40 @@ Copy the `filters/vibeo_video` folder to:
 
 ---
 
+## ⚡ Agentic AI Command Center & Top-of-Screen Dock
+
+vibeoVideo includes a separate **Agentic AI Command Center** window with an automated **Top-of-Screen Dock** that sits right next to the **Help** menu on Shotcut's menu bar:
+
+### How It Works
+1. Launch the command center:
+   - Double-click **`run_vibeo_command_center.bat`** (or click **`🚀 AI Center`** in the vibeoVideo filter inside Shotcut).
+2. **Top-Bar Dock**:
+   - When Shotcut is open, a sleek pill button **`[✨ Open vibeoVideo]`** automatically docks at the top of your screen, right next to the **Help** menu on Shotcut's menu bar!
+   - Clicking it brings the **Agentic Command Center** to the foreground.
+3. **Agentic Capabilities & Video Tools**:
+   - **🧠 Multi-Turn Conversation Memory**: Retains the entire conversation across questions and commands with an intelligent sliding context window that automatically manages token consumption.
+   - **⚠️ Dangerous High-Token Mode**: Optional setting to unlock massive input contexts (up to 128k tokens) and output capacities (up to 8,192 tokens) for deep video analysis.
+   - **🎬 Autonomous Video Transformations**:
+     - `trim_video`: Cut and trim video clips to specified timestamps.
+     - `convert_vertical`: Crop and convert 16:9 videos to 9:16 vertical format for TikTok, Instagram Reels, and YouTube Shorts.
+     - `extract_audio`: Extract pristine MP3 audio from any video.
+     - `burn_subtitles`: Hardcode and burn styled subtitles directly into video footage.
+     - `change_speed`: Speed up (timelapse) or slow down video footage.
+     - `extract_thumbnail`: Capture high-resolution video frame screenshots.
+     - `compress_video`: Smart compression for web, Discord, or email delivery.
+     - `modify_mlt`: Inspect and inject filter definitions directly into Shotcut `.mlt` XML project files.
+   - **🎙️ Subtitle Studio**: Extract audio and transcribe with OpenAI Whisper into synced `.srt` files.
+   - **🗣️ Voiceover Studio**: Turn scripts into studio voiceover audio tracks (`alloy`, `echo`, `fable`, `onyx`, `nova`, `shimmer`).
+   - **🎨 DALL-E 3 B-Roll Studio**: Generate 16:9 widescreen or 9:16 vertical AI imagery and download directly into project folders.
+   - **📁 Shotcut Project Inspector**: Inspect `.mlt` XML files, list track counts, media sources, and duration.
+
+---
+
 ## 🎙️ vibeoVideo AI Companion (Whisper Subtitles & TTS Voiceovers)
 
 For batch audio processing, subtitle generation, and text-to-speech, vibeoVideo includes a companion desktop app.
 
-### Running the Companion Tool
+### Running the Classic Companion Tool
 
 Double-click `companion\run_companion.bat` or run via terminal:
 
@@ -131,12 +172,15 @@ shotcut-vibeovideo/
 │       ├── vui.qml             # Video viewport interactive manipulation gizmo
 │       ├── OpenAiClient.js     # Asynchronous OpenAI REST engine (XMLHttpRequest)
 │       ├── vibeoStorage.js     # Persistent SQLite/LocalStorage manager
-│       ├── icon.webp           # Shotcut filter list icon (128x128 WebP)
-│       └── icon.png            # High-res icon asset
+│       ├── icon.webp           # Shotcut filter list icon (128x128 WebP vV logo)
+│       ├── icon.png            # High-res vV icon asset
+│       └── logo.svg            # Scalable vV vector logo
 ├── companion/
+│   ├── vibeo_agent_center.py   # Agentic Command Center desktop app
 │   ├── vibeo_companion.py      # Desktop GUI & CLI for Whisper & TTS
-│   ├── run_companion.bat       # Quick-launch launcher
-│   └── requirements.txt        # Optional dependency documentation
+│   ├── vibeo_icon.ico          # Windows multi-size application icon
+│   ├── vibeo_logo_icon.png     # vV logo badge asset
+│   └── run_companion.bat       # Quick-launch launcher
 ├── install.ps1                 # Automated PowerShell installer
 ├── uninstall.ps1               # Clean uninstaller script
 └── README.md                   # Full documentation
@@ -145,4 +189,4 @@ shotcut-vibeovideo/
 ### Compatibility
 - **Shotcut**: Shotcut 22.09, 23.x, 24.x, and newer (Qt 6 Quick architecture)
 - **OS**: Windows 10/11, macOS, and Linux
-- **OpenAI Models**: `gpt-4o`, `gpt-4o-mini`, `gpt-3.5-turbo`, `dall-e-3`, `whisper-1`, `tts-1`, `tts-1-hd`
+- **OpenAI Models**: `gpt-5.6-luna` (default), `gpt-4o`, `gpt-4o-mini`, `gpt-3.5-turbo`, `dall-e-3`, `whisper-1`, `tts-1`, `tts-1-hd`

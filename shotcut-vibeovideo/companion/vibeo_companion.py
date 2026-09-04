@@ -180,6 +180,14 @@ class VibeoCompanionApp:
         self.style = ttk.Style()
         self.style.theme_use("clam")
 
+        # Set window icon
+        try:
+            ico_path = os.path.join(os.path.dirname(__file__), "vibeo_icon.ico")
+            if os.path.exists(ico_path):
+                self.root.iconbitmap(ico_path)
+        except Exception:
+            pass
+
         self.ffmpeg_path = find_ffmpeg()
         self.load_settings()
         self.create_widgets()

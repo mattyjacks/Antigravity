@@ -1,0 +1,31 @@
+========================================================================
+🎬 vibeoVideo - OpenAI AI Studio for Shotcut (v1.0.0 Windows x64)
+Zero External Dependencies - No Python or Pip Required!
+========================================================================
+
+✨ WHAT'S INCLUDED:
+------------------------------------------------------------------------
+1. Native Top-of-Screen Menu Item:
+   Sits right next to "Help" on Shotcut's menu bar matching Shotcut's dark theme.
+2. vibeoVideo Agentic AI Command Center:
+   Standalone desktop app (vibeo_command_center.exe) with 1-click "Launch Shotcut"
+   button, autonomous AI agent, Whisper subtitles (.srt), OpenAI TTS, and DALL-E 3.
+3. In-Editor Shotcut Filter (vibeoVideo):
+   Renders AI titles, lower thirds, captions, and translations directly onto
+   video clips inside Shotcut with interactive on-screen drag handles.
+
+🚀 1-STEP INSTALLATION:
+------------------------------------------------------------------------
+1. Double-click "install.bat".
+   (It automatically copies the plugin to your Shotcut extensions folder).
+2. Double-click "vibeo_command_center.exe" (or "run_vibeo_command_center.bat").
+   If Shotcut is not running, click the green "🚀 Launch Shotcut" button!
+3. On Shotcut's top menu bar, you'll see "vibeoVideo" docked seamlessly next to "Help"!
+
+⚙️ CONFIGURATION:
+------------------------------------------------------------------------
+In the Command Center or inside the Shotcut filter panel under "Settings",
+paste your OpenAI API Key (sk-...) and click "Save Key".
+
+Enjoy editing with AI in Shotcut!
+========================================================================

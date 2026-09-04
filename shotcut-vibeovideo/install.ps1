@@ -53,7 +53,9 @@ $filesToCopy = @(
     "OpenAiClient.js",
     "vibeoStorage.js",
     "icon.webp",
-    "icon.png"
+    "icon.png",
+    "logo.svg",
+    "run_command_center.bat"
 )
 
 foreach ($f in $filesToCopy) {
@@ -66,19 +68,35 @@ foreach ($f in $filesToCopy) {
     }
 }
 
+# Copy companion directory
+$companionSrc = Join-Path $scriptDir "companion"
+$companionDest = Join-Path $targetDir "companion"
+if (Test-Path $companionSrc) {
+    Copy-Item -Path $companionSrc -Destination $companionDest -Recurse -Force
+    Write-Host "  -> Installed companion tools to $companionDest" -ForegroundColor DarkGray
+}
+
+# Copy standalone command center executable
+$exeSrc = Join-Path $scriptDir "vibeo_command_center.exe"
+if (Test-Path $exeSrc) {
+    Copy-Item -Path $exeSrc -Destination $targetDir -Force
+    Write-Host "  -> Installed vibeo_command_center.exe" -ForegroundColor DarkGray
+}
+
 Write-Host ""
 Write-Host "====================================================" -ForegroundColor Green
 Write-Host "✨ vibeoVideo installed successfully!" -ForegroundColor Green
 Write-Host "====================================================" -ForegroundColor Green
 Write-Host ""
-Write-Host "How to use vibeoVideo in Shotcut:" -ForegroundColor Yellow
-Write-Host "1. (Re)Start Shotcut if it is currently open."
-Write-Host "2. Add any video clip, image, or transparent color clip to the Timeline."
-Write-Host "3. Click the 'Filters' tab and click '+' to add a filter."
-Write-Host "4. Search for 'vibeoVideo' under the Video filters."
-Write-Host "5. In the filter panel, click 'Settings', paste your OpenAI API Key, and click 'Save Key'."
-Write-Host "6. Switch to 'AI Text' to generate titles, hooks, lower thirds, or 'DALL-E 3' for B-roll!"
+Write-Host "Top-of-Screen 'Open vibeoVideo' Option:" -ForegroundColor Cyan
+Write-Host "  Start the Agentic AI Command Center and Top-Bar Dock:"
+Write-Host "    $scriptDir\run_vibeo_command_center.bat"
+Write-Host "  (When Shotcut is open, an 'Open vibeoVideo' button is pinned right next to 'Help'!)"
 Write-Host ""
-Write-Host "To run the Whisper Subtitle & Voiceover Companion tool:" -ForegroundColor Cyan
-Write-Host "  Run '$scriptDir\companion\run_companion.bat'"
+Write-Host "How to use vibeoVideo inside Shotcut:" -ForegroundColor Yellow
+Write-Host "1. (Re)Start Shotcut."
+Write-Host "2. Add any video clip or color clip to the Timeline."
+Write-Host "3. In Filters (+), search for 'vibeoVideo'."
+Write-Host "4. Click 'Settings', paste your OpenAI API Key, and click 'Save Key'."
+Write-Host "5. Click '🚀 AI Center' in the filter or click 'Open vibeoVideo' next to 'Help' at the top of the screen!"
 Write-Host ""

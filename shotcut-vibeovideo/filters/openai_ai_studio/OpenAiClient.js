@@ -72,7 +72,7 @@ function chatCompletion(apiKey, model, systemPrompt, userPrompt, temperature, ma
     }
 
     var payload = {
-        model: model || "gpt-4o-mini",
+        model: model || "gpt-5.6-luna",
         messages: [
             {
                 role: "system",
