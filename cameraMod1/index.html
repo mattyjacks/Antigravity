@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matty Jacks CameraMod1 - Virtual Camera Studio</title>
+  <link rel="stylesheet" href="/src/styles/main.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header Bar -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="brand-logo-icon">MJ</div>
+      <div class="brand-title-wrap">
+        <div class="brand-name">MATTY JACKS • CAMERAMOD 1</div>
+        <div class="brand-subtitle">AI VIRTUAL CAMERA & NETWORKING ENGINE</div>
+      </div>
+    </div>
+
+    <div class="header-status-badge">
+      <span class="status-dot"></span>
+      <span id="headerStatusText">INITIALIZING ENGINE...</span>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn-primary" id="btnOpenProjector">
+        📺 Launch Output Projector
+      </button>
+    </div>
+  </header>
+
+  <!-- Studio Container -->
+  <main class="studio-container">
+    <!-- Left Monitor Viewport -->
+    <section class="monitor-pane">
+      <div class="canvas-wrapper">
+        <canvas id="compositorCanvas" width="1280" height="720"></canvas>
+        
+        <!-- Live HUD Overlay -->
+        <div class="monitor-hud">
+          <div class="hud-pill live-rec">
+            <span class="status-dot" style="background: #ff2a5f; box-shadow: 0 0 8px #ff2a5f;"></span>
+            <span>PROG ON-AIR</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <div class="hud-pill" id="hudFps">60 FPS</div>
+            <div class="hud-pill" id="hudRes">1280x720</div>
+            <div class="hud-pill" id="hudLatency">0.0 ms</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Layer Controls -->
+      <div class="monitor-bottom-bar">
+        <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px;">LIVE LAYERS:</span>
+        <div class="layer-toggle-group">
+          <button class="layer-btn active" data-layer="camera">📷 Camera</button>
+          <button class="layer-btn active" data-layer="aiMatte">🧠 AI Matte</button>
+          <button class="layer-btn active" data-layer="matrixRain">⚡ Matrix Rain</button>
+          <button class="layer-btn active" data-layer="watermark">🏷️ Watermark</button>
+          <button class="layer-btn active" data-layer="ticker">📜 Ticker</button>
+          <button class="layer-btn active" data-layer="demoDeck">🎬 Demo Deck</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Control Deck -->
+    <section class="control-pane">
+      <!-- Tabs Nav -->
+      <nav class="control-tabs-nav">
+        <button class="tab-nav-btn active" data-tab="tab-matrix">🌟 Matrix Rain</button>
+        <button class="tab-nav-btn" data-tab="tab-watermark">🏷️ Branding</button>
+        <button class="tab-nav-btn" data-tab="tab-ticker">📜 News Ticker</button>
+        <button class="tab-nav-btn" data-tab="tab-demos">🎬 8s Demo Deck</button>
+        <button class="tab-nav-btn" data-tab="tab-devices">⚙️ Devices & VCam</button>
+      </nav>
+
+      <!-- Tabs Content -->
+      <div class="tab-content-container">
+        
+        <!-- Tab 1: Matrix Rain -->
+        <div class="tab-pane active" id="tab-matrix">
+          <div class="control-card">
+            <div class="card-title">
+              <span>Matrix Digital Rain Engine</span>
+              <span class="badge">PROCEDURAL SHADER</span>
+            </div>
+
+            <div class="setting-row">
+              <label class="setting-header">
+                <span>Character Glyphs</span>
+              </label>
+              <select id="matrixCharSet">
+                <option value="katakana">Japanese Katakana & Symbols (Matrix Classic)</option>
+                <option value="matrix">Full Matrix Movie Cipher</option>
+                <option value="mattyjacks">MATTY JACKS Custom Brand Alphanumeric</option>
+                <option value="binary">Binary Quantum Bitstream (0101)</option>
+                <option value="hex">Hexadecimal Memory Dump (0-F)</option>
+              </select>
+            </div>
+
+            <div class="setting-row">
+              <label class="setting-header">
+                <span>Theme Color Palette</span>
+              </label>
+              <div class="color-presets-grid">
+                <button class="color-swatch active matrix-color-swatch" data-color="#00ff66" style="background: #00ff66;"></button>
+                <button class="color-swatch matrix-color-swatch" data-color="#00d2ff" style="background: #00d2ff;"></button>
+                <button class="color-swatch matrix-color-swatch" data-color="#ffb800" style="background: #ffb800;"></button>
+                <button class="color-swatch matrix-color-swatch" data-color="#b026ff" style="background: #b026ff;"></button>
+                <button class="color-swatch matrix-color-swatch" data-color="#ff2a5f" style="background: #ff2a5f;"></button>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-header">
+                <span>Rain Speed</span>
+                <span class="setting-value" id="matrixSpeedVal">1.0x</span>
+              </div>
+              <input type="range" id="matrixSpeed" min="0.2" max="3.0" step="0.1" value="1.0" />
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-header">
+                <span>Rain Column Density</span>
+                <span class="setting-value" id="matrixDensityVal">1.0x</span>
+              </div>
+              <input type="range" id="matrixDensity" min="0.4" max="2.0" step="0.1" value="1.0" />
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-header">
+                <span>Glyph Font Size</span>
+                <span class="setting-value" id="matrixFontSizeVal">18px</span>
+              </div>
+              <input type="range" id="matrixFontSize" min="12" max="32" step="1" value="18" />
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-header">
+                <span>Phosphor Glow Intensity</span>
+                <span class="setting-value" id="matrixGlowVal">12px</span>
+              </div>
+              <input type="range" id="matrixGlow" min="0" max="30" step="1" value="12" />
+            </div>
+
+            <div class="setting-row" style="flex-direction: row; justify-content: space-between; align-items: center;">
+              <span>CRT Phosphor Scanlines</span>
+              <input type="checkbox" id="matrixScanlines" checked />
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Watermark & Branding -->
+        <div class="tab-pane" id="tab-watermark">
+          <div class="control-card">
+            <div class="card-title">
+              <span>Matty Jacks Branded Watermark</span>
+              <span class="badge">GLASSMORPHIC HUD</span>
+            </div>
+
+            <div class="setting-row">
+              <label class="setting-header"><span>Brand / Presenter Name</span></label>
+              <input type="text" id="wmName" value="MATTY JACKS" />
+            </div>
+
+            <div class="setting-row">
+              <label class="setting-header"><span>Professional Title / Subtitle</span></label>
+              <input type="text" id="wmRole" value="AI & Full-Stack Systems Specialist" />
+            </div>
+
+            <div class="setting-row">
+              <label class="setting-header"><span>Live Networking Status Pill</span></label>
+              <input type="text" id="wmStatus" value="🟢 LIVE NETWORKING" />
+            </div>
+
+            <div class="setting-row">
+              <label class="setting-header"><span>Overlay Position</span></label>
+              <select id="wmPosition">
+                <option value="top-right">Top Right (Recommended)</option>
+                <option value="top-left">Top Left</option>
+                <option value="bottom-right">Bottom Right</option>
+                <option value="bottom-left">Bottom Left</option>
+              </select>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-header">
+                <span>Scale Size</span>
+                <span class="setting-value" id="wmScaleVal">1.0x</span>
+              </div>
+              <input type="range" id="wmScale" min="0.7" max="1.5" step="0.05" value="1.0" />
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-header">
+                <span>Card Opacity</span>
+                <span class="setting-value" id="wmOpacityVal">90%</span>
+              </div>
+              <input type="range" id="wmOpacity" min="0.2" max="1.0" step="0.05" value="0.9" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: News Ticker -->
+        <div class="tab-pane" id="tab-ticker">
+          <div class="control-card">
+            <div class="card-title">
+              <span>Live Scrolling Bottom Ticker</span>
+              <span class="badge">HARDWARE ACCELERATED</span>
+            </div>
+
+            <div class="setting-row">
+              <label class="setting-header"><span>Ticker Messages (One per line)</span></label>
+              <textarea id="tickerTextInput" rows="5" placeholder="Enter ticker lines..."></textarea>
+            </div>
+
+            <div class="setting-row">
+              <label class="setting-header"><span>Insert Quick Skill Presets</span></label>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                <button class="btn-secondary ticker-quick-tag" data-tag="⚡ Advanced Tauri + Rust + WebGL Architectures">⚡ Rust & Tauri</button>
+                <button class="btn-secondary ticker-quick-tag" data-tag="🧠 Autonomous Real-Time AI Systems & Neural Models">🧠 AI Neural Models</button>
+                <button class="btn-secondary ticker-quick-tag" data-tag="🚀 Open for Consulting & High-Impact Tech Partnerships">🚀 Consulting & Collab</button>
+                <button class="btn-secondary ticker-quick-tag" data-tag="🎯 Press Keys 1-6 for 8s Interactive Tech Demos!">🎯 8s Live Demos</button>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-header">
+                <span>Scroll Speed</span>
+                <span class="setting-value" id="tickerSpeedVal">2.0x</span>
+              </div>
+              <input type="range" id="tickerSpeed" min="0.5" max="5.0" step="0.2" value="2.0" />
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-header">
+                <span>Font Size</span>
+                <span class="setting-value" id="tickerFontSizeVal">16px</span>
+              </div>
+              <input type="range" id="tickerFontSize" min="12" max="24" step="1" value="16" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: 8s Demo Deck -->
+        <div class="tab-pane" id="tab-demos">
+          <div class="control-card">
+            <div class="card-title">
+              <span>8-Second Demo Action Deck</span>
+              <span class="badge">HOTKEYS 1 - 6</span>
+            </div>
+
+            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;">
+              Click any button or press keyboard numbers <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; color: #fff;">1</kbd> to <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; color: #fff;">6</kbd> during networking calls to trigger an instant 8-second showcase!
+            </div>
+
+            <div class="setting-row">
+              <label class="setting-header"><span>Presentation Viewport Mode</span></label>
+              <select id="demoDisplayMode">
+                <option value="pip">Picture-in-Picture Floating Window</option>
+                <option value="split-screen">Split-Screen (Presenter + Demo)</option>
+              </select>
+            </div>
+
+            <div class="setting-row" style="flex-direction: row; justify-content: space-between; align-items: center;">
+              <span>Synthesizer Audio Chime on Trigger</span>
+              <input type="checkbox" id="demoSoundToggle" checked />
+            </div>
+
+            <!-- Demo Soundboard Grid -->
+            <div class="demo-grid" id="demoButtonsGrid"></div>
+          </div>
+        </div>
+
+        <!-- Tab 5: Devices & VCam -->
+        <div class="tab-pane" id="tab-devices">
+          <div class="control-card">
+            <div class="card-title">
+              <span>Video Input & AI Segmentation</span>
+              <span class="badge">60 FPS PIPELINE</span>
+            </div>
+
+            <div class="setting-row">
+              <label class="setting-header"><span>Webcam Device</span></label>
+              <select id="cameraDeviceSelect">
+                <option value="loading">Enumerating cameras...</option>
+              </select>
+            </div>
+
+            <div class="setting-row">
+              <label class="setting-header"><span>Stream Resolution</span></label>
+              <select id="resSelect">
+                <option value="1280x720">1280 x 720 (720p HD - 60 FPS)</option>
+                <option value="1920x1080">1920 x 1080 (1080p FHD - 60 FPS)</option>
+                <option value="854x480">854 x 480 (480p SD - Low Latency)</option>
+              </select>
+            </div>
+
+            <div class="setting-row" style="flex-direction: row; justify-content: space-between; align-items: center;">
+              <span>AI Background Removal (Zero Green-Screen)</span>
+              <input type="checkbox" id="aiMatteToggle" checked />
+            </div>
+
+            <div class="setting-row" style="flex-direction: row; justify-content: space-between; align-items: center;">
+              <span>Mirror / Flip Camera Horizontally</span>
+              <input type="checkbox" id="flipCameraToggle" />
+            </div>
+
+            <div class="setting-row">
+              <label class="setting-header"><span>Silhouette Shape Mode</span></label>
+              <select id="matteShapeSelect">
+                <option value="natural-portrait">Natural Portrait (Head & Shoulders)</option>
+                <option value="focused-oval">Focused Oval Spotlight</option>
+                <option value="studio-wide">Studio Wide Aperture</option>
+                <option value="cyber-hexagon">Cyberpunk Hologram Hexagon</option>
+              </select>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-header">
+                <span>Presenter Framing Scale</span>
+                <span class="setting-value" id="matteScaleVal">1.00x</span>
+              </div>
+              <input type="range" id="matteScale" min="0.6" max="1.8" step="0.05" value="1.0" />
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-header">
+                <span>Vertical Centering Offset</span>
+                <span class="setting-value" id="matteOffsetYVal">0px</span>
+              </div>
+              <input type="range" id="matteOffsetY" min="-150" max="150" step="5" value="0" />
+            </div>
+
+            <div class="setting-row" style="flex-direction: row; justify-content: space-between; align-items: center;">
+              <span>Cyber Edge Glow Aura</span>
+              <input type="checkbox" id="edgeGlowToggle" checked />
+            </div>
+
+            <div class="setting-row">
+              <label class="setting-header"><span>Edge Glow Aura Color</span></label>
+              <select id="edgeGlowColor">
+                <option value="#00ff66">Neon Matrix Green</option>
+                <option value="#00d2ff">Cyber Cyan</option>
+                <option value="#b026ff">Synthwave Purple</option>
+                <option value="#ffb800">Amber Gold</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="control-card">
+            <div class="card-title">
+              <span>Virtual Camera Output Loopback</span>
+              <span class="badge">CROSS-PLATFORM</span>
+            </div>
+
+            <div style="font-size: 13px; font-weight: 700; color: #fff;" id="vcamStatusText">
+              Checking virtual camera drivers...
+            </div>
+
+            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;" id="vcamGuideText">
+              DirectShow (Windows), CoreMedia DAL (macOS), and v4l2loopback (Linux) support enabled.
+            </div>
+
+            <button class="btn-primary" id="btnOpenProjector" style="margin-top: 6px;">
+              📺 Open Borderless Projector Window (For Zoom / Teams / Meet)
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
