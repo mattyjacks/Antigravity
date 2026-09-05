@@ -9,9 +9,9 @@ def setup_agent_tab(parent_frame, app):
     frame = tk.Frame(parent_frame, bg="#0f172a", padx=10, pady=10)
     frame.pack(fill=tk.BOTH, expand=True)
 
-    # Quick action prompt buttons
+    # 1. Quick action prompt buttons (Top)
     quick_frame = tk.Frame(frame, bg="#0f172a")
-    quick_frame.pack(fill=tk.X, pady=(0, 8))
+    quick_frame.pack(side=tk.TOP, fill=tk.X, pady=(0, 6))
 
     tk.Label(quick_frame, text="Quick Agent Prompts:", font=("Segoe UI", 9, "bold"), fg="#94a3b8", bg="#0f172a").pack(side=tk.LEFT, padx=(0, 6))
 
@@ -26,9 +26,9 @@ def setup_agent_tab(parent_frame, app):
                         command=lambda t=p_text: app.send_agent_prompt(t))
         btn.pack(side=tk.LEFT, padx=3)
 
-    # Commander Multi-Agent Swarm Toggle
+    # 2. Commander Multi-Agent Swarm Toggle (Top, below quick prompts)
     swarm_bar = tk.Frame(frame, bg="#1e1b4b", padx=8, pady=4)
-    swarm_bar.pack(fill=tk.X, pady=(0, 6))
+    swarm_bar.pack(side=tk.TOP, fill=tk.X, pady=(0, 6))
 
     app.commander_mode_var = tk.BooleanVar(value=True)
     tk.Checkbutton(
@@ -43,14 +43,21 @@ def setup_agent_tab(parent_frame, app):
         activeforeground="#ffffff"
     ).pack(side=tk.LEFT)
 
-    # Agent Chat History & Log
-    app.agent_chat = tk.Text(frame, bg="#1e293b", fg="#f8fafc", font=("Segoe UI", 10), wrap=tk.WORD, relief=tk.FLAT, padx=10, pady=10)
-    app.agent_chat.pack(fill=tk.BOTH, expand=True, pady=(0, 6))
-    app.agent_chat.insert(tk.END, "🤖 vibeoVideo Agent initialized.\nI remember our entire conversation and can execute physical video modifications directly on your files (trimming, 9:16 vertical crop, subtitle burn-in, audio extraction, speed changes, thumbnails, Shotcut .mlt editing, TTS, and DALL-E 3)!\n\n")
+    # 3. Input Area (PINNED TO BOTTOM FIRST so it is ALWAYS visible without vertical expanding!)
+    input_frame = tk.Frame(frame, bg="#0f172a")
+    input_frame.pack(side=tk.BOTTOM, fill=tk.X, pady=(6, 0))
 
-    # Memory & Token Status Bar
+    app.agent_input = tk.Entry(input_frame, font=("Segoe UI", 11), bg="#1e293b", fg="#ffffff", insertbackground="#ffffff")
+    app.agent_input.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 8), ipady=6)
+    app.agent_input.bind("<Return>", lambda e: app.on_agent_submit())
+
+    send_btn = tk.Button(input_frame, text="Send to Agent 🚀", font=("Segoe UI", 10, "bold"), bg="#6366f1", fg="#ffffff", relief=tk.FLAT, padx=14, pady=4,
+                         command=app.on_agent_submit)
+    send_btn.pack(side=tk.RIGHT)
+
+    # 4. Memory & Token Status Bar (PINNED TO BOTTOM, directly above input area)
     mem_bar = tk.Frame(frame, bg="#1e1b4b", padx=8, pady=4)
-    mem_bar.pack(fill=tk.X, pady=(0, 6))
+    mem_bar.pack(side=tk.BOTTOM, fill=tk.X, pady=(4, 0))
 
     app.agent_token_label = tk.Label(
         mem_bar,
@@ -71,14 +78,19 @@ def setup_agent_tab(parent_frame, app):
         command=app.clear_agent_memory
     ).pack(side=tk.RIGHT)
 
-    # Input Area
-    input_frame = tk.Frame(frame, bg="#0f172a")
-    input_frame.pack(fill=tk.X)
+    # 5. Agent Chat History & Log (Scrollable container filling the remaining middle space)
+    chat_container = tk.Frame(frame, bg="#1e293b")
+    chat_container.pack(side=tk.TOP, fill=tk.BOTH, expand=True, pady=(0, 4))
 
-    app.agent_input = tk.Entry(input_frame, font=("Segoe UI", 11), bg="#1e293b", fg="#ffffff", insertbackground="#ffffff")
-    app.agent_input.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 8), ipady=6)
-    app.agent_input.bind("<Return>", lambda e: app.on_agent_submit())
+    chat_scroll = tk.Scrollbar(chat_container)
+    chat_scroll.pack(side=tk.RIGHT, fill=tk.Y)
 
-    send_btn = tk.Button(input_frame, text="Send to Agent 🚀", font=("Segoe UI", 10, "bold"), bg="#6366f1", fg="#ffffff", relief=tk.FLAT, padx=14, pady=4,
-                         command=app.on_agent_submit)
-    send_btn.pack(side=tk.RIGHT)
+    app.agent_chat = tk.Text(
+        chat_container, bg="#1e293b", fg="#f8fafc", font=("Segoe UI", 10),
+        wrap=tk.WORD, relief=tk.FLAT, padx=10, pady=10, height=8,
+        yscrollcommand=chat_scroll.set
+    )
+    app.agent_chat.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+    chat_scroll.config(command=app.agent_chat.yview)
+    app.agent_chat.insert(tk.END, "🤖 vibeoVideo Agent initialized.\nI remember our entire conversation and can execute physical video modifications directly on your files (trimming, 9:16 vertical crop, subtitle burn-in, audio extraction, speed changes, thumbnails, Shotcut .mlt editing, TTS, and DALL-E 3)!\n\n")
+

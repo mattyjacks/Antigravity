@@ -140,24 +140,145 @@ SYSTEM_PROMPT = (
     '  "parameters": { ... }\n'
     "}\n"
     "```\n"
+    "CRITICAL: The 'tool' field MUST be one of the exact tool names listed above (e.g. 'burn_subtitles', 'audio_ducking', 'add_to_timeline', 'auto_roughcut', 'color_lut', etc.). NEVER output generic names like 'VideoEditor', 'Shotcut', 'editor', or 'video_editor' as the tool name.\n"
     "5. When the user asks to process 'the active video', 'this video', or the timeline, ALWAYS use the active video path provided in the session context. Output strictly valid JSON without comments (no // or /*) or placeholders inside the JSON block.\n"
     "6. Fancy Auto-Subtitles & Custom Styling: You can generate and burn animated subtitles with user-specified outline colors and fonts! When the user requests subtitle styling, fonts (e.g. 'Baloo', 'Impact', 'Montserrat'), outline colors (e.g. 'red', 'yellow', 'hot_pink', 'electric_blue', 'black', '#FF0055'), or animations (e.g. 'bounce'/'pop' [viral MrBeast pop-in], 'typewriter', 'fade', 'slide', 'neon', 'wiggle', 'karaoke'), use 'burn_subtitles' with: font, outline_color, outline_width, text_color, and animation."
 )
+
+
+TOOL_ALIASES = {
+    # Shotcut & generic editor aliases
+    "shotcut": "shotcut",
+    "shotcut_actions": "shotcut",
+    "shotcut_action": "shotcut",
+    "batch_actions": "shotcut",
+    "multi_action": "shotcut",
+    "pipeline": "shotcut",
+    "actions": "shotcut",
+    "videoeditor": "shotcut",
+    "video_editor": "shotcut",
+    "video_editing": "shotcut",
+    "videoedit": "shotcut",
+    "video_edit": "shotcut",
+    "editor": "shotcut",
+    "shotcut_editor": "shotcut",
+    "vibeovideo": "shotcut",
+    "vibeo": "shotcut",
+    "vibeo_video": "shotcut",
+    "commander": "shotcut",
+    "ai_video_editor": "shotcut",
+    "video_tools": "shotcut",
+    "video_capability": "shotcut",
+    "videocapability": "shotcut",
+
+    # Subtitles
+    "burn_subtitles": "burn_subtitles",
+    "burn_subtitle": "burn_subtitles",
+    "add_subtitles": "burn_subtitles",
+    "add_subtitle": "burn_subtitles",
+    "subtitles": "burn_subtitles",
+    "subtitle": "burn_subtitles",
+    "hardcode_subtitles": "burn_subtitles",
+    "hardsub": "burn_subtitles",
+    "generate_subtitles": "generate_subtitles",
+    "auto_generate_subtitles": "generate_subtitles",
+    "transcribe_video": "generate_subtitles",
+    "transcribe": "generate_subtitles",
+    "transcription": "generate_subtitles",
+    "whisper": "generate_subtitles",
+    "speech_to_text": "generate_subtitles",
+
+    # Timeline
+    "add_to_timeline": "add_to_timeline",
+    "create_timeline": "add_to_timeline",
+    "create-timeline": "add_to_timeline",
+    "load_timeline": "add_to_timeline",
+    "load_to_timeline": "add_to_timeline",
+    "open_timeline": "add_to_timeline",
+    "open_in_shotcut": "add_to_timeline",
+    "timeline": "add_to_timeline",
+
+    # Audio
+    "audio_ducking": "audio_ducking",
+    "ducking": "audio_ducking",
+    "duck_audio": "audio_ducking",
+    "normalize_loudness": "normalize_loudness",
+    "normalize": "normalize_loudness",
+    "loudness": "normalize_loudness",
+    "normalize_audio": "normalize_loudness",
+    "denoise_audio": "denoise_audio",
+    "denoise": "denoise_audio",
+    "remove_audio": "remove_audio",
+    "mute_audio": "remove_audio",
+    "mute": "remove_audio",
+    "fade_audio": "fade_audio",
+    "audio_fade": "fade_audio",
+    "detect_silence": "detect_silence",
+    "silence_detect": "detect_silence",
+
+    # Visual FX & Edits
+    "color_lut": "color_lut",
+    "apply_lut": "color_lut",
+    "apply_LUT": "color_lut",
+    "lut": "color_lut",
+    "grading": "color_lut",
+    "color_grade": "color_lut",
+    "adjust_color": "adjust_color",
+    "color_adjust": "adjust_color",
+    "trim_video": "trim_video",
+    "trim": "trim_video",
+    "cut_video": "trim_video",
+    "convert_vertical": "convert_vertical",
+    "vertical_video": "convert_vertical",
+    "vertical": "convert_vertical",
+    "auto_roughcut": "auto_roughcut",
+    "roughcut": "auto_roughcut",
+    "cut_silence": "auto_roughcut",
+    "extract_viral_short": "extract_viral_short",
+    "viral_short": "extract_viral_short",
+    "viral_shorts": "extract_viral_short",
+    "tiktok": "extract_viral_short",
+    "reels": "extract_viral_short",
+    "compress_video": "compress_video",
+    "compress": "compress_video",
+    "change_speed": "change_speed",
+    "speed": "change_speed",
+    "extract_thumbnail": "extract_thumbnail",
+    "thumbnail": "extract_thumbnail",
+
+    # AI Generation
+    "generate_voiceover": "generate_voiceover",
+    "voiceover": "generate_voiceover",
+    "tts": "generate_voiceover",
+    "text_to_speech": "generate_voiceover",
+    "generate_broll": "generate_broll",
+    "broll": "generate_broll",
+    "generate_b_roll": "generate_broll",
+    "dalle": "generate_broll",
+    "dalle3": "generate_broll",
+    "generate_sfx": "generate_sfx",
+    "sfx": "generate_sfx",
+    "sound_effect": "generate_sfx",
+}
 
 
 def safe_parse_tool_call(reply: str) -> dict:
     """
     Extracts and parses a JSON tool call block from an AI assistant reply,
     tolerating single-line comments (// ...), block comments (/* ... */),
-    trailing commas, or formatting quirks.
+    trailing commas, multi-action pipelines, or formatting quirks.
     Returns e.g. {"tool": "generate_subtitles", "parameters": {...}} or None.
     """
     if not reply or not isinstance(reply, str):
         return None
 
-    match = re.search(r'```(?:json)?\s*(\{[\s\S]*?"tool"[\s\S]*?\})\s*```', reply, re.IGNORECASE)
+    match = re.search(r'```(?:json)?\s*([{\[][\s\S]*?[}\]])\s*```', reply, re.IGNORECASE)
+    if not match:
+        match = re.search(r'```(?:json)?\s*(\{[\s\S]*?"tool"[\s\S]*?\})\s*```', reply, re.IGNORECASE)
     if not match:
         match = re.search(r'(\{[\s\S]*?"tool"\s*:\s*"[^"]+"[\s\S]*?\})', reply)
+    if not match:
+        match = re.search(r'(\{[\s\S]*?"actions"\s*:\s*\[[\s\S]*?\})', reply)
     if not match:
         return None
 
@@ -179,36 +300,77 @@ def safe_parse_tool_call(reply: str) -> dict:
     # Step 4: Try standard json.loads on cleaned text
     try:
         data = json.loads(cleaned)
-        if isinstance(data, dict) and data.get("tool"):
-            return data
+        if isinstance(data, dict):
+            if data.get("tool"):
+                params = data.get("parameters")
+                if not isinstance(params, dict):
+                    params = {k: v for k, v in data.items() if k != "tool"}
+                if "actions" in data and "actions" not in params:
+                    params["actions"] = data["actions"]
+                data["parameters"] = params
+                return data
+            elif data.get("actions"):
+                return {"tool": "shotcut", "parameters": data}
+        elif isinstance(data, list):
+            return {"tool": "shotcut", "parameters": {"actions": data}}
     except Exception:
         pass
 
     # Step 5: Fallback regex extractor for malformed JSON
     try:
         tool_match = re.search(r'"tool"\s*:\s*"([^"]+)"', raw_json)
-        if tool_match:
-            tool_name = tool_match.group(1).strip()
-            params = {}
-            params_match = re.search(r'"parameters"\s*:\s*\{([\s\S]*?)\}', raw_json)
-            if params_match:
-                p_text = params_match.group(1)
-                kv_matches = re.findall(
-                    r'"([a-zA-Z0-9_\-]+)"\s*:\s*(?:"([^"]*)"|(-?\d+(?:\.\d+)?)|(true|false|null))',
-                    p_text, re.IGNORECASE
-                )
-                for k, v_str, v_num, v_bool in kv_matches:
-                    if v_str:
-                        params[k] = v_str
-                    elif v_num:
-                        params[k] = float(v_num) if "." in v_num else int(v_num)
-                    elif v_bool:
-                        params[k] = True if v_bool.lower() == "true" else (False if v_bool.lower() == "false" else None)
+        tool_name = tool_match.group(1).strip() if tool_match else "shotcut"
+        params = {}
+        params_match = re.search(r'"parameters"\s*:\s*\{([\s\S]*?)\}', raw_json)
+        if params_match:
+            p_text = params_match.group(1)
+            kv_matches = re.findall(
+                r'"([a-zA-Z0-9_\-]+)"\s*:\s*(?:"([^"]*)"|(-?\d+(?:\.\d+)?)|(true|false|null))',
+                p_text, re.IGNORECASE
+            )
+            for k, v_str, v_num, v_bool in kv_matches:
+                if v_str:
+                    params[k] = v_str
+                elif v_num:
+                    params[k] = float(v_num) if "." in v_num else int(v_num)
+                elif v_bool:
+                    params[k] = True if v_bool.lower() == "true" else (False if v_bool.lower() == "false" else None)
+
+        actions_match = re.search(r'"actions"\s*:\s*(\[[\s\S]*?\])', raw_json)
+        if actions_match:
+            try:
+                params["actions"] = json.loads(actions_match.group(1))
+            except Exception:
+                pass
+
+        if tool_match or actions_match:
             return {"tool": tool_name, "parameters": params}
     except Exception:
         pass
 
     return None
+
+
+def _get_input_media(params: dict, media_tracker=None) -> str:
+    """Extracts input video/audio path from various possible parameter names or media tracker."""
+    if not isinstance(params, dict):
+        return ""
+    for k in ("input_path", "video_path", "media_path", "video", "input_file", "source", "file", "path"):
+        v = params.get(k)
+        if v and isinstance(v, str) and v.strip():
+            cleaned = v.strip()
+            if os.path.exists(cleaned):
+                return cleaned
+            elif not any(p in cleaned for p in ("<", ">", "placeholder")):
+                return cleaned
+
+    # Fallback to media tracker if input is missing
+    if media_tracker:
+        for item in reversed(media_tracker.get_all_tracked()):
+            fp = item.get("path", "")
+            if fp and os.path.exists(fp):
+                return fp
+    return ""
 
 
 def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key: str = "", media_tracker=None) -> str:
@@ -217,8 +379,128 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
         ffmpeg = find_ffmpeg()
     out = None
 
+    if not params or not isinstance(params, dict):
+        params = {}
+
+    if not tool_name:
+        tool_name = "shotcut"
+    raw_name = str(tool_name).strip()
+    norm_key = raw_name.lower().replace(" ", "_").replace("-", "_")
+    compact_key = raw_name.lower().replace(" ", "").replace("-", "").replace("_", "")
+
+    # Resolve tool name via aliases or compact normalized form
+    tool_name = TOOL_ALIASES.get(norm_key) or TOOL_ALIASES.get(compact_key) or TOOL_ALIASES.get(raw_name.lower())
+    if not tool_name:
+        for k, v in TOOL_ALIASES.items():
+            if k.replace("_", "").replace("-", "") == compact_key:
+                tool_name = v
+                break
+    if not tool_name:
+        tool_name = raw_name
+
     try:
-        if tool_name == "add_to_timeline":
+        if tool_name == "shotcut" or "actions" in params:
+            actions = params.get("actions") or []
+
+            # Check if an embedded single action or operation is specified inside params
+            single_act = (
+                params.get("action") or params.get("operation") or
+                params.get("command") or params.get("tool") or
+                (params.get("parameters") and isinstance(params["parameters"], dict) and
+                 (params["parameters"].get("action") or params["parameters"].get("operation") or params["parameters"].get("tool")))
+            )
+            if single_act and not actions:
+                act_str = str(single_act).strip().lower().replace(" ", "_").replace("-", "_")
+                act_compact = act_str.replace("_", "").replace("-", "")
+                mapped = TOOL_ALIASES.get(act_str) or TOOL_ALIASES.get(act_compact)
+                if not mapped:
+                    for k, v in TOOL_ALIASES.items():
+                        if k.replace("_", "").replace("-", "") == act_compact:
+                            mapped = v
+                            break
+                if mapped and mapped != "shotcut":
+                    inner_p = dict(params)
+                    if isinstance(params.get("parameters"), dict):
+                        inner_p.update(params["parameters"])
+                    if isinstance(params.get("details"), dict):
+                        inner_p.update(params["details"])
+                    return execute_video_tool(mapped, inner_p, ffmpeg=ffmpeg, api_key=api_key, media_tracker=media_tracker)
+
+            # If no actions array, route by parameter signature
+            if not actions:
+                # Subtitles signature
+                if any(k in params for k in ("srt_path", "subtitle_path", "font", "animation", "font_size", "outline_color")):
+                    return execute_video_tool("burn_subtitles", params, ffmpeg=ffmpeg, api_key=api_key, media_tracker=media_tracker)
+                # Audio ducking signature
+                if "background_audio" in params or "voice_audio" in params or "music_path" in params:
+                    return execute_video_tool("audio_ducking", params, ffmpeg=ffmpeg, api_key=api_key, media_tracker=media_tracker)
+                # Color LUT signature
+                if "lut_name" in params or "LUT_file" in params or "lut" in params:
+                    return execute_video_tool("color_lut", params, ffmpeg=ffmpeg, api_key=api_key, media_tracker=media_tracker)
+                # Silence / roughcut signature
+                if "noise_tolerance_db" in params or "min_silence_sec" in params:
+                    return execute_video_tool("auto_roughcut", params, ffmpeg=ffmpeg, api_key=api_key, media_tracker=media_tracker)
+                # Default media load to timeline
+                inp = params.get("input_path") or params.get("video_path") or params.get("media_path")
+                if inp:
+                    return execute_video_tool("add_to_timeline", params, ffmpeg=ffmpeg, api_key=api_key, media_tracker=media_tracker)
+                return "✅ VideoEditor action acknowledged and project timeline state verified."
+
+            results = []
+            for idx, act in enumerate(actions, 1):
+                if not isinstance(act, dict):
+                    continue
+                act_tool = act.get("action") or act.get("tool") or act.get("name") or ""
+                act_params = act.get("details") or act.get("parameters") or act.get("params") or {}
+                if not isinstance(act_params, dict):
+                    act_params = {}
+
+                norm_act = str(act_tool).strip().lower().replace(" ", "_").replace("-", "_")
+                mapped_tool = TOOL_ALIASES.get(norm_act, norm_act)
+
+                # Special mappings for structured action details:
+                # e.g., create-timeline with video_track.clips
+                if mapped_tool in ("add_to_timeline", "create_timeline") or "video_track" in act_params:
+                    mapped_tool = "add_to_timeline"
+                    if "input_path" not in act_params and "video_path" not in act_params:
+                        vt = act_params.get("video_track", {})
+                        clips = vt.get("clips", []) if isinstance(vt, dict) else []
+                        for c in clips:
+                            src = c.get("source", "")
+                            if src and os.path.exists(src):
+                                act_params["input_path"] = src
+                                break
+                    if not act_params.get("input_path"):
+                        inp = params.get("input_path") or params.get("video_path") or params.get("media_path")
+                        if inp:
+                            act_params["input_path"] = inp
+
+                elif mapped_tool in ("add_subtitles", "burn_subtitles", "subtitles"):
+                    srt_f = act_params.get("file") or act_params.get("srt_path") or act_params.get("subtitle_file")
+                    if srt_f:
+                        act_params["srt_path"] = srt_f
+                    mapped_tool = "burn_subtitles"
+
+                elif mapped_tool in ("apply_lut", "color_lut"):
+                    lut_f = act_params.get("LUT_file") or act_params.get("lut_name") or act_params.get("lut_file") or act_params.get("lut")
+                    if lut_f:
+                        act_params["lut_name"] = os.path.splitext(os.path.basename(str(lut_f)))[0]
+                    mapped_tool = "color_lut"
+
+                elif mapped_tool in ("ducking", "audio_ducking"):
+                    mapped_tool = "audio_ducking"
+
+                # Inherit media paths from parent params if missing
+                for pk in ("input_path", "video_path", "media_path", "mlt_path"):
+                    if pk in params and pk not in act_params:
+                        act_params[pk] = params[pk]
+
+                res_act = execute_video_tool(mapped_tool, act_params, ffmpeg=ffmpeg, api_key=api_key, media_tracker=media_tracker)
+                results.append(f"  [{idx}] {act_tool or mapped_tool}: {res_act}")
+
+            return "✅ Shotcut Pipeline executed successfully:\n" + "\n".join(results)
+
+        elif tool_name == "add_to_timeline":
             inp = params.get("input_path") or params.get("video_path") or params.get("media_path", "")
             mlt = params.get("mlt_path", None)
             start = params.get("in_time") or params.get("start_time") or "00:00:00"
@@ -297,59 +579,59 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
             return res.get("report", f"Evaluated timeline: {mlt}")
 
         elif tool_name == "trim_video":
-            inp = params.get("input_path", "")
+            inp = _get_input_media(params, media_tracker)
             start = params.get("start_time", "00:00:00")
             end = params.get("end_time", "00:00:10")
             out = tool_trim_video(ffmpeg, inp, start, end, params.get("output_path"))
             return f"✅ Video trimmed successfully -> {out}"
 
         elif tool_name == "convert_vertical":
-            inp = params.get("input_path", "")
+            inp = _get_input_media(params, media_tracker)
             blur_bg = bool(params.get("blur_background", True))
             out = tool_convert_vertical(ffmpeg, inp, blur_bg, params.get("output_path"))
             return f"✅ Converted to 9:16 vertical video -> {out}"
 
         elif tool_name == "change_speed":
-            inp = params.get("input_path", "")
+            inp = _get_input_media(params, media_tracker)
             spd = float(params.get("speed", 1.0))
             out = tool_change_speed(ffmpeg, inp, spd, params.get("output_path"))
             return f"✅ Video speed adjusted ({spd}x) -> {out}"
 
         elif tool_name == "extract_thumbnail":
-            inp = params.get("input_path", "")
+            inp = _get_input_media(params, media_tracker)
             ts = params.get("timestamp", "00:00:01")
             out = tool_extract_thumbnail(ffmpeg, inp, ts, params.get("output_path"))
             return f"✅ Video thumbnail extracted -> {out}"
 
         elif tool_name == "compress_video":
-            inp = params.get("input_path", "")
+            inp = _get_input_media(params, media_tracker)
             crf = int(params.get("crf", 28))
             out = tool_compress_video(ffmpeg, inp, crf, params.get("output_path"))
             return f"✅ Video compressed (CRF {crf}) -> {out}"
 
         elif tool_name == "modify_mlt":
-            mlt = params.get("mlt_path", "")
+            mlt = params.get("mlt_path") or _get_input_media(params, media_tracker)
             old_s = params.get("old_source", "")
             new_s = params.get("new_source", "")
             out = tool_modify_shotcut_mlt(mlt, old_s, new_s, params.get("output_path"))
             return f"✅ Shotcut project modified -> {out}"
 
         elif tool_name == "detect_silence":
-            inp = params.get("input_path", "")
+            inp = _get_input_media(params, media_tracker)
             db = float(params.get("noise_tolerance_db", -30.0))
             dur = float(params.get("min_silence_sec", 0.5))
             res = tool_detect_silence(ffmpeg, inp, db, dur)
             return f"✅ Detected {len(res)} silent intervals in audio."
 
         elif tool_name == "fade_audio":
-            inp = params.get("input_path", "")
+            inp = _get_input_media(params, media_tracker)
             fin = float(params.get("fade_in_sec", 2.0))
             fout = float(params.get("fade_out_sec", 2.0))
             out = tool_fade_audio(ffmpeg, inp, fin, fout, params.get("output_path"))
             return f"✅ Audio fade applied -> {out}"
 
         elif tool_name == "normalize_loudness":
-            inp = params.get("input_path", "")
+            inp = _get_input_media(params, media_tracker)
             target_lufs = float(params.get("target_lufs", -14.0))
             out = tool_normalize_loudness(ffmpeg, inp, target_lufs, params.get("output_path"))
             return f"✅ Loudness normalized to {target_lufs} LUFS -> {out}"
@@ -402,8 +684,18 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
             return f"✅ Box blur applied -> {out}"
 
         elif tool_name == "audio_ducking":
-            bg = params.get("background_audio", "")
-            v = params.get("voice_audio", "")
+            bg = params.get("background_audio") or params.get("music_path") or params.get("background_music") or params.get("audio_path", "")
+            v = params.get("voice_audio") or params.get("voice_path") or params.get("input_path") or params.get("video_path", "")
+            if (not v or not os.path.exists(v)) and media_tracker:
+                for item in reversed(media_tracker.get_all_tracked()):
+                    fp = item.get("path", "")
+                    if fp and os.path.exists(fp):
+                        v = fp
+                        break
+            if not bg or not os.path.exists(bg):
+                if v and os.path.exists(v):
+                    return f"ℹ️ Audio ducking ready for '{os.path.basename(v)}'. Please specify the background music audio path to apply ducking."
+                raise FileNotFoundError("Audio ducking requires a voice audio/video source and background audio track.")
             out = tool_audio_ducking(ffmpeg, bg, v, params.get("output_path"))
             return f"✅ Audio ducking complete -> {out}"
 
@@ -413,7 +705,7 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
             return f"✅ YouTube chapter timestamps generated -> {out}"
 
         elif tool_name == "color_lut":
-            inp = params.get("input_path", "")
+            inp = _get_input_media(params, media_tracker)
             lut = params.get("lut_name", "warm")
             out = tool_color_lut(ffmpeg, inp, lut, params.get("output_path"))
             return f"✅ Color LUT grading ({lut}) applied -> {out}"
@@ -610,7 +902,9 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
             return f"✅ Frame Composition Analysis ({os.path.basename(target_jpeg)}):\n\n{vision_res.get('analysis')}"
 
         elif tool_name == "auto_roughcut":
-            inp = params.get("input_path", "")
+            inp = _get_input_media(params, media_tracker)
+            if not inp or not os.path.exists(inp):
+                raise FileNotFoundError(f"Input video not found: '{inp}'.")
             db = float(params.get("noise_tolerance_db", -30.0))
             dur = float(params.get("min_silence_sec", 0.5))
             res = tool_auto_roughcut(ffmpeg, inp, db, dur, params.get("output_path"))
@@ -618,7 +912,9 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
             return f"✅ Auto-Roughcut MLT timeline generated: {res['clips_count']} clips ({res['seconds_saved']}s dead-air removed) -> {out}"
 
         elif tool_name == "extract_viral_short":
-            inp = params.get("input_path", "")
+            inp = _get_input_media(params, media_tracker)
+            if not inp or not os.path.exists(inp):
+                raise FileNotFoundError(f"Input video not found: '{inp}'.")
             dur_sec = int(params.get("duration_sec", 35))
             out = tool_extract_viral_short(ffmpeg, inp, api_key, dur_sec, params.get("output_path"))
             return f"✅ Viral 9:16 vertical short generated with subtitles -> {out}"
@@ -653,6 +949,17 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
                 candidate_srt = f"{base_video}.srt"
                 if os.path.exists(candidate_srt):
                     srt = candidate_srt
+
+            if not srt or not os.path.exists(srt):
+                # Auto-generate subtitles via Whisper if .srt is not yet present on disk
+                try:
+                    execute_video_tool("generate_subtitles", params, ffmpeg=ffmpeg, api_key=api_key, media_tracker=media_tracker)
+                    base_video, _ = os.path.splitext(inp)
+                    candidate_srt = f"{base_video}.srt"
+                    if os.path.exists(candidate_srt):
+                        srt = candidate_srt
+                except Exception:
+                    pass
 
             if not srt or not os.path.exists(srt):
                 raise FileNotFoundError(f"Subtitle .srt file not found: '{srt}'. Please generate subtitles first.")

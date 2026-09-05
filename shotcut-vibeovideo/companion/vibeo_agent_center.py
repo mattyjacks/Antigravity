@@ -65,8 +65,8 @@ class VibeoAgenticCenter:
     def __init__(self, root):
         self.root = root
         self.root.title("vibeoVideo - Agentic AI Command Center")
-        self.root.geometry("820x680")
-        self.root.minsize(720, 540)
+        self.root.geometry("880x740")
+        self.root.minsize(780, 580)
         self.root.configure(bg="#0f172a")
 
         self.style = ttk.Style()
@@ -362,7 +362,10 @@ class VibeoAgenticCenter:
         active_video = self.get_active_video_path()
         active_mlt = self.get_active_mlt_path()
 
-        path_keys = ("media_path", "input_path", "video_path", "input_video", "video", "input_file")
+        path_keys = (
+            "media_path", "input_path", "video_path", "input_video", "video", "input_file",
+            "voice_audio", "voice_path", "background_audio", "music_path"
+        )
         for k in path_keys:
             if k in resolved:
                 val = str(resolved[k]).strip()
@@ -379,16 +382,34 @@ class VibeoAgenticCenter:
 
                 # If the tool specifically needs raw video/audio but was given an MLT file
                 cur_val = str(resolved[k]).strip()
-                if cur_val.lower().endswith(".mlt") and tool_name in ("generate_subtitles", "burn_subtitles", "auto_roughcut", "extract_viral_short", "detect_silence", "trim_video", "convert_vertical"):
+                if cur_val.lower().endswith(".mlt") and tool_name in ("generate_subtitles", "burn_subtitles", "auto_roughcut", "extract_viral_short", "detect_silence", "trim_video", "convert_vertical", "audio_ducking"):
                     extracted = self.extract_video_from_mlt(cur_val)
                     if extracted and os.path.exists(extracted):
                         resolved[k] = extracted
+
+        # If actions list is present (e.g. Shotcut action pipeline), resolve parameters in each action
+        if "actions" in resolved and isinstance(resolved["actions"], list):
+            for act in resolved["actions"]:
+                if isinstance(act, dict):
+                    act_det = act.get("details") or act.get("parameters") or act.get("params") or {}
+                    if isinstance(act_det, dict):
+                        for pk in path_keys:
+                            if pk in act_det:
+                                v_str = str(act_det[pk]).strip()
+                                if not os.path.exists(v_str) and (v_str in ("active", "current", "") or "active" in v_str.lower()):
+                                    if active_video and os.path.exists(active_video):
+                                        act_det[pk] = active_video
+                        if not any(pk in act_det and act_det[pk] for pk in path_keys):
+                            if active_video and os.path.exists(active_video):
+                                act_det["input_path"] = active_video
 
         # If no media_path or input_path was provided at all, inject active_video
         if not any(k in resolved and resolved[k] for k in path_keys):
             if active_video and os.path.exists(active_video):
                 resolved["media_path"] = active_video
                 resolved["input_path"] = active_video
+                if tool_name == "audio_ducking":
+                    resolved["voice_audio"] = active_video
 
         return resolved
 
@@ -542,7 +563,11 @@ class VibeoAgenticCenter:
             tool_call = safe_parse_tool_call(ai_reply)
             if tool_call and isinstance(tool_call, dict):
                 t_name = tool_call.get("tool")
-                t_params = tool_call.get("parameters", {})
+                t_params = tool_call.get("parameters") or {}
+                if not isinstance(t_params, dict):
+                    t_params = {}
+                if "actions" in tool_call and "actions" not in t_params:
+                    t_params["actions"] = tool_call["actions"]
                 if self.settings.get("dangerous_mode", False) and t_name:
                     self.agent_chat.insert(tk.END, f"⚙️ Auto-Executing recommended tool: {t_name}...\n")
                     res = self._execute_video_tool(t_name, t_params)
@@ -794,9 +819,14 @@ class VibeoAgenticCenter:
             try:
                 commander = VibeoCommander(api_key, model=model)
                 commander_input = user_msg
-                if context_items and any(w in user_msg.lower() for w in ("active", "this video", "the video", "current", "project")):
-                    commander_input = f"{user_msg}\n(Context: Active Video={active_video or active_mlt})"
-                res = commander.orchestrate(commander_input, chat_history=self.conversation_history, status_callback=status_cb)
+                if active_video or active_mlt:
+                    commander_input = f"{user_msg}\n(Context: Active Media = {active_video or active_mlt})"
+                res = commander.orchestrate(
+                    commander_input,
+                    chat_history=self.conversation_history,
+                    status_callback=status_cb,
+                    system_prompt=current_sys_prompt
+                )
                 synth = res.get("synthesis", "")
                 reports = res.get("sub_agent_reports", {})
 
@@ -817,7 +847,12 @@ class VibeoAgenticCenter:
 
                 if tool_call and isinstance(tool_call, dict):
                     t_name = tool_call.get("tool")
-                    t_params = tool_call.get("parameters", {})
+                    t_params = tool_call.get("parameters") or {}
+                    if not isinstance(t_params, dict):
+                        t_params = {}
+                    if "actions" in tool_call and "actions" not in t_params:
+                        t_params["actions"] = tool_call["actions"]
+
                     if t_name:
                         self.root.after(0, lambda n=t_name: self.agent_chat.insert(tk.END, f"⚙️ Commander Executing Video Capability: {n}...\n"))
                         exec_res = self._execute_video_tool(t_name, t_params)
@@ -866,7 +901,11 @@ class VibeoAgenticCenter:
                 if tool_call and isinstance(tool_call, dict):
                     try:
                         tool_name = tool_call.get("tool")
-                        tool_params = tool_call.get("parameters", {})
+                        tool_params = tool_call.get("parameters") or {}
+                        if not isinstance(tool_params, dict):
+                            tool_params = {}
+                        if "actions" in tool_call and "actions" not in tool_params:
+                            tool_params["actions"] = tool_call["actions"]
                         if tool_name:
                             self.root.after(0, lambda n=tool_name: self.agent_chat.insert(tk.END, f"⚙️ Executing video modification: {n}...\n"))
                             res = self._execute_video_tool(tool_name, tool_params)

@@ -7,6 +7,15 @@ import urllib.request
 import urllib.error
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+try:
+    from companion.core.agent_engine import SYSTEM_PROMPT, safe_parse_tool_call
+except ImportError:
+    try:
+        from core.agent_engine import SYSTEM_PROMPT, safe_parse_tool_call
+    except ImportError:
+        SYSTEM_PROMPT = ""
+        safe_parse_tool_call = None
+
 
 class VibeoCommander:
     """Orchestrates multiple specialized AI sub-agents in parallel and synthesizes consensus."""
@@ -42,15 +51,33 @@ class VibeoCommander:
         except Exception as e:
             return {"name": agent_name, "content": f"Sub-agent error: {e}", "status": "error"}
 
-    def orchestrate(self, user_msg: str, chat_history: list = None, status_callback=None) -> dict:
+    def orchestrate(self, user_msg: str, chat_history: list = None, status_callback=None, system_prompt: str = None) -> dict:
         """Runs sub-agents concurrently, collects reports, and synthesizes final edit directives."""
+        swarm_suffix = (
+            " You are part of the vibeoVideo autonomous AI copilot swarm for Shotcut. "
+            "You have direct execution access to the host's 50+ video editing tools and active project session context. "
+            "NEVER say you cannot access or analyze files on the user's system. Assume the user's footage/timeline is loaded "
+            "and provide your specialized, actionable editing directives, parameters, and analysis directly."
+        )
         sub_agents = {
-            "ScriptAgent": "You are ScriptAgent, expert video narrative designer and dialogue editor. Analyze viral retention, hook structure, and script subtitles.",
-            "TimelineAgent": "You are TimelineAgent, expert video cutter and MLT timeline pacing engineer. Analyze scene cuts, trim timestamps, transitions, speed curves, and dedicated overlay timeline tracks (V2) for Shotcut library elements.",
-            "StylistAgent": "You are StylistAgent, creative visual colorist and graphic artist. Recommend aspect ratios (16:9 vs 9:16 vertical), lower-thirds, LUTs, Shotcut Elements Library stickers/emojis/overlays (fireworks, confetti, halloween, balloon, etc.), and DALL-E 3 B-Roll.",
-            "AudioAgent": "You are AudioAgent, sound engineer and voice director. Focus on loudness normalization (-14 LUFS), audio ducking, background noise reduction, and TTS voiceover.",
-            "ReviewerAgent": "You are ReviewerAgent, film QC inspector. Audit file format compatibility, black frame transitions, and subtitle sync accuracy."
+            "ScriptAgent": "You are ScriptAgent, expert video narrative designer and dialogue editor. Analyze viral retention, hook structure, pacing, and script subtitles." + swarm_suffix,
+            "TimelineAgent": "You are TimelineAgent, expert video cutter and MLT timeline pacing engineer. Analyze scene cuts, trim timestamps, transitions, speed curves, and dedicated overlay timeline tracks (V2) for Shotcut library elements." + swarm_suffix,
+            "StylistAgent": "You are StylistAgent, creative visual colorist and graphic artist. Recommend aspect ratios (16:9 vs 9:16 vertical), lower-thirds, LUTs, Shotcut Elements Library stickers/emojis/overlays (fireworks, confetti, halloween, balloon, etc.), and DALL-E 3 B-Roll." + swarm_suffix,
+            "AudioAgent": "You are AudioAgent, sound engineer and voice director. Focus on loudness normalization (-14 LUFS), audio ducking, background noise reduction, and TTS voiceover." + swarm_suffix,
+            "ReviewerAgent": "You are ReviewerAgent, film QC inspector. Audit file format compatibility, black frame transitions, and subtitle sync accuracy." + swarm_suffix
         }
+
+        # Format recent context from conversation history so agents understand confirmations like "go!"
+        recent_context = ""
+        if chat_history:
+            recent_turns = [m for m in chat_history if isinstance(m, dict) and m.get("role") in ("user", "assistant")][-6:]
+            if recent_turns:
+                conv_lines = [f"{str(m.get('role', '')).upper()}: {m.get('content', '')}" for m in recent_turns]
+                recent_context = "Recent Conversation History:\n" + "\n".join(conv_lines)
+
+        sub_prompt = user_msg
+        if recent_context:
+            sub_prompt = f"{recent_context}\n\nLatest User Message: {user_msg}"
 
         reports = {}
         if status_callback:
@@ -58,7 +85,7 @@ class VibeoCommander:
 
         with ThreadPoolExecutor(max_workers=5) as executor:
             futures = {
-                executor.submit(self._call_sub_agent, name, prompt, user_msg): name
+                executor.submit(self._call_sub_agent, name, prompt, sub_prompt): name
                 for name, prompt in sub_agents.items()
             }
             for future in as_completed(futures):
@@ -75,16 +102,51 @@ class VibeoCommander:
         if status_callback:
             status_callback("Commander synthesizing multi-agent consensus...")
 
-        synth_prompt = (
-            f"User Instruction: {user_msg}\n\n"
-            "Sub-Agent Expert Reports:\n"
-            + "\n\n".join([f"--- {k} ---\n{v}" for k, v in reports.items()])
-            + "\n\nSynthesize these recommendations into an executive production plan. "
-            "If an executable video tool is required, include the exact JSON tool block."
+        base_sys = system_prompt or SYSTEM_PROMPT
+        commander_sys = (
+            f"{base_sys}\n\n"
+            "You are vibeoVideo Commander, Supreme Director of the Multi-Agent Video Swarm.\n"
+            "Synthesize the sub-agent expert reports into an executive production plan.\n"
+            "CRITICAL DIRECTIVES FOR VIDEO TOOL EXECUTION:\n"
+            "1. When the user approves, requests, or confirms video processing or editing (e.g. 'go!', 'proceed', 'yes', 'burn subtitles and apply ducking'), you MUST emit an exact executable JSON tool block.\n"
+            "2. NEVER output imaginary or generic tool names like 'VideoEditor', 'Shotcut', 'shotcut', 'video_editor', 'video_edit', or 'timeline'. Shotcut is the host application, NOT a tool.\n"
+            "3. Use the exact supported tool name from the capability list:\n"
+            "   - 'burn_subtitles' (to burn/hardcode subtitles onto video with font/animations)\n"
+            "   - 'generate_subtitles' (to transcribe speech to .srt and animated .ass)\n"
+            "   - 'audio_ducking' (to duck background music under voice)\n"
+            "   - 'normalize_loudness' (to normalize audio loudness)\n"
+            "   - 'add_to_timeline' (to load video onto Shotcut timeline)\n"
+            "   - 'color_lut' (to apply a color grading LUT)\n"
+            "   - 'auto_roughcut' (to cut out silence/dead air)\n"
+            "   - 'extract_viral_short' (to create vertical 9:16 short)\n"
+            "   - 'generate_voiceover' (TTS narration)\n"
+            "   - 'generate_broll' (DALL-E 3 b-roll image)\n"
+            "   - 'generate_sfx' (sound effects)\n"
+            "4. Tool Block Format (Strictly valid JSON, no comments):\n"
+            "```json\n"
+            "{\n"
+            '  "tool": "exact_tool_name",\n'
+            '  "parameters": {\n'
+            '    "param_name": "param_value"\n'
+            "  }\n"
+            "}\n"
+            "```\n"
+            "If the user confirmed proceeding with multiple actions (e.g. burning subtitles and audio ducking), prioritize the primary executable step first (e.g. 'burn_subtitles') and outline the immediate sequence in your text."
         )
 
+        synth_prompt_parts = []
+        if recent_context:
+            synth_prompt_parts.append(recent_context)
+        synth_prompt_parts.append(f"Latest User Request: {user_msg}")
+        synth_prompt_parts.append("Sub-Agent Expert Reports:\n" + "\n\n".join([f"--- {k} ---\n{v}" for k, v in reports.items()]))
+        synth_prompt_parts.append(
+            "Synthesize these recommendations into an executive production plan. "
+            "If an executable video capability is requested or confirmed, include the exact JSON tool block using the real tool name (e.g. 'burn_subtitles', 'audio_ducking', 'add_to_timeline', etc.). Do NOT use 'VideoEditor' or 'Shotcut' as the tool name."
+        )
+        synth_prompt = "\n\n".join(synth_prompt_parts)
+
         synth_messages = [
-            {"role": "system", "content": "You are vibeoVideo Commander, Supreme Director of the Multi-Agent Video Swarm."},
+            {"role": "system", "content": commander_sys},
             {"role": "user", "content": synth_prompt}
         ]
 
@@ -108,8 +170,13 @@ class VibeoCommander:
         except Exception as e:
             synthesis_text = f"Commander synthesis completed with local summary:\n" + "\n".join([f"• {k}: {v[:100]}..." for k, v in reports.items()])
 
+        suggested_tool = None
+        if safe_parse_tool_call:
+            suggested_tool = safe_parse_tool_call(synthesis_text)
+
         return {
             "synthesis": synthesis_text,
             "sub_agent_reports": reports,
-            "suggested_tool": None
+            "suggested_tool": suggested_tool
         }
+
