@@ -634,8 +634,37 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
                             break
                 except Exception:
                     pass
-            srt = params.get("srt_path", "")
-            out = tool_burn_subtitles(ffmpeg, inp, srt, params.get("output_path"))
+
+            # Fallback to media tracker if inp is missing or placeholder
+            if (not inp or not os.path.exists(inp)) and media_tracker:
+                for item in reversed(media_tracker.get_all_tracked()):
+                    fp = item.get("path", "")
+                    if fp and os.path.exists(fp) and fp.lower().endswith((".mp4", ".mov", ".mkv", ".avi", ".webm")):
+                        inp = fp
+                        break
+
+            if not inp or not os.path.exists(inp):
+                raise FileNotFoundError(f"Media file not found for burning subtitles: '{inp}'.")
+
+            srt = params.get("srt_path") or params.get("subtitle_path", "")
+            if (not srt or not os.path.exists(srt)) and inp:
+                base_video, _ = os.path.splitext(inp)
+                candidate_srt = f"{base_video}.srt"
+                if os.path.exists(candidate_srt):
+                    srt = candidate_srt
+
+            if not srt or not os.path.exists(srt):
+                raise FileNotFoundError(f"Subtitle .srt file not found: '{srt}'. Please generate subtitles first.")
+
+            _burn = globals().get("tool_burn_subtitles")
+            if not _burn:
+                try:
+                    from companion.tools.subtitles_tools import tool_burn_subtitles as _burn
+                except ImportError:
+                    from tools.subtitles_tools import tool_burn_subtitles as _burn
+
+            font = params.get("font")
+            out = _burn(ffmpeg, inp, srt, params.get("output_path"), font=font)
             return f"✅ Hardcoded subtitles burned into video -> {out}"
 
         elif tool_name in ("generate_subtitles", "auto_generate_subtitles", "transcribe_video"):
@@ -666,11 +695,42 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
             base, _ = os.path.splitext(inp)
             temp_mp3 = f"{base}_vibeo_whisper_tmp.mp3"
             out_srt = params.get("output_path") or f"{base}.srt"
-            extract_audio_for_whisper(inp, temp_mp3, ffmpeg)
-            w_data = transcribe_whisper(temp_mp3, api_key)
-            if os.path.exists(temp_mp3):
-                os.remove(temp_mp3)
-            convert_whisper_to_srt(w_data, out_srt)
+
+            _extract = globals().get("extract_audio_for_whisper")
+            if not _extract:
+                try:
+                    from companion.tools.subtitles_tools import extract_audio_for_whisper as _extract
+                except ImportError:
+                    try:
+                        from tools.subtitles_tools import extract_audio_for_whisper as _extract
+                    except ImportError:
+                        _extract = extract_audio
+
+            _transcribe = globals().get("transcribe_whisper")
+            if not _transcribe:
+                try:
+                    from companion.tools.subtitles_tools import transcribe_whisper as _transcribe
+                except ImportError:
+                    from tools.subtitles_tools import transcribe_whisper as _transcribe
+
+            _convert = globals().get("convert_whisper_to_srt")
+            if not _convert:
+                try:
+                    from companion.tools.subtitles_tools import convert_whisper_to_srt as _convert
+                except ImportError:
+                    from tools.subtitles_tools import convert_whisper_to_srt as _convert
+
+            try:
+                _extract(inp, temp_mp3, ffmpeg)
+                w_data = _transcribe(temp_mp3, api_key)
+                _convert(w_data, out_srt)
+            finally:
+                if os.path.exists(temp_mp3):
+                    try:
+                        os.remove(temp_mp3)
+                    except Exception:
+                        pass
+
             out = out_srt
             return f"✅ Synchronized subtitles (.srt) generated for {os.path.basename(inp)} -> {out}"
 

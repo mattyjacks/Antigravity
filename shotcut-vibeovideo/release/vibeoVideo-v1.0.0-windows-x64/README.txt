@@ -8,8 +8,11 @@ Zero External Dependencies - No Python or Pip Required!
 1. Native Top-of-Screen Menu Item:
    Sits right next to "Help" on Shotcut's menu bar matching Shotcut's dark theme.
 2. vibeoVideo Agentic AI Command Center:
-   Standalone desktop app (vibeo_command_center.exe) with 1-click "Launch Shotcut"
-   button, autonomous AI agent, Whisper subtitles (.srt), OpenAI TTS, and DALL-E 3.
+   Standalone desktop app (vibeo_command_center.exe) with:
+   - 🎖️ Commander Multi-Agent Swarm (Script, Timeline, Stylist, Audio & Reviewer Agents)
+   - 🤝 Editor Collaboration Hub: Export single action logs, ultra-lightweight project packs (.zip) with system links (file:///) and NO heavy media, or turnkey master archives
+   - ⚡ 50+ Autonomous Video Manipulation Capabilities (trimming, 9:16 vertical crop, silence detection, loudness normalization, audio ducking, speed ramping, transitions, etc.)
+   - 🎙️ Whisper speech-to-text subtitles (.srt), OpenAI TTS narration, and DALL-E 3 B-Roll.
 3. In-Editor Shotcut Filter (vibeoVideo):
    Renders AI titles, lower thirds, captions, and translations directly onto
    video clips inside Shotcut with interactive on-screen drag handles.

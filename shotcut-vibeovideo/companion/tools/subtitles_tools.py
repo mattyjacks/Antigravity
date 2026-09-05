@@ -24,6 +24,8 @@ def extract_audio_for_whisper(input_video: str, output_audio: str, ffmpeg_path: 
 
 def transcribe_whisper(audio_path: str, api_key: str) -> dict:
     """Send audio file to OpenAI Whisper API."""
+    if not api_key or not str(api_key).strip():
+        raise ValueError("OpenAI API key is required for Whisper transcription. Please configure your API key in Settings.")
     url = "https://api.openai.com/v1/audio/transcriptions"
     boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW"
     with open(audio_path, "rb") as f:
@@ -80,8 +82,8 @@ def convert_whisper_to_srt(whisper_data: dict, output_srt: str):
         f.write("\n".join(lines))
 
 
-def tool_burn_subtitles(ffmpeg: str, video_path: str, srt_path: str, output_path: str = None) -> str:
-    """Burn .srt subtitles directly onto video frames."""
+def tool_burn_subtitles(ffmpeg: str, video_path: str, srt_path: str, output_path: str = None, font: str = None) -> str:
+    """Burn .srt subtitles directly onto video frames with optional font customization."""
     if not os.path.exists(video_path):
         raise FileNotFoundError(f"Video file not found: {video_path}")
     if not os.path.exists(srt_path):
@@ -90,9 +92,10 @@ def tool_burn_subtitles(ffmpeg: str, video_path: str, srt_path: str, output_path
         base, ext = os.path.splitext(video_path)
         output_path = f"{base}_subtitled{ext}"
     escaped_srt = srt_path.replace("\\", "/").replace(":", "\\:")
+    font_style = f"FontName={font}," if font else ""
     cmd = [
         ffmpeg, "-y", "-i", video_path,
-        "-vf", f"subtitles='{escaped_srt}':force_style='FontSize=20,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=3'",
+        "-vf", f"subtitles='{escaped_srt}':force_style='{font_style}FontSize=20,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=3'",
         "-c:v", "libx264", "-crf", "20", "-c:a", "copy",
         output_path
     ]
