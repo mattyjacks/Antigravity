@@ -9,12 +9,15 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 try:
     from companion.core.agent_engine import SYSTEM_PROMPT, safe_parse_tool_call
+    from companion.core.cost_calculator import get_cost_calculator
 except ImportError:
     try:
         from core.agent_engine import SYSTEM_PROMPT, safe_parse_tool_call
+        from core.cost_calculator import get_cost_calculator
     except ImportError:
         SYSTEM_PROMPT = ""
         safe_parse_tool_call = None
+        get_cost_calculator = None
 
 
 class VibeoCommander:
@@ -23,6 +26,13 @@ class VibeoCommander:
         self.api_key = api_key
         self.model = model
         self.url = "https://api.openai.com/v1/chat/completions"
+        self.cost_calc = get_cost_calculator() if get_cost_calculator else None
+        if self.cost_calc:
+            gw_cfg = self.cost_calc.get_gateway_config()
+            if gw_cfg.get("enabled") and gw_cfg.get("url"):
+                self.url = gw_cfg["url"]
+                if gw_cfg.get("key"):
+                    self.api_key = gw_cfg["key"]
 
     def _call_sub_agent(self, agent_name: str, system_role: str, user_prompt: str) -> dict:
         messages = [
@@ -47,6 +57,12 @@ class VibeoCommander:
             with urllib.request.urlopen(req, timeout=35) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
                 content = data["choices"][0]["message"]["content"].strip()
+                usage = data.get("usage", {})
+                p_tok = usage.get("prompt_tokens", 0)
+                c_tok = usage.get("completion_tokens", 0)
+                if self.cost_calc and (p_tok > 0 or c_tok > 0):
+                    cost = self.cost_calc.calculate_llm_cost(self.model, p_tok, c_tok)
+                    self.cost_calc.record_transaction(f"Swarm Sub-Agent ({agent_name})", cost, {"tokens": p_tok + c_tok}, f"Tokens: {p_tok}+{c_tok}")
                 return {"name": agent_name, "content": content, "status": "success"}
         except Exception as e:
             return {"name": agent_name, "content": f"Sub-agent error: {e}", "status": "error"}
@@ -167,6 +183,12 @@ class VibeoCommander:
             with urllib.request.urlopen(req, timeout=45) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
                 synthesis_text = data["choices"][0]["message"]["content"].strip()
+                usage = data.get("usage", {})
+                p_tok = usage.get("prompt_tokens", 0)
+                c_tok = usage.get("completion_tokens", 0)
+                if self.cost_calc and (p_tok > 0 or c_tok > 0):
+                    cost = self.cost_calc.calculate_llm_cost(self.model, p_tok, c_tok)
+                    self.cost_calc.record_transaction("Commander Consensus Synthesis", cost, {"tokens": p_tok + c_tok}, f"Tokens: {p_tok}+{c_tok}")
         except Exception as e:
             synthesis_text = f"Commander synthesis completed with local summary:\n" + "\n".join([f"• {k}: {v[:100]}..." for k, v in reports.items()])
 

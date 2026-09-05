@@ -34,7 +34,9 @@ try:
         extract_audio, transcribe_whisper, convert_whisper_to_srt,
         generate_tts_audio, generate_dalle_image,
         parse_mlt_project, tool_evaluate_timeline, bring_shotcut_to_front,
-        safe_parse_tool_call
+        safe_parse_tool_call, CostCalculator, get_cost_calculator,
+        FingerprintTracker, get_fingerprint_tracker, PreparedPlan,
+        STATUS_FREE, STATUS_PARTS, STATUS_FULL
     )
     from companion.ui import (
         VibeoTopBarButton, setup_remote_bar,
@@ -42,6 +44,7 @@ try:
         setup_inspector_tab, setup_vision_tab, setup_collab_tab, setup_settings_tab,
         setup_director_tab, setup_sfx_tab, setup_elements_tab, setup_multiverse_tab
     )
+    from companion.ui.onboarding_dialog import OnboardingDialog
 except ImportError:
     from vibeo_tools import (
         MediaLibraryTracker, VibeoCommander, SYSTEM_PROMPT, execute_video_tool,
@@ -50,7 +53,9 @@ except ImportError:
         extract_audio, transcribe_whisper, convert_whisper_to_srt,
         generate_tts_audio, generate_dalle_image,
         parse_mlt_project, tool_evaluate_timeline, bring_shotcut_to_front,
-        safe_parse_tool_call
+        safe_parse_tool_call, CostCalculator, get_cost_calculator,
+        FingerprintTracker, get_fingerprint_tracker, PreparedPlan,
+        STATUS_FREE, STATUS_PARTS, STATUS_FULL
     )
     from ui import (
         VibeoTopBarButton, setup_remote_bar,
@@ -58,6 +63,7 @@ except ImportError:
         setup_inspector_tab, setup_vision_tab, setup_collab_tab, setup_settings_tab,
         setup_director_tab, setup_sfx_tab, setup_elements_tab, setup_multiverse_tab
     )
+    from ui.onboarding_dialog import OnboardingDialog
 
 
 class VibeoAgenticCenter:
@@ -80,9 +86,13 @@ class VibeoAgenticCenter:
             pass
 
         self.ffmpeg_path = find_ffmpeg()
+        self.cost_calc = get_cost_calculator()
         self.load_settings()
+        self.fp_tracker = get_fingerprint_tracker(self.settings)
         self.conversation_history = []
         self.media_tracker = MediaLibraryTracker() if MediaLibraryTracker else None
+        self.pending_plan = None
+        self.last_user_prompt = ""
 
         self._active_mlt_path = None
         self.last_mlt_mtime = 0
@@ -102,6 +112,14 @@ class VibeoAgenticCenter:
         # Start dynamic Shotcut status checking loop
         self.update_shotcut_status()
 
+        # Update Live Fingerprint badge & budget interface
+        self.update_fingerprint_badge()
+        self.refresh_budget_ui()
+
+        # Show initial onboarding modal if not remembered
+        if not self.settings.get("onboarding_completed", False):
+            self.root.after(300, self.show_onboarding_modal)
+
     def load_settings(self):
         self.settings_file = os.path.join(os.path.expanduser("~"), ".vibeovideo_companion.json")
         self.settings = {
@@ -112,7 +130,12 @@ class VibeoAgenticCenter:
             "shotcut_exe_path": find_shotcut_exe() or "",
             "dangerous_mode": False,
             "max_context_tokens": 8192,
-            "max_output_tokens": 800
+            "max_output_tokens": 800,
+            "disable_ai_fingerprint_features": False,
+            "onboarding_completed": False,
+            "auto_proceed_plan": False,
+            "daily_budget_limit": 5.00,
+            "lifetime_budget_limit": 50.00
         }
         if os.path.exists(self.settings_file):
             try:
@@ -142,8 +165,37 @@ class VibeoAgenticCenter:
                 self.settings["max_context_tokens"] = int(self.ctx_tokens_entry.get().strip() or "8192")
             if hasattr(self, "out_tokens_entry"):
                 self.settings["max_output_tokens"] = int(self.out_tokens_entry.get().strip() or "800")
+            if hasattr(self, "disable_ai_fingerprint_var"):
+                self.settings["disable_ai_fingerprint_features"] = bool(self.disable_ai_fingerprint_var.get())
+            if hasattr(self, "auto_proceed_var"):
+                self.settings["auto_proceed_plan"] = bool(self.auto_proceed_var.get())
+            if hasattr(self, "agent_auto_proceed_var"):
+                self.settings["auto_proceed_plan"] = bool(self.agent_auto_proceed_var.get())
+            if hasattr(self, "daily_limit_entry") and hasattr(self, "lifetime_limit_entry"):
+                try:
+                    d_lim = float(self.daily_limit_entry.get().strip() or "5.0")
+                    l_lim = float(self.lifetime_limit_entry.get().strip() or "50.0")
+                    if self.cost_calc:
+                        self.cost_calc.set_budget_limits(d_lim, l_lim)
+                    self.settings["daily_budget_limit"] = d_lim
+                    self.settings["lifetime_budget_limit"] = l_lim
+                except Exception:
+                    pass
+            if hasattr(self, "gw_enabled_var") and self.cost_calc:
+                self.cost_calc.set_gateway_config(
+                    enabled=self.gw_enabled_var.get(),
+                    url=self.gw_url_entry.get().strip(),
+                    key=self.gw_key_entry.get().strip(),
+                    billing_id=self.gw_billing_entry.get().strip()
+                )
+            if self.fp_tracker:
+                self.fp_tracker.settings = self.settings
+
             with open(self.settings_file, "w", encoding="utf-8") as f:
                 json.dump(self.settings, f, indent=2)
+
+            self.update_fingerprint_badge()
+            self.refresh_budget_ui()
             if not silent:
                 messagebox.showinfo("Saved", "Settings updated successfully!")
         except Exception as e:
@@ -626,6 +678,13 @@ class VibeoAgenticCenter:
         self.badge = tk.Label(self.header_actions, text="● Checking Shotcut...", font=("Segoe UI", 9, "bold"), fg="#fbbf24", bg="#451a03", padx=10, pady=4)
         self.badge.pack(side=tk.RIGHT, padx=(6, 0))
 
+        self.fp_header_badge = tk.Label(
+            self.header_actions, text="🟢 Fingerprint-Free", font=("Segoe UI", 9, "bold"),
+            fg="#ffffff", bg="#10b981", padx=10, pady=4, cursor="hand2"
+        )
+        self.fp_header_badge.pack(side=tk.RIGHT, padx=(6, 0))
+        self.fp_header_badge.bind("<Button-1>", lambda e: self.notebook.select(self.tab_settings))
+
         # Interactive Timeline Remote Controller Bar
         setup_remote_bar(self.root, self)
 
@@ -744,9 +803,24 @@ class VibeoAgenticCenter:
 
     def on_agent_submit(self):
         text = self.agent_input.get().strip()
-        if text:
-            self.agent_input.delete(0, tk.END)
-            self.send_agent_prompt(text)
+        if not text:
+            return
+        self.agent_input.delete(0, tk.END)
+
+        # Check if user is confirming or declining a pending Prepared Plan
+        if hasattr(self, "pending_plan") and self.pending_plan:
+            norm = text.lower().strip()
+            if norm in ("proceed", "go", "go!", "yes", "confirm", "execute", "run", "do it", "ok"):
+                self.agent_chat.insert(tk.END, f"\n👤 You: {text}\n")
+                self.execute_pending_plan()
+                return
+            elif norm in ("cancel", "decline", "stop", "no", "abort"):
+                self.agent_chat.insert(tk.END, f"\n👤 You: {text}\n")
+                self.decline_pending_plan()
+                return
+
+        self.last_user_prompt = text
+        self.send_agent_prompt(text)
 
     def send_agent_prompt(self, user_msg):
         api_key = self.settings.get("api_key", "").strip()
@@ -782,6 +856,194 @@ class VibeoAgenticCenter:
                         break
 
         return res
+
+    def handle_tool_execution_plan(self, tool_name: str, tool_params: dict, plan_goal: str = ""):
+        """Handles Antigravity-style Prepared Plan generation, cost estimation, and approval/auto-proceed."""
+        auto_proceed = self.settings.get("auto_proceed_plan", False)
+
+        # Extract itemized steps
+        steps = []
+        if "actions" in tool_params and isinstance(tool_params["actions"], list):
+            for a in tool_params["actions"]:
+                if isinstance(a, dict):
+                    act_n = a.get("action") or a.get("tool") or tool_name
+                    act_p = a.get("details") or a.get("parameters") or a.get("params") or {}
+                    steps.append({"tool": act_n, "params": act_p})
+        if not steps:
+            steps = [{"tool": tool_name, "params": tool_params}]
+
+        plan = PreparedPlan(
+            goal=plan_goal or f"Modify Video via {tool_name}",
+            steps=steps,
+            user_prompt=self.last_user_prompt,
+            auto_proceed=auto_proceed,
+            settings_ref=self.settings
+        )
+
+        # Print structured Antigravity markdown implementation plan into chat
+        self.root.after(0, lambda: self.agent_chat.insert(tk.END, f"\n{plan.to_markdown()}\n\n"))
+        self.root.after(0, self.agent_chat.see, tk.END)
+
+        if auto_proceed:
+            # Auto-proceed mode: execute immediately
+            self.root.after(0, lambda: self.agent_chat.insert(tk.END, f"⚡ [Auto-Proceed] Executing {tool_name}...\n"))
+            res = self._execute_video_tool(tool_name, tool_params)
+            self.root.after(0, lambda r=res: self.agent_chat.insert(tk.END, f"{r}\n\n"))
+            self.root.after(0, self.agent_chat.see, tk.END)
+            self.root.after(0, self.update_fingerprint_badge)
+            self.root.after(0, self.refresh_budget_ui)
+        else:
+            # Request to proceed mode: store pending plan and show interactive UI card
+            self.pending_plan = {
+                "tool": tool_name,
+                "params": tool_params,
+                "plan": plan
+            }
+            self.root.after(0, lambda p=plan: self._show_plan_card(p))
+
+    def _show_plan_card(self, plan):
+        """Displays interactive Prepared Plan card docked above memory bar with Proceed / Decline buttons."""
+        if not hasattr(self, "plan_card_frame"):
+            return
+        self.plan_card_title.config(text=f"📋 Prepared Plan: {plan.goal[:38]}")
+        if plan.fingerprint_status == "Fingerprint-Free":
+            self.plan_card_badge.config(text="🟢 Fingerprint-Free", fg="#10b981", bg="#064e3b")
+        elif plan.fingerprint_status == "Fingerprint-Parts":
+            self.plan_card_badge.config(text="🟡 Fingerprint-Parts", fg="#f59e0b", bg="#451a03")
+        else:
+            self.plan_card_badge.config(text="🟣 Fingerprint-Full", fg="#c084fc", bg="#3b0764")
+
+        self.plan_card_details.config(
+            text=f"Plan ID: vibeo-plan-{plan.plan_id}  |  Est. API Cost: ${plan.estimated_cost:.4f} USD  |  {len(plan.steps)} step(s)"
+        )
+        self.plan_card_frame.pack(side=tk.BOTTOM, fill=tk.X, pady=(4, 0))
+        self.status_var.set(f"📋 Prepared Plan awaiting approval (Plan ID: vibeo-plan-{plan.plan_id}). Click 'Proceed' or type 'proceed'.")
+
+    def execute_pending_plan(self):
+        """User approved the prepared plan: runs the modifications."""
+        if not hasattr(self, "pending_plan") or not self.pending_plan:
+            return
+        item = self.pending_plan
+        self.pending_plan = None
+        if hasattr(self, "plan_card_frame"):
+            self.plan_card_frame.pack_forget()
+
+        tool_name = item["tool"]
+        tool_params = item["params"]
+        self.agent_chat.insert(tk.END, f"🚀 User Approved: Executing {tool_name}...\n")
+        self.status_var.set(f"Executing plan: {tool_name}...")
+
+        def _do():
+            res = self._execute_video_tool(tool_name, tool_params)
+            self.root.after(0, lambda: self.agent_chat.insert(tk.END, f"{res}\n\n"))
+            self.root.after(0, self.agent_chat.see, tk.END)
+            self.root.after(0, self.update_fingerprint_badge)
+            self.root.after(0, self.refresh_budget_ui)
+            self.status_var.set("Plan execution complete.")
+
+        threading.Thread(target=_do, daemon=True).start()
+
+    def decline_pending_plan(self):
+        """User declined the prepared plan: cancels execution."""
+        if hasattr(self, "plan_card_frame"):
+            self.plan_card_frame.pack_forget()
+        if hasattr(self, "pending_plan") and self.pending_plan:
+            plan_id = self.pending_plan["plan"].plan_id
+            self.pending_plan = None
+            self.agent_chat.insert(tk.END, f"❌ Plan vibeo-plan-{plan_id} cancelled by user.\n\n")
+            self.agent_chat.see(tk.END)
+            self.status_var.set("Plan cancelled.")
+
+    def on_toggle_fingerprint_setting(self):
+        """Callback when user toggles strict Fingerprint-Free mode in Settings."""
+        is_strict = self.disable_ai_fingerprint_var.get()
+        self.settings["disable_ai_fingerprint_features"] = is_strict
+        self.save_settings(silent=True)
+        self.update_fingerprint_badge()
+        msg = "🛡️ AI Fingerprint features DISABLED (Strict Fingerprint-Free Mode)." if is_strict else "🚀 Creative AI features ENABLED (DALL-E 3 & TTS voiceovers allowed)."
+        self.status_var.set(msg)
+
+    def on_toggle_auto_proceed(self):
+        """Callback when user toggles Auto-Proceed vs Request to Proceed."""
+        val = self.agent_auto_proceed_var.get()
+        self.settings["auto_proceed_plan"] = val
+        if hasattr(self, "auto_proceed_var"):
+            self.auto_proceed_var.set(val)
+        self.save_settings(silent=True)
+        self.status_var.set("⚡ Auto-Proceed ENABLED (Skips interactive approval)." if val else "📋 Request to Proceed ENABLED (Antigravity interactive plan review required).")
+
+    def update_fingerprint_badge(self):
+        """Updates header and settings badges with live 3-tier status."""
+        fp_tracker = get_fingerprint_tracker(self.settings)
+        if not fp_tracker:
+            return
+        status_info = fp_tracker.evaluate_status()
+        text = f"{status_info['badge_icon']} {status_info['status']}"
+        color = status_info["badge_color"]
+
+        if hasattr(self, "fp_header_badge"):
+            self.fp_header_badge.config(text=text, bg=color, fg="#ffffff")
+        if hasattr(self, "fp_status_badge"):
+            self.fp_status_badge.config(text=text, bg=color, fg="#ffffff")
+
+    def refresh_budget_ui(self):
+        """Refreshes daily and lifetime spend meters and labels."""
+        cost_calc = get_cost_calculator()
+        if not cost_calc:
+            return
+        info = cost_calc.check_budget_status()
+
+        if hasattr(self, "daily_spend_lbl"):
+            self.daily_spend_lbl.config(
+                text=f"${info['daily_spend']:.4f} / ${info['daily_limit']:.2f}",
+                fg="#f87171" if info["is_daily_exceeded"] else "#34d399"
+            )
+        if hasattr(self, "daily_progress"):
+            self.daily_progress["value"] = min(100.0, info["daily_percent"])
+
+        if hasattr(self, "lifetime_spend_lbl"):
+            self.lifetime_spend_lbl.config(
+                text=f"${info['lifetime_spend']:.4f} / ${info['lifetime_limit']:.2f}",
+                fg="#f87171" if info["is_lifetime_exceeded"] else "#38bdf8"
+            )
+        if hasattr(self, "lifetime_progress"):
+            self.lifetime_progress["value"] = min(100.0, info["lifetime_percent"])
+
+        if info.get("warning"):
+            self.status_var.set(info["warning"])
+
+    def reset_budget_history(self):
+        """Resets spend ledger and counters after confirmation."""
+        if messagebox.askyesno("Reset Budget", "Are you sure you want to reset your daily and lifetime spend tracking history?"):
+            cost_calc = get_cost_calculator()
+            if cost_calc:
+                cost_calc.reset_history()
+            self.refresh_budget_ui()
+            self.status_var.set("Budget history reset successfully.")
+
+    def show_onboarding_modal(self, force=False):
+        """Displays initial feature and fingerprint selection dialog."""
+        if not force and self.settings.get("onboarding_completed", False):
+            return
+        OnboardingDialog(self.root, self.on_onboarding_choice, current_settings=self.settings)
+
+    def on_onboarding_choice(self, choice: str, remember: bool):
+        """Handles onboarding dialog selection."""
+        if choice == "fingerprint_free":
+            self.settings["disable_ai_fingerprint_features"] = True
+            self.status_var.set("🛡️ Configured in Fingerprint-Free Mode (Authentic human footage / Max Reach).")
+        else:
+            self.settings["disable_ai_fingerprint_features"] = False
+            self.status_var.set("🚀 Configured in Fully Featured Mode (DALL-E 3 & TTS enabled).")
+
+        if remember:
+            self.settings["onboarding_completed"] = True
+
+        if hasattr(self, "disable_ai_fingerprint_var"):
+            self.disable_ai_fingerprint_var.set(self.settings["disable_ai_fingerprint_features"])
+
+        self.save_settings(silent=True)
+        self.update_fingerprint_badge()
 
     def _run_agent_thread(self, user_msg, api_key):
         model = self.settings.get("model", "gpt-5.6-luna")
@@ -854,16 +1116,20 @@ class VibeoAgenticCenter:
                         t_params["actions"] = tool_call["actions"]
 
                     if t_name:
-                        self.root.after(0, lambda n=t_name: self.agent_chat.insert(tk.END, f"⚙️ Commander Executing Video Capability: {n}...\n"))
-                        exec_res = self._execute_video_tool(t_name, t_params)
-                        self.root.after(0, lambda r=exec_res: self.agent_chat.insert(tk.END, f"{r}\n\n"))
-                        self.root.after(0, self.agent_chat.see, tk.END)
+                        self.handle_tool_execution_plan(t_name, t_params, plan_goal=f"Commander Execution: {t_name}")
                 return
             except Exception as ce:
                 self.root.after(0, lambda e=ce: self.agent_chat.insert(tk.END, f"⚠️ Commander swarm fallback to single agent: {e}\n"))
 
         # Single-Agent fallback mode
         url = "https://api.openai.com/v1/chat/completions"
+        if self.cost_calc:
+            gw_cfg = self.cost_calc.get_gateway_config()
+            if gw_cfg.get("enabled") and gw_cfg.get("url"):
+                url = gw_cfg["url"]
+                if gw_cfg.get("key"):
+                    api_key = gw_cfg["key"]
+
         if not self.conversation_history:
             self.conversation_history = [{"role": "system", "content": current_sys_prompt}]
         else:
@@ -893,7 +1159,16 @@ class VibeoAgenticCenter:
                 self.conversation_history = pruned_msgs[:]
                 self.conversation_history.append({"role": "assistant", "content": reply})
 
-                tok_count = data.get("usage", {}).get("total_tokens", count_conversation_tokens(self.conversation_history))
+                # Record accurate LLM cost and usage
+                usage = data.get("usage", {})
+                p_tok = usage.get("prompt_tokens", 0)
+                c_tok = usage.get("completion_tokens", 0)
+                if self.cost_calc and (p_tok > 0 or c_tok > 0):
+                    cost = self.cost_calc.calculate_llm_cost(model, p_tok, c_tok)
+                    self.cost_calc.record_transaction(f"Single Agent LLM ({model})", cost, {"tokens": p_tok + c_tok}, f"Prompt: {user_msg[:35]}")
+                    self.root.after(0, self.refresh_budget_ui)
+
+                tok_count = usage.get("total_tokens", count_conversation_tokens(self.conversation_history))
                 self.root.after(0, self._update_agent_token_label, tok_count)
                 self.root.after(0, self._update_agent_reply, reply)
 
@@ -907,10 +1182,7 @@ class VibeoAgenticCenter:
                         if "actions" in tool_call and "actions" not in tool_params:
                             tool_params["actions"] = tool_call["actions"]
                         if tool_name:
-                            self.root.after(0, lambda n=tool_name: self.agent_chat.insert(tk.END, f"⚙️ Executing video modification: {n}...\n"))
-                            res = self._execute_video_tool(tool_name, tool_params)
-                            self.root.after(0, lambda r=res: self.agent_chat.insert(tk.END, f"{r}\n\n"))
-                            self.root.after(0, self.agent_chat.see, tk.END)
+                            self.handle_tool_execution_plan(tool_name, tool_params, plan_goal=f"Agent Execution: {tool_name}")
                     except Exception as te:
                         self.root.after(0, lambda e=te: self.agent_chat.insert(tk.END, f"⚠️ Tool execution error: {e}\n\n"))
         except Exception as e:

@@ -22,6 +22,8 @@ for _p in [str(_root_dir), str(_companion_dir), str(_current_dir)]:
 try:
     from companion.core.ffmpeg_utils import find_ffmpeg, count_conversation_tokens, prune_sliding_context
     from companion.core.commander import VibeoCommander
+    from companion.core.cost_calculator import get_cost_calculator
+    from companion.core.fingerprint_tracker import get_fingerprint_tracker
     from companion.tools.audio_tools import (
         tool_detect_silence, tool_fade_audio, tool_normalize_loudness,
         tool_audio_ducking, tool_denoise_audio, tool_remove_audio,
@@ -71,6 +73,8 @@ try:
 except ImportError:
     from core.ffmpeg_utils import find_ffmpeg, count_conversation_tokens, prune_sliding_context
     from core.commander import VibeoCommander
+    from core.cost_calculator import get_cost_calculator
+    from core.fingerprint_tracker import get_fingerprint_tracker
     from tools.audio_tools import (
         tool_detect_silence, tool_fade_audio, tool_normalize_loudness,
         tool_audio_ducking, tool_denoise_audio, tool_remove_audio,
@@ -397,6 +401,13 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
                 break
     if not tool_name:
         tool_name = raw_name
+
+    # 3-Tier Fingerprint policy check
+    fp_tracker = get_fingerprint_tracker()
+    if fp_tracker:
+        allowed, block_reason = fp_tracker.check_tool_permission(tool_name)
+        if not allowed:
+            return block_reason
 
     try:
         if tool_name == "shotcut" or "actions" in params:
@@ -1043,6 +1054,18 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
                 w_data = _transcribe(temp_mp3, api_key)
                 _convert(w_data, out_srt)
 
+                # Record accurate Whisper transcription cost
+                try:
+                    c_calc = get_cost_calculator()
+                    if c_calc:
+                        dur_sec = 60.0
+                        if os.path.exists(temp_mp3):
+                            dur_sec = get_media_duration_seconds(temp_mp3, ffmpeg)
+                        w_cost = c_calc.calculate_whisper_cost(dur_sec)
+                        c_calc.record_transaction("Whisper STT Transcription", w_cost, {"audio_seconds": dur_sec}, f"Audio duration: {dur_sec:.1f}s")
+                except Exception:
+                    pass
+
                 # Also automatically generate styled & animated .ass subtitle file
                 font = params.get("font") or "Baloo"
                 outline_color = params.get("outline_color") or "black"
@@ -1078,12 +1101,24 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
             txt = params.get("text", "")
             voice = params.get("voice", "alloy")
             out = generate_tts_audio(txt, voice, api_key, params.get("output_path"))
+            c_calc = get_cost_calculator()
+            if c_calc:
+                tts_cost = c_calc.calculate_tts_cost(len(txt))
+                c_calc.record_transaction("OpenAI Text-to-Speech", tts_cost, {"tts_chars": len(txt)}, f"Voice: {voice}, {len(txt)} chars")
+            if fp_tracker:
+                fp_tracker.record_media_asset(out, is_ai_generated=True)
             return f"✅ Studio TTS voiceover synthesized ({voice}) -> {out}"
 
         elif tool_name == "generate_broll":
             pmt = params.get("prompt", "")
             sz = params.get("size", "1024x1024")
             out = generate_dalle_image(pmt, api_key, sz, params.get("output_path"))
+            c_calc = get_cost_calculator()
+            if c_calc:
+                dalle_cost = c_calc.calculate_dalle_cost(sz)
+                c_calc.record_transaction("DALL-E 3 Image Generation", dalle_cost, {"dalle_images": 1}, f"Prompt: {pmt[:40]}")
+            if fp_tracker:
+                fp_tracker.record_media_asset(out, is_ai_generated=True)
             return f"✅ Visual B-Roll generated via DALL-E 3 -> {out}"
 
         elif tool_name == "generate_sfx":
@@ -1096,6 +1131,10 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
     except Exception as err:
         return f"❌ Tool execution failed: {err}"
     finally:
+        if fp_tracker:
+            fp_tracker.record_action(tool_name, params)
+            if out and isinstance(out, str) and os.path.exists(out) and tool_name not in ("generate_broll", "generate_voiceover"):
+                fp_tracker.record_media_asset(out, is_ai_generated=False)
         if media_tracker:
             for k in ("input_path", "video_path", "media_path", "audio_path", "voice_path", "music_path", "background_video", "overlay_video", "video1_path", "video2_path"):
                 if k in params and params[k]:

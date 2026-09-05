@@ -1,5 +1,6 @@
 """
-agent_tab.py - Agent Console tab with quick prompts, commander swarm toggle, and memory gauge.
+agent_tab.py - Agent Console tab with quick prompts, commander swarm toggle,
+Antigravity-style Prepared Plan approval card, and memory gauge.
 """
 
 import tkinter as tk
@@ -26,14 +27,14 @@ def setup_agent_tab(parent_frame, app):
                         command=lambda t=p_text: app.send_agent_prompt(t))
         btn.pack(side=tk.LEFT, padx=3)
 
-    # 2. Commander Multi-Agent Swarm Toggle (Top, below quick prompts)
-    swarm_bar = tk.Frame(frame, bg="#1e1b4b", padx=8, pady=4)
-    swarm_bar.pack(side=tk.TOP, fill=tk.X, pady=(0, 6))
+    # 2. Controls Bar (Top: Commander Multi-Agent Swarm + Auto-Proceed Toggle)
+    controls_bar = tk.Frame(frame, bg="#1e1b4b", padx=8, pady=4)
+    controls_bar.pack(side=tk.TOP, fill=tk.X, pady=(0, 6))
 
     app.commander_mode_var = tk.BooleanVar(value=True)
     tk.Checkbutton(
-        swarm_bar,
-        text="🎖️ Commander Multi-Agent Swarm (Script, Timeline, Stylist, Audio & Reviewer Agents)",
+        controls_bar,
+        text="🎖️ Commander Multi-Agent Swarm",
         variable=app.commander_mode_var,
         font=("Segoe UI", 9, "bold"),
         fg="#a5b4fc",
@@ -42,6 +43,21 @@ def setup_agent_tab(parent_frame, app):
         activebackground="#1e1b4b",
         activeforeground="#ffffff"
     ).pack(side=tk.LEFT)
+
+    # Auto-Proceed vs Request to Proceed toggle
+    app.agent_auto_proceed_var = tk.BooleanVar(value=app.settings.get("auto_proceed_plan", False))
+    tk.Checkbutton(
+        controls_bar,
+        text="⚡ Auto-Proceed with Plans (Skip Approval)",
+        variable=app.agent_auto_proceed_var,
+        font=("Segoe UI", 9),
+        fg="#cbd5e1",
+        bg="#1e1b4b",
+        selectcolor="#0f172a",
+        activebackground="#1e1b4b",
+        activeforeground="#ffffff",
+        command=lambda: app.on_toggle_auto_proceed()
+    ).pack(side=tk.RIGHT)
 
     # 3. Input Area (PINNED TO BOTTOM FIRST so it is ALWAYS visible without vertical expanding!)
     input_frame = tk.Frame(frame, bg="#0f172a")
@@ -78,7 +94,78 @@ def setup_agent_tab(parent_frame, app):
         command=app.clear_agent_memory
     ).pack(side=tk.RIGHT)
 
-    # 5. Agent Chat History & Log (Scrollable container filling the remaining middle space)
+    # 5. Interactive Prepared Plan Card (PINNED TO BOTTOM, directly above memory bar)
+    # Hidden until a Prepared Plan requires interactive review & proceed approval
+    app.plan_card_frame = tk.Frame(frame, bg="#1e1b4b", padx=10, pady=8, highlightbackground="#6366f1", highlightthickness=1)
+
+    plan_hdr_row = tk.Frame(app.plan_card_frame, bg="#1e1b4b")
+    plan_hdr_row.pack(fill=tk.X)
+
+    app.plan_card_title = tk.Label(
+        plan_hdr_row,
+        text="📋 Prepared Plan Awaiting Approval",
+        font=("Segoe UI", 10, "bold"),
+        fg="#ffffff",
+        bg="#1e1b4b"
+    )
+    app.plan_card_title.pack(side=tk.LEFT)
+
+    app.plan_card_badge = tk.Label(
+        plan_hdr_row,
+        text="🟢 Fingerprint-Free",
+        font=("Segoe UI", 8, "bold"),
+        fg="#10b981",
+        bg="#064e3b",
+        padx=6,
+        pady=2
+    )
+    app.plan_card_badge.pack(side=tk.RIGHT)
+
+    app.plan_card_details = tk.Label(
+        app.plan_card_frame,
+        text="Estimated Cost: $0.0000 | 1 Step planned.",
+        font=("Segoe UI", 9),
+        fg="#cbd5e1",
+        bg="#1e1b4b"
+    )
+    app.plan_card_details.pack(anchor=tk.W, pady=(2, 6))
+
+    plan_btn_row = tk.Frame(app.plan_card_frame, bg="#1e1b4b")
+    plan_btn_row.pack(fill=tk.X)
+
+    app.plan_proceed_btn = tk.Button(
+        plan_btn_row,
+        text="🚀 Proceed / Execute Plan",
+        font=("Segoe UI", 9, "bold"),
+        bg="#10b981",
+        fg="#ffffff",
+        activebackground="#059669",
+        activeforeground="#ffffff",
+        relief=tk.FLAT,
+        padx=14,
+        pady=4,
+        cursor="hand2",
+        command=lambda: app.execute_pending_plan()
+    )
+    app.plan_proceed_btn.pack(side=tk.LEFT, padx=(0, 8))
+
+    app.plan_decline_btn = tk.Button(
+        plan_btn_row,
+        text="❌ Decline / Cancel",
+        font=("Segoe UI", 9),
+        bg="#334155",
+        fg="#f1f5f9",
+        activebackground="#475569",
+        activeforeground="#ffffff",
+        relief=tk.FLAT,
+        padx=12,
+        pady=4,
+        cursor="hand2",
+        command=lambda: app.decline_pending_plan()
+    )
+    app.plan_decline_btn.pack(side=tk.LEFT)
+
+    # 6. Agent Chat History & Log (Scrollable container filling the remaining middle space)
     chat_container = tk.Frame(frame, bg="#1e293b")
     chat_container.pack(side=tk.TOP, fill=tk.BOTH, expand=True, pady=(0, 4))
 
@@ -93,4 +180,3 @@ def setup_agent_tab(parent_frame, app):
     app.agent_chat.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
     chat_scroll.config(command=app.agent_chat.yview)
     app.agent_chat.insert(tk.END, "🤖 vibeoVideo Agent initialized.\nI remember our entire conversation and can execute physical video modifications directly on your files (trimming, 9:16 vertical crop, subtitle burn-in, audio extraction, speed changes, thumbnails, Shotcut .mlt editing, TTS, and DALL-E 3)!\n\n")
-
