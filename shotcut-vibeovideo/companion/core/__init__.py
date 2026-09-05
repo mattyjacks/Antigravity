@@ -16,9 +16,11 @@ from .shotcut_remote import (
 
 
 def __getattr__(name):
-    if name in ("SYSTEM_PROMPT", "execute_video_tool"):
-        from .agent_engine import SYSTEM_PROMPT, execute_video_tool
+    if name in ("SYSTEM_PROMPT", "execute_video_tool", "safe_parse_tool_call"):
+        from .agent_engine import SYSTEM_PROMPT, execute_video_tool, safe_parse_tool_call
         if name == "SYSTEM_PROMPT":
             return SYSTEM_PROMPT
+        if name == "safe_parse_tool_call":
+            return safe_parse_tool_call
         return execute_video_tool
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

@@ -139,8 +139,75 @@ SYSTEM_PROMPT = (
     '  "tool": "tool_name",\n'
     '  "parameters": { ... }\n'
     "}\n"
-    "```"
+    "```\n"
+    "5. When the user asks to process 'the active video', 'this video', or the timeline, ALWAYS use the active video path provided in the session context. Output strictly valid JSON without comments (no // or /*) or placeholders inside the JSON block."
 )
+
+
+def safe_parse_tool_call(reply: str) -> dict:
+    """
+    Extracts and parses a JSON tool call block from an AI assistant reply,
+    tolerating single-line comments (// ...), block comments (/* ... */),
+    trailing commas, or formatting quirks.
+    Returns e.g. {"tool": "generate_subtitles", "parameters": {...}} or None.
+    """
+    if not reply or not isinstance(reply, str):
+        return None
+
+    match = re.search(r'```(?:json)?\s*(\{[\s\S]*?"tool"[\s\S]*?\})\s*```', reply, re.IGNORECASE)
+    if not match:
+        match = re.search(r'(\{[\s\S]*?"tool"\s*:\s*"[^"]+"[\s\S]*?\})', reply)
+    if not match:
+        return None
+
+    raw_json = match.group(1).strip()
+
+    # Step 1: Strip single-line comments // ... (ignoring http:// and https://)
+    clean_lines = []
+    for line in raw_json.splitlines():
+        cleaned_line = re.sub(r'(?<!http:)(?<!https:)//.*$', '', line)
+        clean_lines.append(cleaned_line)
+    cleaned = "\n".join(clean_lines)
+
+    # Step 2: Strip block comments /* ... */
+    cleaned = re.sub(r'/\*[\s\S]*?\*/', '', cleaned)
+
+    # Step 3: Remove trailing commas before closing braces/brackets
+    cleaned = re.sub(r',\s*([\}\]])', r'\1', cleaned)
+
+    # Step 4: Try standard json.loads on cleaned text
+    try:
+        data = json.loads(cleaned)
+        if isinstance(data, dict) and data.get("tool"):
+            return data
+    except Exception:
+        pass
+
+    # Step 5: Fallback regex extractor for malformed JSON
+    try:
+        tool_match = re.search(r'"tool"\s*:\s*"([^"]+)"', raw_json)
+        if tool_match:
+            tool_name = tool_match.group(1).strip()
+            params = {}
+            params_match = re.search(r'"parameters"\s*:\s*\{([\s\S]*?)\}', raw_json)
+            if params_match:
+                p_text = params_match.group(1)
+                kv_matches = re.findall(
+                    r'"([a-zA-Z0-9_\-]+)"\s*:\s*(?:"([^"]*)"|(-?\d+(?:\.\d+)?)|(true|false|null))',
+                    p_text, re.IGNORECASE
+                )
+                for k, v_str, v_num, v_bool in kv_matches:
+                    if v_str:
+                        params[k] = v_str
+                    elif v_num:
+                        params[k] = float(v_num) if "." in v_num else int(v_num)
+                    elif v_bool:
+                        params[k] = True if v_bool.lower() == "true" else (False if v_bool.lower() == "false" else None)
+            return {"tool": tool_name, "parameters": params}
+    except Exception:
+        pass
+
+    return None
 
 
 def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key: str = "", media_tracker=None) -> str:
@@ -556,15 +623,46 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
             return f"✅ Viral 9:16 vertical short generated with subtitles -> {out}"
 
         elif tool_name == "burn_subtitles":
-            inp = params.get("video_path") or params.get("input_path", "")
+            inp = params.get("video_path") or params.get("input_path") or params.get("media_path", "")
+            if inp and isinstance(inp, str) and inp.lower().endswith(".mlt") and os.path.exists(inp):
+                try:
+                    p_info = parse_mlt_project(inp)
+                    for pr in p_info.get("producers", []):
+                        s = pr.get("source", "").replace("/", "\\")
+                        if s and os.path.exists(s) and s.lower().endswith((".mp4", ".mov", ".mkv", ".avi", ".webm")):
+                            inp = s
+                            break
+                except Exception:
+                    pass
             srt = params.get("srt_path", "")
             out = tool_burn_subtitles(ffmpeg, inp, srt, params.get("output_path"))
             return f"✅ Hardcoded subtitles burned into video -> {out}"
 
-        elif tool_name == "generate_subtitles":
+        elif tool_name in ("generate_subtitles", "auto_generate_subtitles", "transcribe_video"):
             inp = params.get("media_path") or params.get("input_path") or params.get("video_path", "")
+            # If inp is a .mlt timeline project, extract its underlying media producer
+            if inp and isinstance(inp, str) and inp.lower().endswith(".mlt") and os.path.exists(inp):
+                try:
+                    p_info = parse_mlt_project(inp)
+                    for pr in p_info.get("producers", []):
+                        s = pr.get("source", "").replace("/", "\\")
+                        if s and os.path.exists(s) and s.lower().endswith((".mp4", ".mov", ".mkv", ".avi", ".webm", ".mp3", ".wav", ".aac", ".flac")):
+                            inp = s
+                            break
+                except Exception:
+                    pass
+
+            # Fallback to media tracker if inp is missing or placeholder
+            if (not inp or not os.path.exists(inp)) and media_tracker:
+                for item in reversed(media_tracker.get_all_tracked()):
+                    fp = item.get("path", "")
+                    if fp and os.path.exists(fp) and fp.lower().endswith((".mp4", ".mov", ".mkv", ".avi", ".webm", ".mp3", ".wav")):
+                        inp = fp
+                        break
+
             if not inp or not os.path.exists(inp):
-                raise FileNotFoundError(f"Media file not found: {inp}")
+                raise FileNotFoundError(f"Media file not found: '{inp}'. Please specify a valid video file.")
+
             base, _ = os.path.splitext(inp)
             temp_mp3 = f"{base}_vibeo_whisper_tmp.mp3"
             out_srt = params.get("output_path") or f"{base}.srt"
@@ -574,7 +672,7 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
                 os.remove(temp_mp3)
             convert_whisper_to_srt(w_data, out_srt)
             out = out_srt
-            return f"✅ Synchronized subtitles (.srt) generated -> {out}"
+            return f"✅ Synchronized subtitles (.srt) generated for {os.path.basename(inp)} -> {out}"
 
         elif tool_name == "generate_voiceover":
             txt = params.get("text", "")

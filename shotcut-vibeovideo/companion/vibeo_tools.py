@@ -31,6 +31,7 @@ try:
         prune_sliding_context,
         SYSTEM_PROMPT,
         execute_video_tool,
+        safe_parse_tool_call,
         remote_play_pause,
         remote_split_clip,
         remote_ripple_delete,
@@ -125,6 +126,7 @@ except ImportError:
         prune_sliding_context,
         SYSTEM_PROMPT,
         execute_video_tool,
+        safe_parse_tool_call,
         remote_play_pause,
         remote_split_clip,
         remote_ripple_delete,
@@ -205,6 +207,7 @@ except ImportError:
     )
 
 __all__ = [
+    "safe_parse_tool_call",
     "tool_evaluate_timeline",
     "MediaLibraryTracker",
     "VibeoCommander",

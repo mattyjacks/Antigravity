@@ -33,7 +33,8 @@ try:
         count_conversation_tokens, prune_sliding_context,
         extract_audio, transcribe_whisper, convert_whisper_to_srt,
         generate_tts_audio, generate_dalle_image,
-        parse_mlt_project, tool_evaluate_timeline, bring_shotcut_to_front
+        parse_mlt_project, tool_evaluate_timeline, bring_shotcut_to_front,
+        safe_parse_tool_call
     )
     from companion.ui import (
         VibeoTopBarButton, setup_remote_bar,
@@ -48,7 +49,8 @@ except ImportError:
         count_conversation_tokens, prune_sliding_context,
         extract_audio, transcribe_whisper, convert_whisper_to_srt,
         generate_tts_audio, generate_dalle_image,
-        parse_mlt_project, tool_evaluate_timeline, bring_shotcut_to_front
+        parse_mlt_project, tool_evaluate_timeline, bring_shotcut_to_front,
+        safe_parse_tool_call
     )
     from ui import (
         VibeoTopBarButton, setup_remote_bar,
@@ -300,6 +302,96 @@ class VibeoAgenticCenter:
                 pass
         return None
 
+    def extract_video_from_mlt(self, mlt_path: str) -> str:
+        """Extracts the first valid video source file from a Shotcut .mlt project."""
+        if not mlt_path or not os.path.exists(mlt_path):
+            return None
+        try:
+            info = parse_mlt_project(mlt_path)
+            for p in info.get("producers", []):
+                src = p.get("source", "").replace("/", "\\")
+                if src and os.path.exists(src) and src.lower().endswith((".mp4", ".mov", ".mkv", ".avi", ".webm", ".m4v", ".mp3", ".wav", ".aac", ".flac")):
+                    return os.path.abspath(src)
+        except Exception:
+            pass
+        return None
+
+    def get_active_video_path(self) -> str:
+        """Returns the real filesystem path of the currently active video."""
+        if hasattr(self, "_active_video_path") and self._active_video_path and os.path.exists(self._active_video_path):
+            return self._active_video_path
+
+        # 1. Check active MLT project and extract its underlying video media
+        active_mlt = self.get_active_mlt_path()
+        if active_mlt and os.path.exists(active_mlt):
+            vid = self.extract_video_from_mlt(active_mlt)
+            if vid and os.path.exists(vid):
+                self._active_video_path = os.path.abspath(vid)
+                return self._active_video_path
+
+        # 2. Check media tracker for tracked video files
+        if self.media_tracker:
+            for item in reversed(self.media_tracker.get_all_tracked()):
+                fp = item.get("path", "")
+                if fp and os.path.exists(fp) and fp.lower().endswith((".mp4", ".mov", ".mkv", ".avi", ".webm", ".m4v")):
+                    self._active_video_path = os.path.abspath(fp)
+                    return self._active_video_path
+
+        # 3. Search ~/Videos for the newest video footage
+        videos_dir = os.path.expanduser("~/Videos")
+        if os.path.exists(videos_dir):
+            try:
+                cand = [
+                    os.path.join(videos_dir, f) for f in os.listdir(videos_dir)
+                    if f.lower().endswith((".mp4", ".mov", ".mkv", ".avi", ".webm", ".m4v"))
+                ]
+                if cand:
+                    cand.sort(key=lambda x: os.path.getmtime(x), reverse=True)
+                    self._active_video_path = os.path.abspath(cand[0])
+                    return self._active_video_path
+            except Exception:
+                pass
+        return None
+
+    def resolve_tool_parameters(self, tool_name: str, params: dict) -> dict:
+        """
+        Intelligently resolves placeholder paths (such as 'active_project_video_path',
+        'active_video', 'active', or blank paths) to actual system media file paths.
+        """
+        resolved = dict(params or {})
+        active_video = self.get_active_video_path()
+        active_mlt = self.get_active_mlt_path()
+
+        path_keys = ("media_path", "input_path", "video_path", "input_video", "video", "input_file")
+        for k in path_keys:
+            if k in resolved:
+                val = str(resolved[k]).strip()
+                # Check if it's a placeholder or missing file containing 'active'
+                is_placeholder = (
+                    val in ("active_project_video_path", "active_video", "active", "current_video", "current", "") or
+                    (not os.path.exists(val) and any(w in val.lower() for w in ("active", "placeholder", "project_video")))
+                )
+                if is_placeholder:
+                    if active_video and os.path.exists(active_video):
+                        resolved[k] = active_video
+                    elif active_mlt and os.path.exists(active_mlt):
+                        resolved[k] = active_mlt
+
+                # If the tool specifically needs raw video/audio but was given an MLT file
+                cur_val = str(resolved[k]).strip()
+                if cur_val.lower().endswith(".mlt") and tool_name in ("generate_subtitles", "burn_subtitles", "auto_roughcut", "extract_viral_short", "detect_silence", "trim_video", "convert_vertical"):
+                    extracted = self.extract_video_from_mlt(cur_val)
+                    if extracted and os.path.exists(extracted):
+                        resolved[k] = extracted
+
+        # If no media_path or input_path was provided at all, inject active_video
+        if not any(k in resolved and resolved[k] for k in path_keys):
+            if active_video and os.path.exists(active_video):
+                resolved["media_path"] = active_video
+                resolved["input_path"] = active_video
+
+        return resolved
+
     def set_active_mlt_path(self, path: str):
         """Sets the active timeline MLT path, initializes mtime, and updates UI."""
         if path and os.path.exists(path):
@@ -447,19 +539,15 @@ class VibeoAgenticCenter:
             self.status_timeline_lbl.config(text=f"⏱️ Watching: {short_fn}", fg="#34d399", bg="#064e3b")
 
         if ai_reply:
-            tool_match = re.search(r'```json\s*(\{[\s\S]*?"tool"[\s\S]*?\})\s*```', ai_reply) or re.search(r'(\{[\s\S]*?"tool"\s*:\s*"[^"]+"[\s\S]*?\})', ai_reply)
-            if tool_match:
-                try:
-                    tool_call = json.loads(tool_match.group(1))
-                    t_name = tool_call.get("tool")
-                    t_params = tool_call.get("parameters", {})
-                    if self.settings.get("dangerous_mode", False) and t_name:
-                        self.agent_chat.insert(tk.END, f"⚙️ Auto-Executing recommended tool: {t_name}...\n")
-                        res = self._execute_video_tool(t_name, t_params)
-                        self.agent_chat.insert(tk.END, f"{res}\n\n")
-                        self.agent_chat.see(tk.END)
-                except Exception:
-                    pass
+            tool_call = safe_parse_tool_call(ai_reply)
+            if tool_call and isinstance(tool_call, dict):
+                t_name = tool_call.get("tool")
+                t_params = tool_call.get("parameters", {})
+                if self.settings.get("dangerous_mode", False) and t_name:
+                    self.agent_chat.insert(tk.END, f"⚙️ Auto-Executing recommended tool: {t_name}...\n")
+                    res = self._execute_video_tool(t_name, t_params)
+                    self.agent_chat.insert(tk.END, f"{res}\n\n")
+                    self.agent_chat.see(tk.END)
 
     def show_window(self):
         self.root.deiconify()
@@ -652,12 +740,14 @@ class VibeoAgenticCenter:
     def _execute_video_tool(self, tool_name: str, params: dict) -> str:
         ffmpeg = self.ffmpeg_path or find_ffmpeg()
         api_key = self.settings.get("api_key", "").strip()
-        res = execute_video_tool(tool_name, params, ffmpeg=ffmpeg, api_key=api_key, media_tracker=self.media_tracker)
+        # Automatically resolve any placeholders to real active files
+        resolved_params = self.resolve_tool_parameters(tool_name, params)
+        res = execute_video_tool(tool_name, resolved_params, ffmpeg=ffmpeg, api_key=api_key, media_tracker=self.media_tracker)
         if hasattr(self, "refresh_media_table"):
             self.root.after(0, self.refresh_media_table)
 
         # Automatically track created/modified MLT timeline
-        for candidate in [params.get("output_path"), params.get("mlt_path"), res]:
+        for candidate in [resolved_params.get("output_path"), resolved_params.get("mlt_path"), res]:
             if isinstance(candidate, str) and ".mlt" in candidate:
                 match = re.search(r'([A-Za-z]:\\[^ \r\n\t<>"\'`]+\.mlt)', candidate) or re.search(r'([A-Za-z]:/[^ \r\n\t<>"\'`]+\.mlt)', candidate)
                 if match:
@@ -671,6 +761,26 @@ class VibeoAgenticCenter:
     def _run_agent_thread(self, user_msg, api_key):
         model = self.settings.get("model", "gpt-5.6-luna")
 
+        # Build dynamic session context so the AI knows the active video and MLT project paths
+        active_video = self.get_active_video_path()
+        active_mlt = self.get_active_mlt_path()
+        context_items = []
+        if active_video and os.path.exists(active_video):
+            context_items.append(f"- Active Video Footage File: {active_video}")
+        if active_mlt and os.path.exists(active_mlt):
+            context_items.append(f"- Active Shotcut Timeline (.mlt): {active_mlt}")
+
+        context_prompt_addon = ""
+        if context_items:
+            context_prompt_addon = (
+                "\n\nCURRENT ACTIVE EDITING SESSION CONTEXT:\n"
+                + "\n".join(context_items) + "\n"
+                + "When the user refers to 'the active video', 'this video', 'the project', or 'the timeline', "
+                + "use these exact file paths directly in tool parameters. Do NOT output placeholders or comments like // in JSON."
+            )
+
+        current_sys_prompt = SYSTEM_PROMPT + context_prompt_addon
+
         # Multi-Agent Commander Swarm Architecture
         if hasattr(self, "commander_mode_var") and self.commander_mode_var.get() and VibeoCommander:
             self.root.after(0, lambda: self.agent_chat.insert(tk.END, "🎖️ [Commander AI] Initializing Sub-Agent Swarm...\n"))
@@ -683,7 +793,10 @@ class VibeoAgenticCenter:
 
             try:
                 commander = VibeoCommander(api_key, model=model)
-                res = commander.orchestrate(user_msg, chat_history=self.conversation_history, status_callback=status_cb)
+                commander_input = user_msg
+                if context_items and any(w in user_msg.lower() for w in ("active", "this video", "the video", "current", "project")):
+                    commander_input = f"{user_msg}\n(Context: Active Video={active_video or active_mlt})"
+                res = commander.orchestrate(commander_input, chat_history=self.conversation_history, status_callback=status_cb)
                 synth = res.get("synthesis", "")
                 reports = res.get("sub_agent_reports", {})
 
@@ -700,12 +813,7 @@ class VibeoAgenticCenter:
 
                 tool_call = res.get("suggested_tool")
                 if not tool_call:
-                    tool_match = re.search(r'```json\s*(\{[\s\S]*?"tool"[\s\S]*?\})\s*```', synth) or re.search(r'(\{[\s\S]*?"tool"\s*:\s*"[^"]+"[\s\S]*?\})', synth)
-                    if tool_match:
-                        try:
-                            tool_call = json.loads(tool_match.group(1))
-                        except Exception:
-                            pass
+                    tool_call = safe_parse_tool_call(synth)
 
                 if tool_call and isinstance(tool_call, dict):
                     t_name = tool_call.get("tool")
@@ -722,7 +830,9 @@ class VibeoAgenticCenter:
         # Single-Agent fallback mode
         url = "https://api.openai.com/v1/chat/completions"
         if not self.conversation_history:
-            self.conversation_history = [{"role": "system", "content": SYSTEM_PROMPT}]
+            self.conversation_history = [{"role": "system", "content": current_sys_prompt}]
+        else:
+            self.conversation_history[0] = {"role": "system", "content": current_sys_prompt}
         self.conversation_history.append({"role": "user", "content": user_msg})
 
         dangerous = self.settings.get("dangerous_mode", False)
@@ -752,14 +862,13 @@ class VibeoAgenticCenter:
                 self.root.after(0, self._update_agent_token_label, tok_count)
                 self.root.after(0, self._update_agent_reply, reply)
 
-                tool_match = re.search(r'```json\s*(\{[\s\S]*?"tool"[\s\S]*?\})\s*```', reply) or re.search(r'(\{[\s\S]*?"tool"\s*:\s*"[^"]+"[\s\S]*?\})', reply)
-                if tool_match:
+                tool_call = safe_parse_tool_call(reply)
+                if tool_call and isinstance(tool_call, dict):
                     try:
-                        tool_data = json.loads(tool_match.group(1))
-                        tool_name = tool_data.get("tool")
-                        tool_params = tool_data.get("parameters", {})
+                        tool_name = tool_call.get("tool")
+                        tool_params = tool_call.get("parameters", {})
                         if tool_name:
-                            self.root.after(0, lambda: self.agent_chat.insert(tk.END, f"⚙️ Executing video modification: {tool_name}...\n"))
+                            self.root.after(0, lambda n=tool_name: self.agent_chat.insert(tk.END, f"⚙️ Executing video modification: {n}...\n"))
                             res = self._execute_video_tool(tool_name, tool_params)
                             self.root.after(0, lambda r=res: self.agent_chat.insert(tk.END, f"{r}\n\n"))
                             self.root.after(0, self.agent_chat.see, tk.END)
