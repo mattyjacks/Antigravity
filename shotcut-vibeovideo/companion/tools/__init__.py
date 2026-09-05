@@ -31,8 +31,9 @@ from .mlt_tools import (
 )
 from .subtitles_tools import (
     extract_audio_for_whisper, transcribe_whisper,
-    convert_whisper_to_srt, tool_burn_subtitles, tool_extract_transcript,
-    tool_generate_chapters
+    convert_whisper_to_srt, convert_whisper_to_ass, convert_srt_to_ass,
+    tool_burn_subtitles, tool_extract_transcript, tool_generate_chapters,
+    color_to_ass, color_to_hex, ANIMATION_TAGS
 )
 from .vision_tools import (
     tool_extract_frame_jpeg, tool_capture_shotcut_preview_jpeg,

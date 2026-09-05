@@ -50,8 +50,8 @@ try:
     )
     from companion.tools.subtitles_tools import (
         extract_audio_for_whisper, transcribe_whisper,
-        convert_whisper_to_srt, tool_burn_subtitles, tool_extract_transcript,
-        tool_generate_chapters
+        convert_whisper_to_srt, convert_whisper_to_ass, convert_srt_to_ass,
+        tool_burn_subtitles, tool_extract_transcript, tool_generate_chapters
     )
     from companion.tools.vision_tools import (
         tool_extract_frame_jpeg, tool_capture_shotcut_preview_jpeg,
@@ -99,8 +99,8 @@ except ImportError:
     )
     from tools.subtitles_tools import (
         extract_audio_for_whisper, transcribe_whisper,
-        convert_whisper_to_srt, tool_burn_subtitles, tool_extract_transcript,
-        tool_generate_chapters
+        convert_whisper_to_srt, convert_whisper_to_ass, convert_srt_to_ass,
+        tool_burn_subtitles, tool_extract_transcript, tool_generate_chapters
     )
     from tools.vision_tools import (
         tool_extract_frame_jpeg, tool_capture_shotcut_preview_jpeg,
@@ -140,7 +140,8 @@ SYSTEM_PROMPT = (
     '  "parameters": { ... }\n'
     "}\n"
     "```\n"
-    "5. When the user asks to process 'the active video', 'this video', or the timeline, ALWAYS use the active video path provided in the session context. Output strictly valid JSON without comments (no // or /*) or placeholders inside the JSON block."
+    "5. When the user asks to process 'the active video', 'this video', or the timeline, ALWAYS use the active video path provided in the session context. Output strictly valid JSON without comments (no // or /*) or placeholders inside the JSON block.\n"
+    "6. Fancy Auto-Subtitles & Custom Styling: You can generate and burn animated subtitles with user-specified outline colors and fonts! When the user requests subtitle styling, fonts (e.g. 'Baloo', 'Impact', 'Montserrat'), outline colors (e.g. 'red', 'yellow', 'hot_pink', 'electric_blue', 'black', '#FF0055'), or animations (e.g. 'bounce'/'pop' [viral MrBeast pop-in], 'typewriter', 'fade', 'slide', 'neon', 'wiggle', 'karaoke'), use 'burn_subtitles' with: font, outline_color, outline_width, text_color, and animation."
 )
 
 
@@ -663,9 +664,19 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
                 except ImportError:
                     from tools.subtitles_tools import tool_burn_subtitles as _burn
 
-            font = params.get("font")
-            out = _burn(ffmpeg, inp, srt, params.get("output_path"), font=font)
-            return f"✅ Hardcoded subtitles burned into video -> {out}"
+            font = params.get("font") or "Baloo"
+            outline_color = params.get("outline_color") or params.get("outline") or "black"
+            text_color = params.get("text_color") or params.get("color") or "white"
+            animation = params.get("animation") or "bounce"
+            outline_width = int(params.get("outline_width", 4))
+            font_size = int(params.get("font_size", 52))
+
+            out = _burn(
+                ffmpeg, inp, srt, params.get("output_path"),
+                font=font, text_color=text_color, outline_color=outline_color,
+                outline_width=outline_width, animation=animation, font_size=font_size
+            )
+            return f"✅ Fancy animated subtitles ({animation} anim, font '{font}', outline '{outline_color}') burned into video -> {out}"
 
         elif tool_name in ("generate_subtitles", "auto_generate_subtitles", "transcribe_video"):
             inp = params.get("media_path") or params.get("input_path") or params.get("video_path", "")
@@ -724,6 +735,28 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
                 _extract(inp, temp_mp3, ffmpeg)
                 w_data = _transcribe(temp_mp3, api_key)
                 _convert(w_data, out_srt)
+
+                # Also automatically generate styled & animated .ass subtitle file
+                font = params.get("font") or "Baloo"
+                outline_color = params.get("outline_color") or "black"
+                text_color = params.get("text_color") or "white"
+                animation = params.get("animation") or "bounce"
+                outline_width = int(params.get("outline_width", 4))
+                out_ass = f"{base}.ass"
+
+                _convert_ass = globals().get("convert_whisper_to_ass")
+                if not _convert_ass:
+                    try:
+                        from companion.tools.subtitles_tools import convert_whisper_to_ass as _convert_ass
+                    except ImportError:
+                        from tools.subtitles_tools import convert_whisper_to_ass as _convert_ass
+
+                if _convert_ass:
+                    _convert_ass(
+                        w_data, out_ass, font=font,
+                        text_color=text_color, outline_color=outline_color,
+                        outline_width=outline_width, animation=animation
+                    )
             finally:
                 if os.path.exists(temp_mp3):
                     try:
@@ -732,7 +765,7 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
                         pass
 
             out = out_srt
-            return f"✅ Synchronized subtitles (.srt) generated for {os.path.basename(inp)} -> {out}"
+            return f"✅ Synchronized subtitles generated for {os.path.basename(inp)} -> {out_srt} & animated {base}.ass (font: '{font}', outline: '{outline_color}', anim: '{animation}')"
 
         elif tool_name == "generate_voiceover":
             txt = params.get("text", "")
