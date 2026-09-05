@@ -11,6 +11,8 @@ from .collab_tab import setup_collab_tab
 from .settings_tab import setup_settings_tab
 from .director_tab import setup_director_tab
 from .sfx_tab import setup_sfx_tab
+from .elements_tab import setup_elements_tab
+from .multiverse_tab import setup_multiverse_tab
 
 __all__ = [
     "VibeoTopBarButton",
@@ -25,4 +27,6 @@ __all__ = [
     "setup_settings_tab",
     "setup_director_tab",
     "setup_sfx_tab",
+    "setup_elements_tab",
+    "setup_multiverse_tab",
 ]

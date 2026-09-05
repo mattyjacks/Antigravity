@@ -9,27 +9,27 @@ import os
 import json
 import subprocess
 import xml.etree.ElementTree as ET
-from .audio_tools import tool_detect_silence, tool_normalize_loudness
-from .video_edit_tools import tool_trim_video, tool_convert_vertical
-from .subtitles_tools import extract_audio_for_whisper, transcribe_whisper, convert_whisper_to_srt, tool_burn_subtitles
-from ..core.ffmpeg_utils import find_ffmpeg, format_timestamp
+try:
+    from companion.tools.audio_tools import tool_detect_silence, tool_normalize_loudness
+    from companion.tools.video_edit_tools import tool_trim_video, tool_convert_vertical
+    from companion.tools.subtitles_tools import extract_audio_for_whisper, transcribe_whisper, convert_whisper_to_srt, tool_burn_subtitles
+    from companion.core.ffmpeg_utils import find_ffmpeg, format_timestamp, get_media_duration_seconds
+except ImportError:
+    try:
+        from .audio_tools import tool_detect_silence, tool_normalize_loudness
+        from .video_edit_tools import tool_trim_video, tool_convert_vertical
+        from .subtitles_tools import extract_audio_for_whisper, transcribe_whisper, convert_whisper_to_srt, tool_burn_subtitles
+        from ..core.ffmpeg_utils import find_ffmpeg, format_timestamp, get_media_duration_seconds
+    except ImportError:
+        from tools.audio_tools import tool_detect_silence, tool_normalize_loudness
+        from tools.video_edit_tools import tool_trim_video, tool_convert_vertical
+        from tools.subtitles_tools import extract_audio_for_whisper, transcribe_whisper, convert_whisper_to_srt, tool_burn_subtitles
+        from core.ffmpeg_utils import find_ffmpeg, format_timestamp, get_media_duration_seconds
 
 
 def _get_video_duration_seconds(ffmpeg: str, video_path: str) -> float:
     """Probes media duration in seconds via FFprobe/FFmpeg."""
-    ffprobe = ffmpeg.replace("ffmpeg.exe", "ffprobe.exe") if ffmpeg.endswith(".exe") else "ffprobe"
-    try:
-        cmd = [
-            ffprobe, "-v", "error", "-show_entries", "format=duration",
-            "-of", "default=noprint_wrappers=1:nokey=1", video_path
-        ]
-        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        if res.returncode == 0 and res.stdout.strip():
-            return float(res.stdout.strip())
-    except Exception:
-        pass
-    # Fallback to 60.0 if probe fails
-    return 60.0
+    return get_media_duration_seconds(ffmpeg, video_path)
 
 
 def tool_auto_roughcut(ffmpeg: str, input_video: str, noise_tolerance_db: float = -30.0,

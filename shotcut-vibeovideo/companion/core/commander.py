@@ -46,8 +46,8 @@ class VibeoCommander:
         """Runs sub-agents concurrently, collects reports, and synthesizes final edit directives."""
         sub_agents = {
             "ScriptAgent": "You are ScriptAgent, expert video narrative designer and dialogue editor. Analyze viral retention, hook structure, and script subtitles.",
-            "TimelineAgent": "You are TimelineAgent, expert video cutter and MLT timeline pacing engineer. Analyze scene cuts, trim timestamps, transitions, and speed curves.",
-            "StylistAgent": "You are StylistAgent, creative visual colorist and graphic artist. Recommend aspect ratios (16:9 vs 9:16 vertical), lower-thirds, LUTs, and DALL-E 3 B-Roll.",
+            "TimelineAgent": "You are TimelineAgent, expert video cutter and MLT timeline pacing engineer. Analyze scene cuts, trim timestamps, transitions, speed curves, and dedicated overlay timeline tracks (V2) for Shotcut library elements.",
+            "StylistAgent": "You are StylistAgent, creative visual colorist and graphic artist. Recommend aspect ratios (16:9 vs 9:16 vertical), lower-thirds, LUTs, Shotcut Elements Library stickers/emojis/overlays (fireworks, confetti, halloween, balloon, etc.), and DALL-E 3 B-Roll.",
             "AudioAgent": "You are AudioAgent, sound engineer and voice director. Focus on loudness normalization (-14 LUFS), audio ducking, background noise reduction, and TTS voiceover.",
             "ReviewerAgent": "You are ReviewerAgent, film QC inspector. Audit file format compatibility, black frame transitions, and subtitle sync accuracy."
         }

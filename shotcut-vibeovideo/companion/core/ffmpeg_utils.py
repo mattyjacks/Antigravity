@@ -118,6 +118,33 @@ def format_timestamp(seconds: float) -> str:
     return f"{hours:02d}:{minutes:02d}:{secs:02d},{millis:03d}"
 
 
+def get_media_duration_seconds(ffmpeg: str, media_path: str) -> float:
+    """Probes media duration in seconds via FFprobe or FFmpeg."""
+    if not ffmpeg:
+        ffmpeg = find_ffmpeg()
+    ffprobe = ffmpeg.replace("ffmpeg.exe", "ffprobe.exe") if ffmpeg and ffmpeg.endswith(".exe") else "ffprobe"
+    try:
+        cmd = [
+            ffprobe, "-v", "error", "-show_entries", "format=duration",
+            "-of", "default=noprint_wrappers=1:nokey=1", media_path
+        ]
+        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if res.returncode == 0 and res.stdout.strip():
+            return float(res.stdout.strip())
+    except Exception:
+        pass
+    try:
+        res = subprocess.run([ffmpeg or "ffmpeg", "-i", media_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        for line in res.stderr.splitlines():
+            if "Duration:" in line:
+                dur_str = line.split("Duration:")[1].split(",")[0].strip()
+                parts = dur_str.split(":")
+                return float(parts[0]) * 3600 + float(parts[1]) * 60 + float(parts[2])
+    except Exception:
+        pass
+    return 60.0
+
+
 def extract_audio(input_media: str, output_audio: str, ffmpeg_path: str = None) -> bool:
     """Extract lightweight audio from video for speech recognition."""
     if not ffmpeg_path:

@@ -23,6 +23,7 @@ from .visual_fx_tools import (
     generate_dalle_image
 )
 from .mlt_tools import (
+    tool_add_to_timeline,
     tool_modify_shotcut_mlt, tool_mlt_add_transition,
     tool_mlt_crop_filter, tool_mlt_blur_filter, tool_export_edl,
     tool_batch_rename, tool_calculate_stats, parse_mlt_project
@@ -43,4 +44,11 @@ from .sfx_tools import (
     tool_generate_sfx, generate_cinematic_boom, generate_whoosh_transition,
     generate_glitch_riser, generate_ui_pop, generate_camera_shutter,
     generate_sub_drop, generate_vinyl_scratch, SFX_GENERATORS
+)
+from .element_tools import (
+    find_shotcut_elements_dir, list_shotcut_elements, resolve_shotcut_element,
+    tool_add_element_to_timeline, tool_auto_add_elements
+)
+from .multiverse_tools import (
+    tool_create_multiverse_timelines, tool_branch_timeline_universe
 )

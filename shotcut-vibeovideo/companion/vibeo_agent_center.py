@@ -32,13 +32,14 @@ try:
         find_ffmpeg, find_shotcut_exe, find_shotcut_window,
         count_conversation_tokens, prune_sliding_context,
         extract_audio, transcribe_whisper, convert_whisper_to_srt,
-        generate_tts_audio, generate_dalle_image
+        generate_tts_audio, generate_dalle_image,
+        parse_mlt_project, tool_evaluate_timeline, bring_shotcut_to_front
     )
     from companion.ui import (
         VibeoTopBarButton, setup_remote_bar,
         setup_agent_tab, setup_subtitles_tab, setup_voiceover_tab, setup_broll_tab,
         setup_inspector_tab, setup_vision_tab, setup_collab_tab, setup_settings_tab,
-        setup_director_tab, setup_sfx_tab
+        setup_director_tab, setup_sfx_tab, setup_elements_tab, setup_multiverse_tab
     )
 except ImportError:
     from vibeo_tools import (
@@ -46,13 +47,14 @@ except ImportError:
         find_ffmpeg, find_shotcut_exe, find_shotcut_window,
         count_conversation_tokens, prune_sliding_context,
         extract_audio, transcribe_whisper, convert_whisper_to_srt,
-        generate_tts_audio, generate_dalle_image
+        generate_tts_audio, generate_dalle_image,
+        parse_mlt_project, tool_evaluate_timeline, bring_shotcut_to_front
     )
     from ui import (
         VibeoTopBarButton, setup_remote_bar,
         setup_agent_tab, setup_subtitles_tab, setup_voiceover_tab, setup_broll_tab,
         setup_inspector_tab, setup_vision_tab, setup_collab_tab, setup_settings_tab,
-        setup_director_tab, setup_sfx_tab
+        setup_director_tab, setup_sfx_tab, setup_elements_tab, setup_multiverse_tab
     )
 
 
@@ -80,7 +82,17 @@ class VibeoAgenticCenter:
         self.conversation_history = []
         self.media_tracker = MediaLibraryTracker() if MediaLibraryTracker else None
 
+        self._active_mlt_path = None
+        self.last_mlt_mtime = 0
+        self.last_mlt_producers_count = 0
+        self.auto_reevaluate_var = tk.BooleanVar(value=True)
+
         self.setup_ui()
+
+        # Initialize active timeline path from tracker or disk
+        initial_mlt = self.get_active_mlt_path()
+        if initial_mlt and os.path.exists(initial_mlt):
+            self.set_active_mlt_path(initial_mlt)
 
         # Initialize top-bar docked overlay button
         self.top_bar_btn = VibeoTopBarButton(self)
@@ -136,27 +148,62 @@ class VibeoAgenticCenter:
             if not silent:
                 messagebox.showerror("Error", f"Failed to save settings: {e}")
 
-    def is_shotcut_running(self):
-        if find_shotcut_window():
-            return True
+    def get_shotcut_status(self):
+        """
+        Determines Shotcut's operational state:
+        - 'gui_linked': Visible Shotcut window is active on screen.
+        - 'headless': Shotcut or Melt process is running in background without a visible GUI window.
+        - 'not_running': Neither process nor window is active.
+        """
+        win = find_shotcut_window()
+        if win:
+            return "gui_linked"
         try:
-            res = subprocess.run(["tasklist", "/FI", "IMAGENAME eq shotcut.exe"],
+            res = subprocess.run(["tasklist", "/FO", "CSV", "/NH"],
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                  text=True, creationflags=0x08000000)
-            if "shotcut.exe" in res.stdout.lower():
-                return True
+            out_lower = res.stdout.lower()
+            if "shotcut.exe" in out_lower:
+                return "headless"
+            if "melt.exe" in out_lower:
+                return "headless"
         except Exception:
             pass
-        return False
+        return "not_running"
+
+    def is_shotcut_running(self):
+        return self.get_shotcut_status() in ("gui_linked", "headless")
 
     def update_shotcut_status(self):
-        is_running = self.is_shotcut_running()
-        if is_running:
+        state = self.get_shotcut_status()
+        if state == "gui_linked":
             self.badge.config(text="● Shotcut Linked", fg="#34d399", bg="#064e3b")
             self.launch_shotcut_btn.pack_forget()
+            if hasattr(self, "view_in_shotcut_btn"):
+                self.view_in_shotcut_btn.pack_forget()
+            if hasattr(self, "status_view_shotcut_btn"):
+                self.status_view_shotcut_btn.pack_forget()
+        elif state == "headless":
+            self.badge.config(text="● Shotcut Headless", fg="#fbbf24", bg="#451a03")
+            self.launch_shotcut_btn.pack_forget()
+            if hasattr(self, "view_in_shotcut_btn"):
+                self.view_in_shotcut_btn.pack(side=tk.RIGHT, padx=(0, 6))
+            if hasattr(self, "status_view_shotcut_btn"):
+                self.status_view_shotcut_btn.pack(side=tk.RIGHT, padx=(6, 0))
+            cur_status = self.status_var.get()
+            if "headless" not in cur_status.lower() and "launching" not in cur_status.lower() and "re-evaluat" not in cur_status.lower():
+                self.status_var.set("⚠️ Shotcut running headless. Click 'View in Shotcut' to open GUI window.")
         else:
             self.badge.config(text="● Shotcut Not Running", fg="#f87171", bg="#450a0a")
+            if hasattr(self, "view_in_shotcut_btn"):
+                self.view_in_shotcut_btn.pack_forget()
             self.launch_shotcut_btn.pack(side=tk.RIGHT, padx=(0, 6))
+            if hasattr(self, "status_view_shotcut_btn"):
+                self.status_view_shotcut_btn.pack_forget()
+
+        # Check for external Shotcut timeline (.mlt) modifications
+        self.check_timeline_changes()
+
         self.root.after(1500, self.update_shotcut_status)
 
     def launch_shotcut(self):
@@ -180,6 +227,239 @@ class VibeoAgenticCenter:
                 messagebox.showerror("Launch Error", f"Failed to launch Shotcut:\n{e}")
         else:
             messagebox.showwarning("Not Found", "Could not locate shotcut.exe. Set its path in Settings.")
+
+    def view_in_shotcut(self):
+        """Brings Shotcut GUI to front or launches the GUI with the active timeline project."""
+        # 1. Attempt to bring existing window to front
+        if bring_shotcut_to_front():
+            self.status_var.set("Brought Shotcut window to front.")
+            self.update_shotcut_status()
+            return
+
+        # 2. Launch Shotcut GUI executable with the active project MLT
+        exe_path = self.settings.get("shotcut_exe_path", "") or find_shotcut_exe()
+        if not exe_path or not os.path.exists(exe_path):
+            exe_path = filedialog.askopenfilename(
+                title="Locate Shotcut Executable (shotcut.exe)",
+                filetypes=[("Shotcut Executable", "shotcut.exe"), ("All Executables", "*.exe"), ("All Files", "*.*")]
+            )
+            if exe_path and os.path.exists(exe_path):
+                self.settings["shotcut_exe_path"] = exe_path
+                self.save_settings(silent=True)
+
+        if exe_path and os.path.exists(exe_path):
+            active_mlt = self.get_active_mlt_path()
+            cmd = [exe_path]
+            if active_mlt and os.path.exists(active_mlt):
+                cmd.append(active_mlt)
+                proj_name = os.path.basename(active_mlt)
+            else:
+                proj_name = "Shotcut"
+
+            try:
+                subprocess.Popen(cmd, creationflags=0x00000008 | 0x00000200)
+                self.status_var.set(f"Opening '{proj_name}' in Shotcut GUI window...")
+                self.badge.config(text="● Opening GUI...", fg="#38bdf8", bg="#082f49")
+                self.root.after(1500, self.update_shotcut_status)
+            except Exception as e:
+                messagebox.showerror("View in Shotcut Error", f"Failed to open Shotcut GUI:\n{e}")
+        else:
+            messagebox.showwarning("Not Found", "Could not locate shotcut.exe. Set its path in Settings.")
+
+    # ---------------------------------------------------------------------
+    # TIMELINE WATCHER & AI RE-EVALUATION
+    # ---------------------------------------------------------------------
+    def get_active_mlt_path(self):
+        """Returns the currently active Shotcut .mlt timeline project path."""
+        if hasattr(self, "_active_mlt_path") and self._active_mlt_path and os.path.exists(self._active_mlt_path):
+            return self._active_mlt_path
+        if hasattr(self, "mlt_entry"):
+            p = self.mlt_entry.get().strip()
+            if p and os.path.exists(p):
+                self._active_mlt_path = os.path.abspath(p)
+                return self._active_mlt_path
+        if self.media_tracker:
+            for item in reversed(self.media_tracker.get_all_tracked()):
+                fp = item.get("path", "")
+                if fp.lower().endswith(".mlt") and os.path.exists(fp):
+                    self._active_mlt_path = os.path.abspath(fp)
+                    return self._active_mlt_path
+        # Search user Videos folder for newest MLT
+        videos_dir = os.path.expanduser("~/Videos")
+        if os.path.exists(videos_dir):
+            try:
+                mlt_files = [
+                    os.path.join(videos_dir, f) for f in os.listdir(videos_dir)
+                    if f.lower().endswith(".mlt")
+                ]
+                if mlt_files:
+                    mlt_files.sort(key=lambda x: os.path.getmtime(x), reverse=True)
+                    self._active_mlt_path = os.path.abspath(mlt_files[0])
+                    return self._active_mlt_path
+            except Exception:
+                pass
+        return None
+
+    def set_active_mlt_path(self, path: str):
+        """Sets the active timeline MLT path, initializes mtime, and updates UI."""
+        if path and os.path.exists(path):
+            self._active_mlt_path = os.path.abspath(path)
+            self.last_mlt_mtime = os.path.getmtime(self._active_mlt_path)
+            try:
+                info = parse_mlt_project(self._active_mlt_path)
+                self.last_mlt_producers_count = info.get("producers_count", 0)
+            except Exception:
+                self.last_mlt_producers_count = 0
+
+            fn = os.path.basename(self._active_mlt_path)
+            short_fn = fn if len(fn) <= 26 else fn[:23] + "..."
+            if hasattr(self, "status_timeline_lbl"):
+                self.status_timeline_lbl.config(
+                    text=f"⏱️ Watching: {short_fn}",
+                    fg="#93c5fd", bg="#1e293b"
+                )
+            if hasattr(self, "mlt_entry"):
+                self.mlt_entry.delete(0, tk.END)
+                self.mlt_entry.insert(0, self._active_mlt_path)
+
+    def check_timeline_changes(self):
+        """Checks if the active Shotcut timeline (.mlt) was modified on disk."""
+        active_mlt = self.get_active_mlt_path()
+        if not active_mlt or not os.path.exists(active_mlt):
+            if hasattr(self, "status_timeline_lbl"):
+                self.status_timeline_lbl.config(text="⏱️ No Timeline Active", fg="#64748b", bg="#1e293b")
+            return
+
+        try:
+            mtime = os.path.getmtime(active_mlt)
+        except Exception:
+            return
+
+        if not hasattr(self, "last_mlt_mtime") or self.last_mlt_mtime == 0:
+            self.set_active_mlt_path(active_mlt)
+            return
+
+        # If file was modified by Shotcut
+        if mtime > self.last_mlt_mtime:
+            self.last_mlt_mtime = mtime
+            self.on_timeline_changed(active_mlt)
+
+    def on_timeline_changed(self, mlt_path: str):
+        """Triggered whenever the Shotcut timeline project file changes on disk."""
+        fn = os.path.basename(mlt_path)
+        short_fn = fn if len(fn) <= 26 else fn[:23] + "..."
+        if hasattr(self, "status_timeline_lbl"):
+            self.status_timeline_lbl.config(text=f"⚡ Updated: {short_fn}", fg="#fbbf24", bg="#451a03")
+        self.status_var.set(f"⚡ Timeline modification detected in '{fn}'! AI re-evaluating...")
+
+        try:
+            info = parse_mlt_project(mlt_path)
+            cur_count = info.get("producers_count", 0)
+            prev_count = getattr(self, "last_mlt_producers_count", cur_count)
+            delta = cur_count - prev_count
+            self.last_mlt_producers_count = cur_count
+            tracks = info.get("tracks_count", 1)
+            filters = len(info.get("filters", []))
+        except Exception as e:
+            cur_count = 0
+            delta = 0
+            tracks = 1
+            filters = 0
+
+        delta_str = f" ({delta:+d} clips)" if delta != 0 else ""
+        notice = (
+            f"\n⚡ [Shotcut Timeline Change Detected]\n"
+            f"📁 Project: {fn}\n"
+            f"📊 Structure: {cur_count} clips{delta_str}, {tracks} tracks, {filters} filters.\n"
+            f"🤖 vibeoVideo AI: Re-evaluating timeline pacing, cuts, and composition...\n"
+        )
+        self.agent_chat.insert(tk.END, notice)
+        self.agent_chat.see(tk.END)
+
+        # Trigger background re-evaluation
+        threading.Thread(target=self._run_timeline_reevaluation_thread, args=(mlt_path, cur_count, delta), daemon=True).start()
+
+    def manual_reevaluate_timeline(self):
+        """Manually triggered timeline re-evaluation."""
+        active_mlt = self.get_active_mlt_path()
+        if not active_mlt or not os.path.exists(active_mlt):
+            messagebox.showinfo("Timeline", "No active Shotcut .mlt timeline detected.\nPlease load or create a timeline project first.")
+            return
+        self.on_timeline_changed(active_mlt)
+
+    def _run_timeline_reevaluation_thread(self, mlt_path: str, cur_count: int, delta: int):
+        """Runs timeline re-evaluation either via OpenAI LLM or local rule-based expert engine."""
+        api_key = self.settings.get("api_key", "").strip()
+        model = self.settings.get("model", "gpt-5.6-luna")
+
+        try:
+            eval_res = tool_evaluate_timeline(mlt_path, previous_clip_count=cur_count - delta if delta else None)
+        except Exception as e:
+            eval_res = {"report": f"Evaluation error: {e}", "recommendations": []}
+
+        report = eval_res.get("report", "")
+
+        if api_key:
+            prompt = (
+                f"A change was detected in the active Shotcut timeline project '{os.path.basename(mlt_path)}'.\n"
+                f"Current timeline status:\n{report}\n\n"
+                f"Please re-evaluate this timeline from the perspective of an expert video editor.\n"
+                f"Provide:\n"
+                f"1. Pacing & flow assessment based on the updated clips.\n"
+                f"2. Audio & visual composition recommendations (e.g. ducking, transitions, subtitles, Shotcut elements).\n"
+                f"3. Concrete next tool suggestion (e.g. auto_add_elements, audio_ducking, burn_subtitles) with a ready-to-run JSON tool block if appropriate."
+            )
+            try:
+                url = "https://api.openai.com/v1/chat/completions"
+                payload = {
+                    "model": model,
+                    "messages": [
+                        {"role": "system", "content": SYSTEM_PROMPT},
+                        {"role": "user", "content": prompt}
+                    ],
+                    "temperature": 0.6,
+                    "max_tokens": 700
+                }
+                req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json"
+                })
+                with urllib.request.urlopen(req, timeout=45) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                    ai_reply = data["choices"][0]["message"]["content"].strip()
+                    full_output = f"🤖 vibeoVideo AI (Timeline Re-Evaluation):\n{ai_reply}\n\n"
+                    self.root.after(0, lambda: self._append_ai_reevaluation(full_output, ai_reply))
+                    return
+            except Exception:
+                pass
+
+        # Fallback / offline intelligent evaluation output
+        full_output = f"🤖 vibeoVideo AI (Timeline Re-Evaluation):\n{report}\n\n"
+        self.root.after(0, lambda: self._append_ai_reevaluation(full_output, None))
+
+    def _append_ai_reevaluation(self, full_text: str, ai_reply: str = None):
+        self.agent_chat.insert(tk.END, full_text)
+        self.agent_chat.see(tk.END)
+        self.status_var.set("Timeline re-evaluation complete.")
+        if hasattr(self, "status_timeline_lbl") and hasattr(self, "_active_mlt_path") and self._active_mlt_path:
+            fn = os.path.basename(self._active_mlt_path)
+            short_fn = fn if len(fn) <= 26 else fn[:23] + "..."
+            self.status_timeline_lbl.config(text=f"⏱️ Watching: {short_fn}", fg="#34d399", bg="#064e3b")
+
+        if ai_reply:
+            tool_match = re.search(r'```json\s*(\{[\s\S]*?"tool"[\s\S]*?\})\s*```', ai_reply) or re.search(r'(\{[\s\S]*?"tool"\s*:\s*"[^"]+"[\s\S]*?\})', ai_reply)
+            if tool_match:
+                try:
+                    tool_call = json.loads(tool_match.group(1))
+                    t_name = tool_call.get("tool")
+                    t_params = tool_call.get("parameters", {})
+                    if self.settings.get("dangerous_mode", False) and t_name:
+                        self.agent_chat.insert(tk.END, f"⚙️ Auto-Executing recommended tool: {t_name}...\n")
+                        res = self._execute_video_tool(t_name, t_params)
+                        self.agent_chat.insert(tk.END, f"{res}\n\n")
+                        self.agent_chat.see(tk.END)
+                except Exception:
+                    pass
 
     def show_window(self):
         self.root.deiconify()
@@ -224,6 +504,12 @@ class VibeoAgenticCenter:
             relief=tk.FLAT, padx=12, pady=4, cursor="hand2", command=self.launch_shotcut
         )
 
+        self.view_in_shotcut_btn = tk.Button(
+            self.header_actions, text="🖥️ View in Shotcut", font=("Segoe UI", 10, "bold"),
+            bg="#0284c7", fg="#ffffff", activebackground="#0369a1", activeforeground="#ffffff",
+            relief=tk.FLAT, padx=12, pady=4, cursor="hand2", command=self.view_in_shotcut
+        )
+
         self.badge = tk.Label(self.header_actions, text="● Checking Shotcut...", font=("Segoe UI", 9, "bold"), fg="#fbbf24", bg="#451a03", padx=10, pady=4)
         self.badge.pack(side=tk.RIGHT, padx=(6, 0))
 
@@ -248,6 +534,16 @@ class VibeoAgenticCenter:
         self.tab_sfx = tk.Frame(self.notebook, bg="#0f172a")
         self.notebook.add(self.tab_sfx, text="🔊 SFX & Sound Design")
         setup_sfx_tab(self.tab_sfx, self)
+
+        # Tab: ✨ Shotcut Elements Library Studio
+        self.tab_elements = tk.Frame(self.notebook, bg="#0f172a")
+        self.notebook.add(self.tab_elements, text="✨ Elements Library")
+        setup_elements_tab(self.tab_elements, self)
+
+        # Tab: 🌌 Multiverse Timelines Hub
+        self.tab_multiverse = tk.Frame(self.notebook, bg="#0f172a")
+        self.notebook.add(self.tab_multiverse, text="🌌 Multiverse Timelines")
+        setup_multiverse_tab(self.tab_multiverse, self)
 
         # Tab 4: Subtitles Studio
         self.tab_subtitles = tk.Frame(self.notebook, bg="#0f172a")
@@ -284,10 +580,29 @@ class VibeoAgenticCenter:
         self.notebook.add(self.tab_settings, text="⚙️ Settings & Dock")
         setup_settings_tab(self.tab_settings, self)
 
-        # Footer Status
+        # Footer Status Bar
+        self.status_bar_frame = tk.Frame(self.root, bg="#0f172a", padx=14, pady=5)
+        self.status_bar_frame.pack(fill=tk.X, side=tk.BOTTOM)
+
         self.status_var = tk.StringVar(value="Agent ready. Click 'Open vibeoVideo' next to Help anytime to activate.")
-        footer = tk.Label(self.root, textvariable=self.status_var, font=("Segoe UI", 9), fg="#94a3b8", bg="#0f172a", anchor=tk.W, padx=14, pady=4)
-        footer.pack(fill=tk.X)
+        self.status_lbl = tk.Label(self.status_bar_frame, textvariable=self.status_var, font=("Segoe UI", 9), fg="#94a3b8", bg="#0f172a", anchor=tk.W)
+        self.status_lbl.pack(side=tk.LEFT, fill=tk.X, expand=True)
+
+        self.status_actions_frame = tk.Frame(self.status_bar_frame, bg="#0f172a")
+        self.status_actions_frame.pack(side=tk.RIGHT)
+
+        self.status_timeline_lbl = tk.Label(
+            self.status_actions_frame, text="⏱️ No Timeline Active",
+            font=("Segoe UI", 8), fg="#64748b", bg="#1e293b", padx=8, pady=2
+        )
+        self.status_timeline_lbl.pack(side=tk.RIGHT, padx=(6, 0))
+
+        self.status_view_shotcut_btn = tk.Button(
+            self.status_actions_frame, text="🖥️ View in Shotcut",
+            font=("Segoe UI", 8, "bold"), bg="#0284c7", fg="#ffffff",
+            activebackground="#0369a1", activeforeground="#ffffff",
+            relief=tk.FLAT, padx=10, pady=2, cursor="hand2", command=self.view_in_shotcut
+        )
 
     # ---------------------------------------------------------------------
     # AGENT CONSOLE METHODS
@@ -340,6 +655,17 @@ class VibeoAgenticCenter:
         res = execute_video_tool(tool_name, params, ffmpeg=ffmpeg, api_key=api_key, media_tracker=self.media_tracker)
         if hasattr(self, "refresh_media_table"):
             self.root.after(0, self.refresh_media_table)
+
+        # Automatically track created/modified MLT timeline
+        for candidate in [params.get("output_path"), params.get("mlt_path"), res]:
+            if isinstance(candidate, str) and ".mlt" in candidate:
+                match = re.search(r'([A-Za-z]:\\[^ \r\n\t<>"\'`]+\.mlt)', candidate) or re.search(r'([A-Za-z]:/[^ \r\n\t<>"\'`]+\.mlt)', candidate)
+                if match:
+                    mlt_p = match.group(1).replace("/", "\\")
+                    if os.path.exists(mlt_p):
+                        self.root.after(0, lambda p=mlt_p: self.set_active_mlt_path(p))
+                        break
+
         return res
 
     def _run_agent_thread(self, user_msg, api_key):

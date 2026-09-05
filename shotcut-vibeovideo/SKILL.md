@@ -106,7 +106,12 @@ graph TD
 The AI agent invokes real, physical media manipulations using structured tool execution blocks.
 
 ### Core Capabilities
-1. `trim_video(input_path, start_time, end_time, output_path)`: Precision cut/trim.
+0. `add_to_timeline(input_path, mlt_path, in_time, out_time, open_in_shotcut, output_path)`: Adds clip into Shotcut .mlt timeline project and opens in Shotcut.
+1. `create_multiverse_timelines(input_path, output_dir, open_in_shotcut, primary_universe)`: Simultaneously spawns 5 parallel multiverse timelines (Alpha: Director's Cut, Beta: Viral Jump Cut, Gamma: Elements & SFX, Delta: Split Matrix A/B, Omega: All-in-One Multi-Track Master Stack).
+2. `branch_timeline_universe(parent_mlt, branch_name, modification_type, open_in_shotcut)`: Branches an existing Shotcut timeline into an alternate universe cut (noir, cinematic warm, custom).
+3. `overlay_shotcut_element(input_path, element_name, timestamp, duration_sec, position, scale, sound_effect)`: Injects an animated sticker, emoji, graphic, or sound effect from Shotcut's built-in library (1,200+ elements) onto a dedicated overlay timeline track (V2).
+4. `auto_add_elements(input_path, theme, count, position, sound_sync)`: Automatically populates the dedicated Elements timeline track (V2) with themed stickers (celebration, halloween, youtube, coding, gaming) and synchronized SFX.
+5. `trim_video(input_path, start_time, end_time, output_path)`: Precision cut/trim.
 2. `convert_vertical(input_path, output_path)`: Crops 16:9 widescreen to 9:16 vertical for TikTok, YouTube Shorts, and Instagram Reels.
 3. `extract_audio(input_path, output_path)`: Strips audio into clean MP3/WAV.
 4. `burn_subtitles(video_path, srt_path, output_path)`: Hardcodes styled subtitles directly onto video frames.

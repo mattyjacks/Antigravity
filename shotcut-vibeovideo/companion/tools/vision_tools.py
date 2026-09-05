@@ -9,8 +9,13 @@ import base64
 import subprocess
 import urllib.request
 import urllib.error
-import xml.etree.ElementTree as ET
-from ..core.ffmpeg_utils import find_melt
+try:
+    from companion.core.ffmpeg_utils import find_melt
+except ImportError:
+    try:
+        from ..core.ffmpeg_utils import find_melt
+    except ImportError:
+        from core.ffmpeg_utils import find_melt
 
 
 def tool_extract_frame_jpeg(ffmpeg: str, input_path: str, timestamp: str = "00:00:01", output_jpeg: str = None) -> str:

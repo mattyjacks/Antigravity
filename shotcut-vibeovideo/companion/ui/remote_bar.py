@@ -48,3 +48,6 @@ def setup_remote_bar(parent_frame, app):
 
     tk.Button(bar, text="🎯 Bring to Front", bg="#6366f1", fg="#ffffff", font=("Segoe UI", 7, "bold"), relief=tk.FLAT, padx=6, pady=2,
               command=lambda: _safe_call(bring_shotcut_to_front, "Brought Shotcut to Foreground")).pack(side=tk.RIGHT, padx=2)
+
+    tk.Button(bar, text="🔄 Re-Evaluate", bg="#0284c7", fg="#ffffff", font=("Segoe UI", 7, "bold"), relief=tk.FLAT, padx=6, pady=2,
+              command=lambda: app.manual_reevaluate_timeline()).pack(side=tk.RIGHT, padx=2)

@@ -7,7 +7,14 @@ import json
 import urllib.request
 import urllib.error
 import subprocess
-from ..core.ffmpeg_utils import format_timestamp, extract_audio
+
+try:
+    from companion.core.ffmpeg_utils import format_timestamp, extract_audio, find_ffmpeg
+except ImportError:
+    try:
+        from ..core.ffmpeg_utils import format_timestamp, extract_audio, find_ffmpeg
+    except ImportError:
+        from core.ffmpeg_utils import format_timestamp, extract_audio, find_ffmpeg
 
 
 def extract_audio_for_whisper(input_video: str, output_audio: str, ffmpeg_path: str = None) -> bool:
@@ -101,7 +108,6 @@ def tool_extract_transcript(media_path: str, api_key: str, output_txt: str = Non
         b, _ = os.path.splitext(media_path)
         output_txt = f"{b}_transcript.txt"
     tmp_audio = f"{os.path.splitext(media_path)[0]}_trans_tmp.mp3"
-    from ..core.ffmpeg_utils import find_ffmpeg
     ffmpeg = find_ffmpeg()
     extract_audio(media_path, tmp_audio, ffmpeg)
     try:

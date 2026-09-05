@@ -8,69 +8,132 @@ import re
 import urllib.request
 import urllib.error
 
+import sys
+from pathlib import Path
+
+# Ensure companion and root directory are in sys.path
+_current_dir = Path(__file__).resolve().parent
+_companion_dir = _current_dir.parent
+_root_dir = _companion_dir.parent
+for _p in [str(_root_dir), str(_companion_dir), str(_current_dir)]:
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
 try:
-    from .ffmpeg_utils import find_ffmpeg, count_conversation_tokens, prune_sliding_context
-    from .commander import VibeoCommander
-    from ..tools import (
-        tool_trim_video, tool_convert_vertical, tool_change_speed,
-        tool_reverse_video, tool_loop_video, tool_speed_ramp,
-        tool_change_framerate, tool_compress_video, tool_split_scenes,
-        tool_detect_black_frames, tool_detect_silence, tool_fade_audio,
-        tool_normalize_loudness, tool_audio_ducking, tool_denoise_audio,
-        tool_remove_audio, tool_mux_audio_video, tool_audio_waveform,
-        tool_mlt_set_gain, generate_tts_audio, tool_add_watermark,
-        tool_create_gif, tool_adjust_color, tool_blur_video,
-        tool_color_lut, tool_flip_video, tool_rotate_video,
-        tool_split_screen, tool_picture_in_picture, tool_render_progress_bar,
-        tool_render_lower_third, tool_credits_roll, tool_slideshow_from_images,
-        tool_concat_videos, tool_storyboard_grid, tool_extract_keyframes,
-        tool_extract_thumbnail, tool_burn_timecode, generate_dalle_image,
-        tool_modify_shotcut_mlt, tool_mlt_add_transition, tool_mlt_crop_filter,
-        tool_mlt_blur_filter, tool_export_edl, tool_batch_rename,
-        tool_calculate_stats, extract_audio_for_whisper, transcribe_whisper,
-        convert_whisper_to_srt, tool_burn_subtitles, tool_extract_transcript,
-        tool_generate_chapters, tool_extract_frame_jpeg,
-        tool_capture_shotcut_preview_jpeg, tool_analyze_frame_vision,
-        tool_auto_roughcut, tool_extract_viral_short, tool_generate_sfx
-    )
-except ImportError:
     from companion.core.ffmpeg_utils import find_ffmpeg, count_conversation_tokens, prune_sliding_context
     from companion.core.commander import VibeoCommander
-    from companion.tools import (
+    from companion.tools.audio_tools import (
+        tool_detect_silence, tool_fade_audio, tool_normalize_loudness,
+        tool_audio_ducking, tool_denoise_audio, tool_remove_audio,
+        tool_mux_audio_video, tool_audio_waveform, tool_mlt_set_gain,
+        generate_tts_audio
+    )
+    from companion.tools.video_edit_tools import (
         tool_trim_video, tool_convert_vertical, tool_change_speed,
         tool_reverse_video, tool_loop_video, tool_speed_ramp,
         tool_change_framerate, tool_compress_video, tool_split_scenes,
-        tool_detect_black_frames, tool_detect_silence, tool_fade_audio,
-        tool_normalize_loudness, tool_audio_ducking, tool_denoise_audio,
-        tool_remove_audio, tool_mux_audio_video, tool_audio_waveform,
-        tool_mlt_set_gain, generate_tts_audio, tool_add_watermark,
-        tool_create_gif, tool_adjust_color, tool_blur_video,
-        tool_color_lut, tool_flip_video, tool_rotate_video,
-        tool_split_screen, tool_picture_in_picture, tool_render_progress_bar,
-        tool_render_lower_third, tool_credits_roll, tool_slideshow_from_images,
-        tool_concat_videos, tool_storyboard_grid, tool_extract_keyframes,
-        tool_extract_thumbnail, tool_burn_timecode, generate_dalle_image,
-        tool_modify_shotcut_mlt, tool_mlt_add_transition, tool_mlt_crop_filter,
-        tool_mlt_blur_filter, tool_export_edl, tool_batch_rename,
-        tool_calculate_stats, extract_audio_for_whisper, transcribe_whisper,
+        tool_detect_black_frames
+    )
+    from companion.tools.visual_fx_tools import (
+        tool_add_watermark, tool_create_gif, tool_adjust_color,
+        tool_blur_video, tool_color_lut, tool_flip_video,
+        tool_rotate_video, tool_split_screen, tool_picture_in_picture,
+        tool_render_progress_bar, tool_render_lower_third, tool_credits_roll,
+        tool_slideshow_from_images, tool_concat_videos, tool_storyboard_grid,
+        tool_extract_keyframes, tool_extract_thumbnail, tool_burn_timecode,
+        generate_dalle_image
+    )
+    from companion.tools.mlt_tools import (
+        tool_add_to_timeline, tool_modify_shotcut_mlt, tool_mlt_add_transition,
+        tool_mlt_crop_filter, tool_mlt_blur_filter, tool_export_edl,
+        tool_batch_rename, tool_calculate_stats, parse_mlt_project, tool_evaluate_timeline
+    )
+    from companion.tools.subtitles_tools import (
+        extract_audio_for_whisper, transcribe_whisper,
         convert_whisper_to_srt, tool_burn_subtitles, tool_extract_transcript,
-        tool_generate_chapters, tool_extract_frame_jpeg,
-        tool_capture_shotcut_preview_jpeg, tool_analyze_frame_vision,
-        tool_auto_roughcut, tool_extract_viral_short, tool_generate_sfx
+        tool_generate_chapters
+    )
+    from companion.tools.vision_tools import (
+        tool_extract_frame_jpeg, tool_capture_shotcut_preview_jpeg,
+        tool_analyze_frame_vision
+    )
+    from companion.tools.auto_director_tools import (
+        tool_auto_roughcut, tool_extract_viral_short
+    )
+    from companion.tools.sfx_tools import tool_generate_sfx
+    from companion.tools.element_tools import (
+        tool_add_element_to_timeline, tool_auto_add_elements,
+        list_shotcut_elements, resolve_shotcut_element
+    )
+    from companion.tools.multiverse_tools import (
+        tool_create_multiverse_timelines, tool_branch_timeline_universe
+    )
+except ImportError:
+    from core.ffmpeg_utils import find_ffmpeg, count_conversation_tokens, prune_sliding_context
+    from core.commander import VibeoCommander
+    from tools.audio_tools import (
+        tool_detect_silence, tool_fade_audio, tool_normalize_loudness,
+        tool_audio_ducking, tool_denoise_audio, tool_remove_audio,
+        tool_mux_audio_video, tool_audio_waveform, tool_mlt_set_gain,
+        generate_tts_audio
+    )
+    from tools.video_edit_tools import (
+        tool_trim_video, tool_convert_vertical, tool_change_speed,
+        tool_reverse_video, tool_loop_video, tool_speed_ramp,
+        tool_change_framerate, tool_compress_video, tool_split_scenes,
+        tool_detect_black_frames
+    )
+    from tools.visual_fx_tools import (
+        tool_add_watermark, tool_create_gif, tool_adjust_color,
+        tool_blur_video, tool_color_lut, tool_flip_video,
+        tool_rotate_video, tool_split_screen, tool_picture_in_picture,
+        tool_render_progress_bar, tool_render_lower_third, tool_credits_roll,
+        tool_slideshow_from_images, tool_concat_videos, tool_storyboard_grid,
+        tool_extract_keyframes, tool_extract_thumbnail, tool_burn_timecode,
+        generate_dalle_image
+    )
+    from tools.mlt_tools import (
+        tool_add_to_timeline, tool_modify_shotcut_mlt, tool_mlt_add_transition,
+        tool_mlt_crop_filter, tool_mlt_blur_filter, tool_export_edl,
+        tool_batch_rename, tool_calculate_stats, parse_mlt_project, tool_evaluate_timeline
+    )
+    from tools.subtitles_tools import (
+        extract_audio_for_whisper, transcribe_whisper,
+        convert_whisper_to_srt, tool_burn_subtitles, tool_extract_transcript,
+        tool_generate_chapters
+    )
+    from tools.vision_tools import (
+        tool_extract_frame_jpeg, tool_capture_shotcut_preview_jpeg,
+        tool_analyze_frame_vision
+    )
+    from tools.auto_director_tools import (
+        tool_auto_roughcut, tool_extract_viral_short
+    )
+    from tools.sfx_tools import tool_generate_sfx
+    from tools.element_tools import (
+        tool_add_element_to_timeline, tool_auto_add_elements,
+        list_shotcut_elements, resolve_shotcut_element
+    )
+    from tools.multiverse_tools import (
+        tool_create_multiverse_timelines, tool_branch_timeline_universe
     )
 
 SYSTEM_PROMPT = (
     "You are vibeoVideo Agent, an expert autonomous AI video editor copilot for Shotcut.\n"
     "You remember the entire conversation history across all turns.\n"
     "You have direct execution access to 50+ video editing tools including:\n"
-    "- trim_video, convert_vertical, extract_audio, burn_subtitles, change_speed, extract_thumbnail, compress_video, modify_mlt\n"
+    "- add_to_timeline, create_multiverse_timelines, branch_timeline_universe, overlay_shotcut_element, auto_add_elements, list_shotcut_elements, trim_video, convert_vertical, extract_audio, burn_subtitles, change_speed, extract_thumbnail, compress_video, modify_mlt\n"
     "- detect_silence, fade_audio, normalize_loudness, reverse_video, loop_video, add_watermark, split_scenes, create_gif\n"
     "- adjust_color, blur_video, audio_ducking, generate_chapters, color_lut, flip_video, rotate_video, denoise_audio\n"
     "- extract_keyframes, speed_ramp, render_progress_bar, concat_videos, extract_transcript, mux_audio_video, remove_audio\n"
     "- audio_waveform, storyboard_grid, render_lower_third, split_screen, picture_in_picture, change_framerate, detect_black_frames\n"
     "- credits_roll, slideshow_from_images, mlt_add_transition, mlt_set_gain, mlt_crop_filter, mlt_blur_filter, export_edl, batch_rename, calculate_stats, burn_timecode\n"
-    "- extract_frame, capture_timeline_preview, analyze_frame, generate_subtitles, generate_voiceover, generate_broll\n\n"
-    "When the user asks you to edit, transform, or generate video assets, explain your plan clearly AND output a tool block:\n"
+    "- extract_frame, capture_timeline_preview, analyze_frame, generate_subtitles, generate_voiceover, generate_broll, auto_roughcut, extract_viral_short, generate_sfx\n\n"
+    "Special Behaviors:\n"
+    "1. When the user provides a video or media file path (without specifying an explicit action), your default action is to load it onto the Shotcut timeline using 'add_to_timeline' and present helpful recommended next editing options (e.g., auto_roughcut to cut silences, extract_viral_short for vertical TikTok/Reels, subtitles, or color LUTs).\n"
+    "2. When the user requests to use elements from Shotcut's library (emojis, animated stickers, graphics, sounds, text, balloons, fireworks, confetti, halloween, subscribe, etc.), use 'overlay_shotcut_element' (to place an element at a timestamp on a dedicated V2 timeline track) or 'auto_add_elements' (to automatically distribute themed elements across the video on a dedicated timeline track).\n"
+    "3. When the user asks for multi-versal timelines, multiple parallel cuts at once, or branching timelines, invoke 'create_multiverse_timelines' to generate 5 parallel universes simultaneously (Universe Alpha: Director's Cut, Universe Beta: Viral Fast Cut, Universe Gamma: Elements & Overlays, Universe Delta: Split-Screen A/B Matrix, and Universe Omega: All-in-One Multi-Track Master Stack).\n"
+    "4. When the user asks you to edit, transform, or generate video assets, explain your plan clearly AND output a tool block:\n"
     "```json\n"
     "{\n"
     '  "tool": "tool_name",\n'
@@ -87,7 +150,85 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
     out = None
 
     try:
-        if tool_name == "trim_video":
+        if tool_name == "add_to_timeline":
+            inp = params.get("input_path") or params.get("video_path") or params.get("media_path", "")
+            mlt = params.get("mlt_path", None)
+            start = params.get("in_time") or params.get("start_time") or "00:00:00"
+            end = params.get("out_time") or params.get("end_time") or None
+            open_sc = bool(params.get("open_in_shotcut", True))
+            out = tool_add_to_timeline(ffmpeg, inp, mlt_path=mlt, in_time=start, out_time=end,
+                                      output_path=params.get("output_path"), open_in_shotcut=open_sc)
+            sc_msg = " and opened in Shotcut" if open_sc else ""
+            return f"✅ Added {os.path.basename(inp)} to Shotcut timeline{sc_msg} -> {out}"
+
+        elif tool_name in ("overlay_shotcut_element", "add_element_to_timeline"):
+            inp = params.get("input_path") or params.get("video_path") or params.get("media_path") or params.get("mlt_path", "")
+            elem = params.get("element_name") or params.get("element") or params.get("query", "confetti")
+            ts = str(params.get("timestamp") or "00:00:02")
+            dur = float(params.get("duration_sec", 3.5))
+            pos = params.get("position", "bottom_right")
+            sc = float(params.get("scale", 1.0))
+            sfx = params.get("sound_effect", None)
+            open_sc = bool(params.get("open_in_shotcut", True))
+            out = tool_add_element_to_timeline(
+                ffmpeg=ffmpeg, input_video_or_mlt=inp, element_name=elem,
+                timestamp=ts, duration_sec=dur, position=pos, scale=sc,
+                sound_effect=sfx, output_path=params.get("output_path"),
+                open_in_shotcut=open_sc
+            )
+            return f"✅ Shotcut library element '{elem}' placed on dedicated timeline track (V2) at {ts} -> {out}"
+
+        elif tool_name == "auto_add_elements":
+            inp = params.get("input_path") or params.get("video_path") or params.get("media_path") or params.get("mlt_path", "")
+            theme = params.get("theme", "celebration")
+            count = int(params.get("count", 4))
+            interval = float(params.get("interval_sec", 0.0)) if params.get("interval_sec") else None
+            pos = params.get("position", "bottom_right")
+            snd = bool(params.get("sound_sync", True))
+            open_sc = bool(params.get("open_in_shotcut", True))
+            res = tool_auto_add_elements(
+                ffmpeg=ffmpeg, input_video_or_mlt=inp, theme=theme,
+                count=count, interval_sec=interval, position=pos,
+                sound_sync=snd, output_path=params.get("output_path"),
+                open_in_shotcut=open_sc
+            )
+            out = res["mlt_project"]
+            return f"✅ Automatically placed {res['count']} '{theme}' Shotcut elements on dedicated timeline track (V2) -> {out}"
+
+        elif tool_name == "list_shotcut_elements":
+            cat = params.get("category", None)
+            q = params.get("query", None)
+            matches = list_shotcut_elements(category=cat, query=q)
+            names = [m["name"] for m in matches[:25]]
+            return f"✅ Found {len(matches)} Shotcut elements matching '{q or cat or 'all'}': {names}"
+
+        elif tool_name in ("create_multiverse_timelines", "generate_multiverse_timelines", "multiverse_timelines"):
+            inp = params.get("input_path") or params.get("video_path") or params.get("media_path", "")
+            prim = params.get("primary_universe", "omega")
+            open_sc = bool(params.get("open_in_shotcut", True))
+            res = tool_create_multiverse_timelines(ffmpeg, inp, open_in_shotcut=open_sc, primary_universe=prim)
+            lines = [f"🌌 Multi-Versal Timelines Created ({res['universes_count']} Parallel Universes at once):"]
+            for u_key, u_val in res["universes"].items():
+                lines.append(f"  • {u_val['name']} ({u_val['duration_sec']}s): {u_val['style']}")
+                lines.append(f"    -> {u_val['file']}")
+            lines.append(f"\n🚀 Active Universe Loaded into Shotcut: {res['active_file']}")
+            return "\n".join(lines)
+
+        elif tool_name == "branch_timeline_universe":
+            mlt = params.get("mlt_path") or params.get("input_path", "")
+            br = params.get("branch_name", "alternate_universe")
+            mod = params.get("modification_type", "custom")
+            open_sc = bool(params.get("open_in_shotcut", True))
+            out = tool_branch_timeline_universe(mlt, br, modification_type=mod, open_in_shotcut=open_sc)
+            return f"🌌 Branched new parallel timeline universe '{br}' -> {out}"
+
+        elif tool_name in ("evaluate_timeline", "re_evaluate_timeline", "analyze_timeline"):
+            mlt = params.get("mlt_path") or params.get("project_path") or params.get("input_path", "")
+            prev = params.get("previous_clip_count", None)
+            res = tool_evaluate_timeline(mlt, previous_clip_count=prev)
+            return res.get("report", f"Evaluated timeline: {mlt}")
+
+        elif tool_name == "trim_video":
             inp = params.get("input_path", "")
             start = params.get("start_time", "00:00:00")
             end = params.get("end_time", "00:00:10")
@@ -413,6 +554,39 @@ def execute_video_tool(tool_name: str, params: dict, ffmpeg: str = None, api_key
             dur_sec = int(params.get("duration_sec", 35))
             out = tool_extract_viral_short(ffmpeg, inp, api_key, dur_sec, params.get("output_path"))
             return f"✅ Viral 9:16 vertical short generated with subtitles -> {out}"
+
+        elif tool_name == "burn_subtitles":
+            inp = params.get("video_path") or params.get("input_path", "")
+            srt = params.get("srt_path", "")
+            out = tool_burn_subtitles(ffmpeg, inp, srt, params.get("output_path"))
+            return f"✅ Hardcoded subtitles burned into video -> {out}"
+
+        elif tool_name == "generate_subtitles":
+            inp = params.get("media_path") or params.get("input_path") or params.get("video_path", "")
+            if not inp or not os.path.exists(inp):
+                raise FileNotFoundError(f"Media file not found: {inp}")
+            base, _ = os.path.splitext(inp)
+            temp_mp3 = f"{base}_vibeo_whisper_tmp.mp3"
+            out_srt = params.get("output_path") or f"{base}.srt"
+            extract_audio_for_whisper(inp, temp_mp3, ffmpeg)
+            w_data = transcribe_whisper(temp_mp3, api_key)
+            if os.path.exists(temp_mp3):
+                os.remove(temp_mp3)
+            convert_whisper_to_srt(w_data, out_srt)
+            out = out_srt
+            return f"✅ Synchronized subtitles (.srt) generated -> {out}"
+
+        elif tool_name == "generate_voiceover":
+            txt = params.get("text", "")
+            voice = params.get("voice", "alloy")
+            out = generate_tts_audio(txt, voice, api_key, params.get("output_path"))
+            return f"✅ Studio TTS voiceover synthesized ({voice}) -> {out}"
+
+        elif tool_name == "generate_broll":
+            pmt = params.get("prompt", "")
+            sz = params.get("size", "1024x1024")
+            out = generate_dalle_image(pmt, api_key, sz, params.get("output_path"))
+            return f"✅ Visual B-Roll generated via DALL-E 3 -> {out}"
 
         elif tool_name == "generate_sfx":
             sfx_t = params.get("sfx_type", "whoosh")
