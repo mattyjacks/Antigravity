@@ -243,26 +243,30 @@ companion/
 │   ├── audio_tools.py        # Silence detection, normalization, ducking, TTS, waveforms
 │   ├── video_edit_tools.py   # Trimming, vertical 9:16 crop, speed ramps, framerate, scene splits
 │   ├── visual_fx_tools.py    # Watermarks, color LUTs, lower thirds, GIFs, DALL-E 3 B-Roll
-│   ├── mlt_tools.py          # Shotcut MLT project XML modifiers, filters, EDL export
+│   ├── mlt_tools.py          # Shotcut MLT project XML modifiers, filters, EDL export, timeline evaluation
 │   ├── subtitles_tools.py    # Whisper STT, SRT conversion, subtitle burning, chaptering
 │   ├── vision_tools.py       # Frame JPEG extraction, Shotcut viewport capture, Vision AI
 │   ├── auto_director_tools.py# 1-Click Magic Roughcut (.mlt) & Viral Shorts 9:16 repurposer
-│   └── sfx_tools.py          # Procedural cinematic sound effects synthesizer (WAV generator)
+│   ├── sfx_tools.py          # Procedural cinematic sound effects synthesizer (WAV generator)
+│   ├── element_tools.py      # Shotcut elements library indexer (1,265 assets) & dedicated V2 timeline overlays
+│   └── multiverse_tools.py   # Multi-Versal Timelines (5 parallel timeline cuts simultaneously)
 ├── ui/
 │   ├── top_bar.py           # Win32 docked overlay button next to Shotcut Help menu
-│   ├── remote_bar.py        # Embedded Shotcut Timeline transport & hotkey controller
+│   ├── remote_bar.py        # Embedded Shotcut Timeline transport, re-evaluation & hotkey controller
 │   ├── agent_tab.py         # AI Agent Chat console, token gauge, swarm toggle
 │   ├── director_tab.py      # AI Auto-Director & 1-Click Viral Shorts Repurposer Studio
 │   ├── sfx_tab.py           # Cinematic SFX Synthesizer & Sound Designer with live audition
+│   ├── elements_tab.py      # Shotcut Elements Library Studio & dedicated V2 placement
+│   ├── multiverse_tab.py    # 5-Universe Multi-Versal Timelines Hub
 │   ├── subtitles_tab.py     # Whisper audio extraction and .srt subtitle generator
 │   ├── voiceover_tab.py     # OpenAI TTS studio (alloy, echo, fable, onyx, nova, shimmer)
 │   ├── broll_tab.py         # DALL-E 3 visual prompt studio & image downloader
-│   ├── inspector_tab.py     # Shotcut .mlt project structure & clip inspector
+│   ├── inspector_tab.py     # Shotcut .mlt project structure inspector & auto-watcher
 │   ├── vision_tab.py        # Frame JPEG preview & AI composition critique studio
 │   ├── collab_tab.py        # Single action log, lightweight pack, and master turnkey exporter
 │   └── settings_tab.py      # API key, model selection, shotcut executable, dangerous mode
 ├── vibeo_tools.py           # Unified facade re-exporting all core and tool modules
-└── vibeo_agent_center.py    # Main window coordinator linking UI tabs with agent engine
+└── vibeo_agent_center.py    # Main window coordinator with Headless Sentinel & Timeline Change Auto-Watcher
 
 filters/vibeo_video/
 ├── ui.qml                   # Main Shotcut QML filter interface

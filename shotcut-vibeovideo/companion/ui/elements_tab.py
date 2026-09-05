@@ -172,8 +172,8 @@ def setup_elements_tab(parent_frame, app):
     cat_dropdown.bind("<<ComboboxSelected>>", lambda e: refresh_library())
     search_var.trace_add("write", lambda *_: refresh_library())
 
-    # Initial load in background thread
-    threading.Thread(target=refresh_library, daemon=True).start()
+    # Initial load safely scheduled on main thread
+    app.root.after(100, refresh_library)
 
     # RIGHT PANE: Dedicated Timeline Controls
     right_pane = tk.LabelFrame(

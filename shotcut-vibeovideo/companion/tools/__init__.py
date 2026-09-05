@@ -26,7 +26,8 @@ from .mlt_tools import (
     tool_add_to_timeline,
     tool_modify_shotcut_mlt, tool_mlt_add_transition,
     tool_mlt_crop_filter, tool_mlt_blur_filter, tool_export_edl,
-    tool_batch_rename, tool_calculate_stats, parse_mlt_project
+    tool_batch_rename, tool_calculate_stats, parse_mlt_project,
+    tool_evaluate_timeline
 )
 from .subtitles_tools import (
     extract_audio_for_whisper, transcribe_whisper,

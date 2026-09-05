@@ -55,6 +55,10 @@ class MediaLibraryTracker:
             "exists": True
         }
 
+    def get_all_tracked(self) -> list:
+        """Returns list of all tracked media item records."""
+        return list(self.tracked_media.values())
+
     def get_manifest(self) -> dict:
         return {
             "exported_at": time.strftime("%Y-%m-%d %H:%M:%S"),

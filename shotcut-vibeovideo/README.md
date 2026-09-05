@@ -25,6 +25,8 @@
 | **Viral Shorts Repurposer** | AI Highlight Hunter | Analyzes dialogue, extracts the top 30-45s retention hook, converts to 9:16 vertical, and burns subtitles. |
 | **Cinematic SFX Synthesizer** | Procedural Audio DSP | Generate broadcast-quality sound effects (Whooshes, Sub Booms, Risers, Pops, Camera Shutters) with live audition. |
 | **Shotcut Timeline Remote** | Win32 Hotkey Engine | Direct timeline transport bar (Play/Pause, Split `S`, Ripple Delete `X`, Step Frames, Undo) without leaving the agent. |
+| **Headless Shotcut & "View in Shotcut"** | Window & Process Sentinel | Detects headless Shotcut/Melt background runs; updates the status bar with an amber badge and interactive "View in Shotcut" button to bring the project into the GUI. |
+| **Timeline Change Auto-Watcher** | MLT XML Event Watcher | Monitors active `.mlt` timeline files on disk; when external edits are saved in Shotcut, the AI proactively re-evaluates cut pacing, clip count changes, audio ducking, and recommends next actions. |
 | **Whisper Auto-Subtitles** | OpenAI Whisper-1 | Auto-transcribe audio/video speech into standard `.srt` subtitle files with millisecond timestamps. |
 | **AI Voiceovers (TTS)** | OpenAI TTS (`tts-1`) | Generate crystal-clear AI narration tracks (`alloy`, `echo`, `fable`, `onyx`, `nova`, `shimmer`) ready for your timeline. |
 | **Secure Key Storage** | SQLite / LocalStorage | Your OpenAI API key is stored locally on your machine with masked inputs and connection testing. |
