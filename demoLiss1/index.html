@@ -1,45 +1,90 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LISS F. — Arcane & Celestial Fine Jewelry</title>
+  <title>🐾 Felinos del Ecuador: Wild Cats of the Mitad del Mundo</title>
+  <meta name="description" content="Museum-grade interactive educational portal celebrating Ecuador's 7 wild felids and urban cat coexistence. Biome mapping, audio soundboards, mini-games, and ranger certification." />
+  
+  <!-- Typography & Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
   <style>
+    /* ==========================================================================
+       DESIGN SYSTEM & VARIABLES - ECUADORIAN BIOMES PALETTE
+       ========================================================================== */
     :root {
-      --bg-deep: #070709;
-      --bg-card: rgba(18, 18, 24, 0.75);
-      --gold-primary: #d4af37;
-      --gold-light: #f5e6a8;
-      --gold-dark: #8f721e;
-      --silver-accent: #c0c0d0;
-      --text-main: #f0ede6;
-      --text-muted: #9e9ba4;
-      --border-mystic: rgba(212, 175, 55, 0.25);
+      --bg-base: #060d09;
+      --bg-card: rgba(14, 28, 20, 0.72);
+      --bg-card-hover: rgba(22, 44, 32, 0.88);
+      --bg-glass: rgba(10, 22, 16, 0.82);
+      
+      --accent-gold: #e5b53b;
+      --accent-gold-glow: rgba(229, 181, 59, 0.35);
+      --accent-emerald: #10b981;
+      --accent-amazon: #059669;
+      --accent-paramo: #3b82f6;
+      --accent-choco: #84cc16;
+      --accent-ember: #f97316;
+      --accent-orchid: #ec4899;
+      
+      --text-main: #f0fdf4;
+      --text-muted: #94a3b8;
+      --text-sub: #cbd5e1;
+      
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(229, 181, 59, 0.3);
+      --border-emerald: rgba(16, 185, 129, 0.25);
+      
+      --font-display: 'Cinzel', serif;
+      --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      
+      --transition-smooth: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --radius-full: 9999px;
+    }
+
+    /* Kids Mode Theme Override */
+    body.kids-mode {
+      --bg-base: #0a1f18;
+      --bg-card: rgba(20, 48, 36, 0.9);
+      --accent-gold: #ffcf33;
+      --border-subtle: rgba(255, 207, 51, 0.3);
+      --text-main: #ffffff;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
-      background-color: var(--bg-deep);
+      background-color: var(--bg-base);
       color: var(--text-main);
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 18px;
+      font-family: var(--font-body);
+      font-size: 16px;
       line-height: 1.6;
       overflow-x: hidden;
       background-image: 
-        radial-gradient(circle at 15% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 85% 75%, rgba(138, 75, 255, 0.04) 0%, transparent 45%);
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.15), transparent),
+        radial-gradient(ellipse 60% 60% at 90% 40%, rgba(229, 181, 59, 0.07), transparent),
+        radial-gradient(circle 800px at 10% 80%, rgba(59, 130, 246, 0.06), transparent);
+      min-height: 100vh;
     }
 
-    .stardust-canvas {
+    /* Ambient Mist Canvas */
+    #ambientCanvas {
       position: fixed;
       top: 0;
       left: 0;
@@ -47,534 +92,3831 @@
       height: 100vh;
       pointer-events: none;
       z-index: 0;
-      opacity: 0.6;
+      opacity: 0.55;
     }
 
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(7, 7, 9, 0.88);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-mystic);
-      padding: 1.2rem 2.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .brand-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.7rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--gold-light);
-      text-shadow: 0 0 16px rgba(212, 175, 55, 0.4);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      text-decoration: none;
-    }
-
-    .brand-title span.sigil {
-      font-size: 1.2rem;
-      color: var(--gold-primary);
-    }
-
-    nav ul {
-      display: flex;
-      list-style: none;
-      gap: 2rem;
-    }
-
-    nav a {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-
-    nav a:hover {
-      color: var(--gold-light);
-      text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
-    }
-
-    .hero {
+    /* Layout Wrapper */
+    .app-container {
       position: relative;
       z-index: 1;
-      padding: 6rem 2rem 4rem;
-      text-align: center;
-      max-width: 900px;
+      max-width: 1400px;
       margin: 0 auto;
+      padding: 0 1.5rem 6rem;
     }
 
-    .hero-eyebrow {
-      font-family: 'Montserrat', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 0.35em;
-      font-size: 0.8rem;
-      color: var(--gold-primary);
-      margin-bottom: 1.2rem;
+    /* ==========================================================================
+       HEADER & NAVIGATION
+       ========================================================================== */
+    header.main-header {
+      position: sticky;
+      top: 1rem;
+      z-index: 1000;
+      background: var(--bg-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      padding: 0.85rem 1.75rem;
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
-    .hero h1 {
-      font-family: 'Cinzel', serif;
-      font-size: clamp(2.4rem, 5vw, 4.2rem);
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      line-height: 1.15;
-      background: linear-gradient(135deg, #fff 20%, #f5e6a8 60%, #b8912e 100%);
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-icon {
+      font-size: 2rem;
+      background: linear-gradient(135deg, #e5b53b, #10b981);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 1.5rem;
+      animation: gentlePulse 3s infinite ease-in-out;
     }
 
-    .hero p {
-      font-size: 1.3rem;
-      color: var(--text-muted);
-      font-style: italic;
-      max-width: 680px;
-      margin: 0 auto 2.5rem;
+    .brand-text h1 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
     }
 
-    .cta-btn {
-      display: inline-block;
-      font-family: 'Montserrat', sans-serif;
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--accent-gold);
+      font-family: var(--font-mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav-tools {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      font-family: var(--font-body);
+      user-select: none;
+    }
+
+    .pill-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--accent-gold);
+      transform: translateY(-1px);
+    }
+
+    .pill-btn.active {
+      background: linear-gradient(135deg, rgba(229, 181, 59, 0.25), rgba(16, 185, 129, 0.2));
+      border-color: var(--accent-gold);
+      color: #fff;
+      box-shadow: 0 0 14px var(--accent-gold-glow);
+    }
+
+    .pill-btn.audio-btn.playing {
+      border-color: var(--accent-emerald);
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+    }
+
+    /* Sound indicator waves */
+    .sound-bars {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+    }
+    .sound-bars span {
+      width: 2px;
+      height: 100%;
+      background: var(--accent-emerald);
+      animation: soundWave 0.8s infinite ease-in-out alternate;
+    }
+    .sound-bars span:nth-child(2) { animation-delay: 0.2s; }
+    .sound-bars span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes soundWave {
+      0% { height: 3px; }
+      100% { height: 12px; }
+    }
+
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(229,181,59,0.3)); }
+      50% { transform: scale(1.06); filter: drop-shadow(0 0 10px rgba(16,185,129,0.5)); }
+    }
+
+    /* Navigation Jump Links */
+    .quick-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.25rem 0.4rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .quick-nav a {
+      color: var(--text-sub);
+      text-decoration: none;
       font-size: 0.8rem;
       font-weight: 500;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      padding: 1rem 2.5rem;
-      color: #070709;
-      background: linear-gradient(135deg, #f5e6a8, #d4af37, #99751e);
-      border: none;
-      border-radius: 2px;
-      cursor: pointer;
-      text-decoration: none;
-      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-full);
+      transition: var(--transition-smooth);
     }
 
-    .cta-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(212, 175, 55, 0.55);
-    }
-
-    .collection-section {
-      position: relative;
-      z-index: 1;
-      max-width: 1280px;
-      margin: 4rem auto;
-      padding: 0 2rem;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 3.5rem;
-    }
-
-    .section-header h2 {
-      font-family: 'Cinzel', serif;
-      font-size: 2.2rem;
-      letter-spacing: 0.15em;
-      color: var(--gold-light);
-    }
-
-    .section-header .divider {
-      width: 70px;
-      height: 1px;
-      background: var(--gold-primary);
-      margin: 1rem auto;
-      position: relative;
-    }
-
-    .section-header .divider::after {
-      content: '✦';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--bg-deep);
-      padding: 0 6px;
-      font-size: 0.75rem;
-      color: var(--gold-primary);
-    }
-
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-      gap: 2.5rem;
-    }
-
-    .jewelry-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-mystic);
-      border-radius: 4px;
-      overflow: hidden;
-      position: relative;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
-    }
-
-    .jewelry-card:hover {
-      transform: translateY(-6px);
-      border-color: var(--gold-primary);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(212, 175, 55, 0.2);
-    }
-
-    .card-img-wrapper {
-      position: relative;
-      width: 100%;
-      padding-top: 100%;
-      overflow: hidden;
-      background: #000;
-    }
-
-    .card-img-wrapper img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s ease, filter 0.4s ease;
-      filter: contrast(1.05) brightness(0.95);
-    }
-
-    .jewelry-card:hover .card-img-wrapper img {
-      transform: scale(1.05);
-      filter: contrast(1.1) brightness(1.02);
-    }
-
-    .card-details {
-      padding: 1.8rem;
-    }
-
-    .card-category {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.72rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--gold-dark);
-      margin-bottom: 0.5rem;
-      display: block;
-    }
-
-    .card-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.45rem;
-      letter-spacing: 0.05em;
+    .quick-nav a:hover {
       color: #fff;
-      margin-bottom: 0.7rem;
+      background: rgba(255, 255, 255, 0.08);
     }
 
-    .card-desc {
-      font-size: 1.05rem;
+    /* ==========================================================================
+       HERO BANNER
+       ========================================================================== */
+    .hero-section {
+      text-align: center;
+      padding: 3.5rem 1rem 2.5rem;
+      position: relative;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(229, 181, 59, 0.12);
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold);
+      padding: 0.35rem 1rem;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 0 20px rgba(229, 181, 59, 0.15);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 40%, #fde68a 80%, #34d399 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-subtitle {
+      max-width: 820px;
+      margin: 0 auto 2rem;
+      font-size: 1.15rem;
+      color: var(--text-sub);
+      font-weight: 300;
+    }
+
+    .hero-stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .stat-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 140px;
+    }
+
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
       color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 1.4rem;
+      letter-spacing: 0.05em;
     }
 
-    .card-meta {
+    /* Mode Banner */
+    .mode-banner {
+      margin: 1.5rem auto 0;
+      max-width: 700px;
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius-full);
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px dashed var(--accent-emerald);
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    /* ==========================================================================
+       SECTION HEADERS
+       ========================================================================== */
+    .section-header {
+      margin: 4.5rem 0 2rem;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid rgba(212, 175, 55, 0.15);
-      padding-top: 1rem;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 1rem;
     }
 
-    .card-price {
-      font-family: 'Cinzel', serif;
-      font-size: 1.3rem;
-      color: var(--gold-light);
+    .section-header-title {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
     }
 
-    .acquire-btn {
-      background: transparent;
-      border: 1px solid var(--gold-primary);
-      color: var(--gold-light);
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 0.55rem 1.2rem;
-      border-radius: 2px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .acquire-btn:hover {
-      background: var(--gold-primary);
-      color: #070709;
-      box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
-    }
-
-    .philosophy-section {
-      position: relative;
-      z-index: 1;
-      max-width: 860px;
-      margin: 6rem auto;
-      padding: 3rem 2rem;
-      text-align: center;
-      border: 1px solid var(--border-mystic);
-      background: rgba(14, 14, 20, 0.6);
-      backdrop-filter: blur(10px);
-    }
-
-    .philosophy-section h3 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.8rem;
-      letter-spacing: 0.15em;
-      color: var(--gold-light);
-      margin-bottom: 1.5rem;
-    }
-
-    .philosophy-section p {
-      font-size: 1.2rem;
-      color: #d1cdd8;
-      line-height: 1.8;
-      margin-bottom: 1.5rem;
-    }
-
-    .sigil-mark {
-      font-size: 1.8rem;
-      color: var(--gold-primary);
-      letter-spacing: 0.5rem;
-    }
-
-    footer {
-      position: relative;
-      z-index: 1;
-      border-top: 1px solid var(--border-mystic);
-      padding: 3rem 2rem;
-      text-align: center;
-      font-family: 'Montserrat', sans-serif;
+    .section-tag {
+      font-family: var(--font-mono);
       font-size: 0.78rem;
-      letter-spacing: 0.18em;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .section-subtitle {
+      font-size: 0.95rem;
       color: var(--text-muted);
-      background: #050507;
+      max-width: 600px;
     }
 
-    footer p {
-      margin-bottom: 0.5rem;
+    /* ==========================================================================
+       1. INTERACTIVE BIOME & TERRITORY MAP
+       ========================================================================== */
+    .map-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2rem;
+      position: relative;
+      overflow: hidden;
     }
 
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(6px);
-      z-index: 1000;
+    @media (max-width: 960px) {
+      .map-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .map-stage {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .map-filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .biome-btn {
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .biome-btn.active, .biome-btn:hover {
+      border-color: var(--accent-gold);
+      color: #fff;
+      background: rgba(229, 181, 59, 0.15);
+    }
+
+    /* SVG Map Styling */
+    .svg-map-wrapper {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      background: radial-gradient(circle at center, rgba(16, 185, 129, 0.05), transparent);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      overflow: hidden;
+      display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .modal-box {
-      background: #0d0d12;
-      border: 1px solid var(--gold-primary);
-      box-shadow: 0 0 35px rgba(212, 175, 55, 0.25);
-      padding: 2.5rem;
-      max-width: 480px;
-      width: 90%;
-      text-align: center;
-      border-radius: 4px;
+    .svg-map-wrapper svg {
+      width: 100%;
+      height: 100%;
+      max-height: 360px;
     }
 
-    .modal-box h4 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.5rem;
-      color: var(--gold-light);
+    .map-region-path {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      stroke-width: 2;
+    }
+
+    .map-region-path:hover {
+      filter: drop-shadow(0 0 10px rgba(229, 181, 59, 0.6));
+      transform-origin: center;
+      opacity: 0.95;
+    }
+
+    .map-pin {
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .map-pin:hover {
+      transform: scale(1.35);
+    }
+
+    /* Elevation Slider */
+    .elevation-control {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 1.2rem 1.5rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .elevation-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.88rem;
+    }
+
+    .elevation-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(to right, #059669 0%, #84cc16 35%, #eab308 65%, #3b82f6 85%, #e2e8f0 100%);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .elevation-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid var(--accent-gold);
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(229, 181, 59, 0.8);
+      transition: transform 0.15s;
+    }
+
+    .elevation-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* Biome Territory Detail Card */
+    .map-info-panel {
+      background: rgba(10, 20, 15, 0.95);
+      border: 1px solid var(--border-emerald);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .map-info-badge {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    .map-info-title {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+
+    .map-info-desc {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+      margin-bottom: 1.2rem;
+    }
+
+    .cats-in-biome {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .cats-in-biome-title {
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      color: var(--accent-gold);
+      text-transform: uppercase;
+    }
+
+    .cat-chips-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .cat-chip {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.3rem 0.65rem;
+      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .cat-chip:hover {
+      background: var(--accent-gold);
+      color: #000;
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       2. FELID PROFILES (GRID OF SPECIES)
+       ========================================================================== */
+    .species-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .species-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: var(--transition-smooth);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .species-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent-gold);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(229, 181, 59, 0.15);
+    }
+
+    .card-banner {
+      height: 180px;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: flex-end;
+      padding: 1rem;
+      overflow: hidden;
+    }
+
+    .card-banner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(14, 28, 20, 1) 0%, rgba(14, 28, 20, 0.3) 60%, transparent 100%);
+    }
+
+    .card-badges {
+      position: absolute;
+      top: 0.85rem;
+      left: 0.85rem;
+      right: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .iucn-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    .iucn-lc { background: #22c55e; color: #000; }
+    .iucn-nt { background: #84cc16; color: #000; }
+    .iucn-vu { background: #eab308; color: #000; }
+    .iucn-en { background: #f97316; color: #fff; }
+    .iucn-cr { background: #ef4444; color: #fff; }
+
+    .kichwa-name {
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      color: var(--accent-gold);
+      font-family: var(--font-mono);
+      border: 1px solid rgba(229, 181, 59, 0.3);
+    }
+
+    .card-content {
+      padding: 1.25rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 0.85rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .cat-names {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .common-name {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .latin-name {
+      font-style: italic;
+      color: var(--accent-emerald);
+      font-size: 0.85rem;
+      font-family: var(--font-body);
+    }
+
+    .superpower-box {
+      background: rgba(16, 185, 129, 0.08);
+      border-left: 3px solid var(--accent-emerald);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.82rem;
+      color: #d1fae5;
+    }
+
+    .superpower-box strong {
+      color: var(--accent-gold);
+    }
+
+    .card-stats-table {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 0.6rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+    }
+
+    .card-stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-stat-item .lbl {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+    }
+
+    .card-stat-item .val {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .card-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 0.5rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .card-btn {
+      flex: 1;
+      padding: 0.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      transition: var(--transition-smooth);
+    }
+
+    .card-btn:hover {
+      background: var(--accent-gold);
+      color: #000;
+      border-color: var(--accent-gold);
+    }
+
+    .card-btn.sound-play-btn:hover {
+      background: var(--accent-emerald);
+      color: #000;
+      border-color: var(--accent-emerald);
+    }
+
+    /* Modal for Deep Dive */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-container {
+      background: #0d1e16;
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      max-width: 800px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+      position: relative;
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-subtle);
+      color: #fff;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      z-index: 10;
+    }
+
+    .modal-close-btn:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .modal-body {
+      padding: 2.5rem;
+    }
+
+    /* ==========================================================================
+       3. BIOACOUSTICS SOUNDBOARD LAB
+       ========================================================================== */
+    .soundboard-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .soundboard-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .soundboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .sound-pad {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0.6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sound-pad::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--accent-emerald);
+      transform: scaleX(0);
+      transition: transform 0.25s ease;
+    }
+
+    .sound-pad:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--accent-emerald);
+      transform: translateY(-2px);
+    }
+
+    .sound-pad:hover::before {
+      transform: scaleX(1);
+    }
+
+    .sound-pad.playing {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--accent-emerald);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.35);
+    }
+
+    .sound-pad-icon {
+      font-size: 2.2rem;
+    }
+
+    .sound-pad-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #fff;
+    }
+
+    .sound-pad-species {
+      font-size: 0.75rem;
+      color: var(--accent-gold);
+      font-family: var(--font-mono);
+    }
+
+    .sound-pad-type {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-full);
+    }
+
+    /* Sound Visualizer & Oscilloscope */
+    .oscilloscope-panel {
+      background: #040906;
+      border: 1px solid var(--border-emerald);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .oscilloscope-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-emerald);
+    }
+
+    #spectrogramCanvas {
+      width: 100%;
+      height: 140px;
+      background: #020503;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .quiz-audio-challenge {
+      background: rgba(229, 181, 59, 0.08);
+      border: 1px dashed var(--accent-gold);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    /* ==========================================================================
+       4. TRACK & PAW IDENTIFICATION LAB
+       ========================================================================== */
+    .track-lab-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .track-lab-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .track-selector-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .track-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.85rem 1.1rem;
+      border-radius: var(--radius-md);
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      cursor: pointer;
+      text-align: left;
+      transition: var(--transition-smooth);
+    }
+
+    .track-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--accent-gold);
+    }
+
+    .track-btn.active {
+      background: rgba(229, 181, 59, 0.15);
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 15px rgba(229, 181, 59, 0.2);
+    }
+
+    .track-btn-thumb {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+
+    .track-inspection-view {
+      background: #060e0a;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 420px;
+      overflow: hidden;
+    }
+
+    .track-canvas-container {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .track-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.6));
+    }
+
+    .scale-guide-hand {
+      position: absolute;
+      right: -20px;
+      bottom: -10px;
+      opacity: 0.25;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .scale-guide-hand.visible {
+      opacity: 0.6;
+    }
+
+    .track-details-box {
+      margin-top: 1.5rem;
+      width: 100%;
+      background: rgba(14, 28, 20, 0.85);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-emerald);
+      padding: 1.25rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    /* ==========================================================================
+       5. BUILD-YOUR-OWN WILD CAT (MORPH LAB)
+       ========================================================================== */
+    .morph-lab-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2rem;
+    }
+
+    @media (max-width: 960px) {
+      .morph-lab-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .morph-preview-stage {
+      background: radial-gradient(circle at center, rgba(16, 185, 129, 0.08) 0%, #030805 70%);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      min-height: 400px;
+    }
+
+    .cat-avatar-frame {
+      width: 260px;
+      height: 260px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .morph-controls-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .morph-group {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .morph-group-title {
+      font-size: 0.82rem;
+      font-family: var(--font-mono);
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .morph-options-btn-group {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .morph-option-btn {
+      flex: 1;
+      min-width: 80px;
+      padding: 0.45rem 0.6rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-sub);
+      cursor: pointer;
+      text-align: center;
+      transition: var(--transition-smooth);
+    }
+
+    .morph-option-btn.active, .morph-option-btn:hover {
+      background: var(--accent-emerald);
+      color: #000;
+      font-weight: 700;
+      border-color: var(--accent-emerald);
+    }
+
+    .survival-rating-card {
+      background: rgba(14, 28, 20, 0.95);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    .rating-meters {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .meter-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      font-size: 0.75rem;
+    }
+
+    .meter-bar-outer {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .meter-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      background: linear-gradient(90deg, var(--accent-gold), var(--accent-emerald));
+      transition: width 0.4s ease;
+    }
+
+    /* ==========================================================================
+       6. CANOPY ACROBAT ARCADE MINI-GAME
+       ========================================================================== */
+    .game-section-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      position: relative;
+    }
+
+    .game-hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border-subtle);
+      font-family: var(--font-mono);
+    }
+
+    .game-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .game-stat-val {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+    }
+
+    #gameCanvas {
+      width: 100%;
+      height: 400px;
+      background: #020805;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-emerald);
+      display: block;
+      cursor: crosshair;
+    }
+
+    .game-controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* ==========================================================================
+       7. JUNIOR RANGER CERTIFICATION QUIZ
+       ========================================================================== */
+    .quiz-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .quiz-progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-bottom: 1.75rem;
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      width: 20%;
+      background: linear-gradient(90deg, var(--accent-gold), var(--accent-emerald));
+      transition: width 0.3s ease;
+    }
+
+    .question-card {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .question-title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+    }
+
+    .option-btn {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-align: left;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .option-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent-gold);
+    }
+
+    .option-btn.selected-correct {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: var(--accent-emerald);
+      color: #fff;
+    }
+
+    .option-btn.selected-wrong {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+      color: #fff;
+    }
+
+    .quiz-result-view {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1.5rem;
+      padding: 2rem 1rem;
+    }
+
+    .badge-award-card {
+      background: radial-gradient(circle at center, rgba(229, 181, 59, 0.2), #07150e);
+      border: 2px solid var(--accent-gold);
+      border-radius: var(--radius-lg);
+      padding: 2rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 0 40px rgba(229, 181, 59, 0.25);
+    }
+
+    .badge-icon-big {
+      font-size: 4rem;
+      animation: floatBadge 3s ease-in-out infinite;
+    }
+
+    @keyframes floatBadge {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ==========================================================================
+       8. DOMESTIC CAT COEXISTENCE BONUS SECTION
+       ========================================================================== */
+    .urban-cats-banner {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.12), rgba(16, 185, 129, 0.1));
+      border: 1px solid rgba(249, 115, 22, 0.3);
+      border-radius: var(--radius-lg);
+      padding: 2rem 2.5rem;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2rem;
+      align-items: center;
+      margin-top: 4rem;
+    }
+
+    @media (max-width: 850px) {
+      .urban-cats-banner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .urban-content h3 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: #fed7aa;
+      margin-bottom: 0.6rem;
+    }
+
+    .urban-content p {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      line-height: 1.6;
       margin-bottom: 1rem;
     }
 
-    .modal-box p {
-      color: var(--text-muted);
-      margin-bottom: 1.8rem;
-      font-size: 1.05rem;
+    .conservation-tips {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.88rem;
     }
 
-    .close-btn {
-      background: var(--gold-primary);
-      color: #070709;
-      border: none;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      padding: 0.7rem 1.8rem;
-      cursor: pointer;
-      text-transform: uppercase;
+    .conservation-tips li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
+
+    /* Footer */
+    footer.main-footer {
+      margin-top: 5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-subtle);
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-links a {
+      color: var(--accent-gold);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* Utility */
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <canvas class="stardust-canvas" id="canvas"></canvas>
+  <!-- Ambient Mist & Cloud Forest Canvas -->
+  <canvas id="ambientCanvas"></canvas>
 
-  <header>
-    <a href="#" class="brand-title">
-      <span class="sigil">✦</span> LISS F. <span class="sigil">✦</span>
-    </a>
-    <nav>
-      <ul>
-        <li><a href="#collection">Grimoire Collection</a></li>
-        <li><a href="#philosophy">The Alchemy</a></li>
-        <li><a href="#contact">Private Commission</a></li>
-      </ul>
-    </nav>
-  </header>
+  <div class="app-container">
+    <!-- Top Sticky Header -->
+    <header class="main-header">
+      <div class="brand">
+        <div class="brand-icon">🐆</div>
+        <div class="brand-text">
+          <h1>Felinos del Ecuador</h1>
+          <p>Wild Cats of the Mitad del Mundo</p>
+        </div>
+      </div>
 
-  <main>
-    <section class="hero">
-      <div class="hero-eyebrow">Apothecary of Relics & Talismans</div>
-      <h1>Artifacts of the Unseen</h1>
-      <p>
-        Consecrated adornments forged at the crossroads of celestial geometries, ancient hermetic mysteries, and rare raw minerals by visionary metalsmith Liss F.
+      <nav class="quick-nav" aria-label="Page navigation">
+        <a href="#mapSection">Territory Map</a>
+        <a href="#speciesSection">Wild Felids</a>
+        <a href="#bioacousticsSection">Soundboard</a>
+        <a href="#pawLabSection">Paw Lab</a>
+        <a href="#morphLabSection">Morph Lab</a>
+        <a href="#gameSection">Acrobat Game</a>
+        <a href="#quizSection">Certification</a>
+      </nav>
+
+      <div class="nav-tools">
+        <!-- Explorer Mode Toggle -->
+        <button id="modeToggleBtn" class="pill-btn" title="Toggle Kids Explorer / Field Biologist mode">
+          <span id="modeIcon">🔬</span>
+          <span id="modeText">Field Biologist Mode</span>
+        </button>
+
+        <!-- Forest Ambient Audio Button -->
+        <button id="ambientAudioBtn" class="pill-btn audio-btn" title="Synthesize Cloud Forest bioacoustic soundscape">
+          <span>🌿 Ambient Sound</span>
+          <div class="sound-bars hidden" id="ambientSoundBars">
+            <span></span><span></span><span></span>
+          </div>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Showcase Section -->
+    <section class="hero-section">
+      <div class="hero-badge">
+        <span>🇪🇨 0° LATITUDE BIODIVERSITY SANCTUARY</span>
+      </div>
+      <h2 class="hero-title">Kingdom of the Shadows & Clouds</h2>
+      <p class="hero-subtitle">
+        At the intersection of the equator, the towering volcanic Andes, the lush Chocó rainforest, and the Yasuní Amazon basin, 
+        Ecuador safeguards 7 remarkable wild cat species. Explore their secret prowls, canopy acrobatics, and urgent conservation stories.
       </p>
-      <a href="#collection" class="cta-btn">Unveil The Collection</a>
+
+      <div class="hero-stats-bar">
+        <div class="stat-pill">
+          <span class="stat-number">7</span>
+          <span class="stat-label">Wild Felid Species</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-number">4,800m</span>
+          <span class="stat-label">Max Elevation (Páramo)</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-number">4</span>
+          <span class="stat-label">Distinct Ecoregions</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-number">180°</span>
+          <span class="stat-label">Margay Ankle Rotation</span>
+        </div>
+      </div>
+
+      <div class="mode-banner" id="modeNoticeBanner">
+        <span>🔬 Currently viewing in <strong>Field Biologist Mode</strong>: Comprehensive anatomical metrics, IUCN data & acoustic spectrograms enabled.</span>
+      </div>
     </section>
 
-    <section class="collection-section" id="collection">
+    <!-- ==========================================================================
+         SECTION 1: INTERACTIVE BIOME & ELEVATION MAP
+         ========================================================================== -->
+    <section id="mapSection">
       <div class="section-header">
-        <h2>The Sacred Artifacts</h2>
-        <div class="divider"></div>
-        <p style="color: var(--text-muted); font-style: italic;">Each piece is individually cast under specific lunar alignments and charged with protective intent.</p>
+        <div class="section-header-title">
+          <span class="section-tag">🗺️ Interactive Territory Explorer</span>
+          <h3 class="section-title">Ecoregions & Elevation Gradients</h3>
+          <p class="section-subtitle">
+            From the mangrove beaches of the Pacific to snow-dusted volcano slopes and the Amazonian rainforest canopy.
+          </p>
+        </div>
       </div>
 
-      <div class="cards-grid">
-        <article class="jewelry-card">
-          <div class="card-img-wrapper">
-            <img src="celestial_talisman.jpg" alt="Lapis Lazuli Astral Constellation Talisman" loading="lazy">
+      <div class="map-container">
+        <div class="map-stage">
+          <div class="map-filters" role="group" aria-label="Select Ecuadorian Ecoregion">
+            <button class="biome-btn active" data-region="all">🌍 All Regions</button>
+            <button class="biome-btn" data-region="costa">🌊 La Costa (Coast & Chocó)</button>
+            <button class="biome-btn" data-region="sierra">🏔️ La Sierra (Andes Highlands)</button>
+            <button class="biome-btn" data-region="oriente">🌿 El Oriente (Amazon Basin)</button>
+            <button class="biome-btn" data-region="galapagos">🐢 Galápagos (Biosecurity)</button>
           </div>
-          <div class="card-details">
-            <span class="card-category">Talismanic Pendant</span>
-            <h3 class="card-title">The Eye of Sothis</h3>
-            <p class="card-desc">
-              Raw Afghan lapis lazuli encased in antique celestial brass. Inscribed with the Sri Yantra, planetary glyphs, and the star chart of the autumn equinox.
-            </p>
-            <div class="card-meta">
-              <span class="card-price">$1,480</span>
-              <button class="acquire-btn" onclick="openModal('The Eye of Sothis')">Acquire Relic</button>
-            </div>
-          </div>
-        </article>
 
-        <article class="jewelry-card">
-          <div class="card-img-wrapper">
-            <img src="occult_ring.jpg" alt="Eye of Providence Sterling Silver Signet Ring" loading="lazy">
-          </div>
-          <div class="card-details">
-            <span class="card-category">Occult Signet</span>
-            <h3 class="card-title">Providence of the Void</h3>
-            <p class="card-desc">
-              Heavily oxidized sterling silver signet set with a luminous cat's eye moonstone inside an onyx triangle. Flanked by elder runic incantations and sigils.
-            </p>
-            <div class="card-meta">
-              <span class="card-price">$920</span>
-              <button class="acquire-btn" onclick="openModal('Providence of the Void')">Acquire Relic</button>
-            </div>
-          </div>
-        </article>
+          <!-- SVG Visual Representation of Ecuador's 4 Natural Regions -->
+          <div class="svg-map-wrapper">
+            <svg viewBox="0 0 650 400" id="ecuadorMapSvg" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="gradCosta" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#059669" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#10b981" stop-opacity="0.4"/>
+                </linearGradient>
+                <linearGradient id="gradSierra" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.75"/>
+                  <stop offset="100%" stop-color="#6366f1" stop-opacity="0.5"/>
+                </linearGradient>
+                <linearGradient id="gradOriente" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#047857" stop-opacity="0.9"/>
+                  <stop offset="100%" stop-color="#065f46" stop-opacity="0.6"/>
+                </linearGradient>
+                <linearGradient id="gradGalapagos" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#eab308" stop-opacity="0.7"/>
+                  <stop offset="100%" stop-color="#ca8a04" stop-opacity="0.4"/>
+                </linearGradient>
+                <filter id="glowEffect" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="4" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
 
-        <article class="jewelry-card">
-          <div class="card-img-wrapper">
-            <img src="alchemical_choker.jpg" alt="Raw Amethyst Lunar Phase Alchemical Choker" loading="lazy">
+              <!-- Galápagos Islands (Inset Box) -->
+              <g id="region-galapagos" class="map-region-group" style="cursor: pointer;">
+                <rect x="25" y="40" width="130" height="110" rx="8" fill="rgba(0,0,0,0.5)" stroke="rgba(234, 179, 8, 0.4)" stroke-dasharray="3,3"/>
+                <text x="35" y="60" fill="#eab308" font-family="'Space Mono', monospace" font-size="9" font-weight="bold">GALÁPAGOS ARCHIPELAGO</text>
+                <text x="35" y="74" fill="#94a3b8" font-size="8">~1,000 km West</text>
+                <!-- Island shapes -->
+                <ellipse cx="65" cy="105" rx="14" ry="22" fill="url(#gradGalapagos)" stroke="#eab308" stroke-width="1.5" class="map-region-path" />
+                <ellipse cx="105" cy="98" rx="12" ry="14" fill="url(#gradGalapagos)" stroke="#eab308" stroke-width="1.5" class="map-region-path" />
+                <circle cx="125" cy="118" r="7" fill="url(#gradGalapagos)" stroke="#eab308" stroke-width="1.5" class="map-region-path" />
+              </g>
+
+              <!-- Continental Ecuador Regions -->
+              <!-- 1. La Costa (Western Pacific coast & Chocó humid forests) -->
+              <path id="path-costa" class="map-region-path"
+                    d="M 210,50 C 240,65 245,110 240,160 C 235,210 220,250 200,290 C 180,330 160,350 210,360 C 225,362 250,330 255,270 C 260,200 270,120 255,60 Z"
+                    fill="url(#gradCosta)" stroke="#10b981" />
+
+              <!-- 2. La Sierra (Central Andes Mountain Spine & Páramo) -->
+              <path id="path-sierra" class="map-region-path"
+                    d="M 255,60 C 270,120 260,200 255,270 C 250,330 275,370 305,370 C 330,340 340,260 335,190 C 330,120 330,70 305,45 C 280,40 265,48 255,60 Z"
+                    fill="url(#gradSierra)" stroke="#60a5fa" />
+
+              <!-- 3. El Oriente (Eastern Amazon Basin Lowlands & Yasuní) -->
+              <path id="path-oriente" class="map-region-path"
+                    d="M 305,45 C 330,70 330,120 335,190 C 340,260 330,340 305,370 C 370,365 470,330 520,270 C 560,220 540,140 480,85 C 420,50 350,40 305,45 Z"
+                    fill="url(#gradOriente)" stroke="#34d399" />
+
+              <!-- Equatorial Line 0° 0' 0" Marking -->
+              <line x1="160" y1="125" x2="550" y2="125" stroke="#e5b53b" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.8"/>
+              <text x="460" y="118" fill="#e5b53b" font-family="'Space Mono', monospace" font-size="9" letter-spacing="1">LINEA EQUINOCCIAL 0°</text>
+
+              <!-- Interactive Cat Pins -->
+              <!-- Jaguar in Yasuní -->
+              <g class="map-pin" data-cat="jaguar" transform="translate(430, 210)">
+                <circle r="14" fill="#e5b53b" opacity="0.3"/>
+                <circle r="8" fill="#e5b53b" stroke="#fff" stroke-width="2"/>
+                <text x="0" y="3" text-anchor="middle" font-size="8" fill="#000" font-weight="bold">🐆</text>
+              </g>
+
+              <!-- Puma in Cotopaxi/Páramo -->
+              <g class="map-pin" data-cat="puma" transform="translate(290, 160)">
+                <circle r="14" fill="#3b82f6" opacity="0.3"/>
+                <circle r="8" fill="#3b82f6" stroke="#fff" stroke-width="2"/>
+                <text x="0" y="3" text-anchor="middle" font-size="8" fill="#000" font-weight="bold">🦁</text>
+              </g>
+
+              <!-- Ocelot in Chocó Coast -->
+              <g class="map-pin" data-cat="ocelot" transform="translate(225, 120)">
+                <circle r="14" fill="#10b981" opacity="0.3"/>
+                <circle r="8" fill="#10b981" stroke="#fff" stroke-width="2"/>
+                <text x="0" y="3" text-anchor="middle" font-size="8" fill="#000" font-weight="bold">🐾</text>
+              </g>
+
+              <!-- Margay in Canopy -->
+              <g class="map-pin" data-cat="margay" transform="translate(370, 140)">
+                <circle r="14" fill="#84cc16" opacity="0.3"/>
+                <circle r="8" fill="#84cc16" stroke="#fff" stroke-width="2"/>
+                <text x="0" y="3" text-anchor="middle" font-size="8" fill="#000" font-weight="bold">🌿</text>
+              </g>
+
+              <!-- Colocolo / Pampas Cat in High Andes -->
+              <g class="map-pin" data-cat="pampas" transform="translate(285, 290)">
+                <circle r="14" fill="#f97316" opacity="0.3"/>
+                <circle r="8" fill="#f97316" stroke="#fff" stroke-width="2"/>
+                <text x="0" y="3" text-anchor="middle" font-size="8" fill="#000" font-weight="bold">⛰️</text>
+              </g>
+            </svg>
           </div>
-          <div class="card-details">
-            <span class="card-category">Ceremonial Torc</span>
-            <h3 class="card-title">Hecate’s Lunar Torque</h3>
-            <p class="card-desc">
-              Hand-hammered bronze neckpiece featuring waxing and waning moon phases, planetary seals, and a terminal raw Uruguayan amethyst shard point.
-            </p>
-            <div class="card-meta">
-              <span class="card-price">$2,100</span>
-              <button class="acquire-btn" onclick="openModal('Hecate’s Lunar Torque')">Acquire Relic</button>
+
+          <!-- Elevation Gradient Slider -->
+          <div class="elevation-control">
+            <div class="elevation-header">
+              <span><strong>Elevation Stratification:</strong> <span id="elevationValueText">0 – 4,800 m (All Habitats)</span></span>
+              <span id="biomeLayerName" style="color: var(--accent-gold); font-family: var(--font-mono);">All Altitudes</span>
+            </div>
+            <input type="range" min="0" max="4800" step="200" value="0" class="elevation-slider" id="elevationSlider" aria-label="Elevation level">
+            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">
+              <span>0m Sea Level (Mangroves)</span>
+              <span>1,200m Cloud Forest</span>
+              <span>3,200m Interandean Valleys</span>
+              <span>4,800m Páramo Peaks</span>
             </div>
           </div>
-        </article>
+        </div>
+
+        <!-- Biome Territory Information Panel -->
+        <div class="map-info-panel" id="mapInfoPanel">
+          <div>
+            <span class="map-info-badge" id="mapRegionBadge" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">Selected Region</span>
+            <h4 class="map-info-title" id="mapRegionTitle">República del Ecuador</h4>
+            <p class="map-info-desc" id="mapRegionDesc">
+              Ecuador packs more feline biodiversity per square kilometer than almost any nation on Earth. Click any region button or map pin above to inspect its feline occupants and ecological dynamics.
+            </p>
+          </div>
+
+          <div class="cats-in-biome">
+            <div class="cats-in-biome-title">Resident Wild Cats Here:</div>
+            <div class="cat-chips-list" id="catChipsContainer">
+              <span class="cat-chip" onclick="openCatDeepDive('jaguar')">🐆 Jaguar</span>
+              <span class="cat-chip" onclick="openCatDeepDive('puma')">🦁 Puma</span>
+              <span class="cat-chip" onclick="openCatDeepDive('ocelot')">🐾 Ocelot</span>
+              <span class="cat-chip" onclick="openCatDeepDive('margay')">🌿 Margay</span>
+              <span class="cat-chip" onclick="openCatDeepDive('oncilla')">✨ Oncilla</span>
+              <span class="cat-chip" onclick="openCatDeepDive('jaguarundi')">🦦 Jaguarundi</span>
+              <span class="cat-chip" onclick="openCatDeepDive('pampas')">🌾 Pampas Cat</span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="philosophy-section" id="philosophy">
-      <div class="sigil-mark">☉ ☽ ☿ ♀ ♂ ♃ ♄</div>
-      <br>
-      <h3>Wearable Talismans for the Awakened</h3>
-      <p>
-        "I do not craft ornaments to merely flatter the flesh. Each artifact is an anchor between the macrocosm and the subconscious soul. When you adorn yourself with mineral, symbol, and fire, you awaken an ancient remembrance."
-      </p>
-      <p style="font-family: 'Cinzel', serif; color: var(--gold-light); font-size: 1.1rem; letter-spacing: 0.1em;">
-        — Liss F., Alchemist & Goldsmith
-      </p>
+    <!-- ==========================================================================
+         SECTION 2: SPECIES SHOWCASE - 7 WILD FELIDS + URBAN COEXISTENCE
+         ========================================================================== -->
+    <section id="speciesSection">
+      <div class="section-header">
+        <div class="section-header-title">
+          <span class="section-tag">🐾 Felid Taxonomy & Ecology</span>
+          <h3 class="section-title">The 7 Wild Felids of Ecuador</h3>
+          <p class="section-subtitle">
+            Scientific classifications, Indigenous Kichwa nomenclature, ecological adaptations, and IUCN Red List statuses.
+          </p>
+        </div>
+      </div>
+
+      <div class="species-grid" id="speciesGridContainer">
+        <!-- Rendered via JavaScript dynamically with rich content -->
+      </div>
+
+      <!-- Bonus: Domestic & Street Cats of Ecuador -->
+      <div class="urban-cats-banner" id="urbanCatsBanner">
+        <div class="urban-content">
+          <span class="kichwa-name">Misi / Allqukuna Yanapay</span>
+          <h3>Domestic & Street Cats of Ecuador: Coexistence & Protection</h3>
+          <p>
+            In the colonial plazas of Quito, Cuenca, and coastal Guayaquil, domestic felines (*Felis catus*) share human history. 
+            However, unmanaged feral cat populations pose an existential threat to native birdlife, reptiles, and endemic Galápagos species. 
+            Ecuador's leading conservation biosecurity projects prioritize comprehensive trap-neuter-return (TNR), indoor feline enrichment, and domestic cat containment to protect wild ecosystems.
+          </p>
+          <ul class="conservation-tips">
+            <li>🛡️ <strong>Galápagos Biosecurity:</strong> Strictly regulated domestic animal quarantines prevent invasive diseases like feline leukemia from jumping to Galápagos sea lions or birds.</li>
+            <li>🏡 <strong>"Catio" & Indoor Enrichment:</strong> Keeping domestic cats indoors protects urban wildlife and keeps pets safe from high Andes traffic and urban parasites.</li>
+            <li>🩺 <strong>Community Spay/Neuter:</strong> Grassroots programs in Pichincha and Azuay foster compassionate coexistence while defending wild felid genetic territories.</li>
+          </ul>
+        </div>
+        <div>
+          <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(249, 115, 22, 0.4); border-radius: var(--radius-md); padding: 1.5rem; text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">🐈‍⬛</div>
+            <h4 style="color: #fed7aa; margin-bottom: 0.5rem;">Urban Wild Connection</h4>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
+              Wild cats like the Oncilla and Jaguarundi often patrol the borders of agricultural farms and Andean towns. Coexistence starts at our doorsteps.
+            </p>
+            <button class="pill-btn" onclick="playSynthesizedSound('domestic_purr')">
+              <span>🔊 Listen to Cat Purr Frequency (25-140Hz Healing Range)</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </section>
-  </main>
 
-  <footer id="contact">
-    <p>© 2026 LISS F. ESOTERIC JEWELRY ATELIER. ALL RIGHTS RESERVED.</p>
-    <p>FOR PRIVATELY CONSECRATED COMMISSIONS & BESPOKE SIGILS: COMMISSIONS@LISSF-ATELIER.COM</p>
-    <p style="margin-top: 1rem; color: var(--gold-dark); font-size: 0.7rem;">AS ABOVE, SO BELOW ✦ AS WITHIN, SO WITHOUT</p>
-  </footer>
+    <!-- ==========================================================================
+         SECTION 3: BIOACOUSTICS SOUNDBOARD LAB
+         ========================================================================== */
+    -->
+    <section id="bioacousticsSection">
+      <div class="section-header">
+        <div class="section-header-title">
+          <span class="section-tag">🔊 Bioacoustic Synthesizer</span>
+          <h3 class="section-title">Whose Roar or Chuff is That?</h3>
+          <p class="section-subtitle">
+            Synthesized Web Audio bioacoustics. Explore the vocal mechanics of big roarers vs. high-frequency whistling tree stalkers.
+          </p>
+        </div>
+      </div>
 
-  <div class="modal-overlay" id="inquiryModal" onclick="closeModal(event)">
-    <div class="modal-box" onclick="event.stopPropagation()">
-      <h4 id="modalItemTitle">Consecrated Artifact</h4>
-      <p>This masterwork is produced in limited astrological cycles. Liss F. receives commissions only through private invitation and personal attunement.</p>
-      <button class="close-btn" onclick="closeModal()">Close Portal</button>
+      <div class="soundboard-container">
+        <div class="soundboard-grid" id="soundboardGrid">
+          <!-- Sound Pads populated dynamically -->
+        </div>
+
+        <div class="oscilloscope-panel">
+          <div class="oscilloscope-header">
+            <span>BIOACOUSTIC FREQUENCY SPECTRUM</span>
+            <span id="audioStatusText">READY (IDLE)</span>
+          </div>
+
+          <canvas id="spectrogramCanvas"></canvas>
+
+          <div style="font-size: 0.8rem; color: var(--text-sub); line-height: 1.4;">
+            <strong style="color: var(--accent-emerald);">Did You Know?</strong>
+            Only *Panthera* species (like the Jaguar) have an incompletely ossified hyoid bone with an elastic cartilage ligament, enabling deep, resonant roars. Smaller cats purr continuously during both inhalation and exhalation!
+          </div>
+
+          <!-- Bioacoustic Mystery Mini-Challenge -->
+          <div class="quiz-audio-challenge">
+            <span style="font-size: 0.72rem; font-family: var(--font-mono); color: var(--accent-gold); font-weight: 700;">MYSTERY CALL CHALLENGE</span>
+            <p style="font-size: 0.82rem; color: #fff;">Can you identify the feline by sound alone?</p>
+            <button class="pill-btn" id="playMysterySoundBtn" style="width: 100%; justify-content: center;">
+              <span>❓ Play Mystery Sound</span>
+            </button>
+            <div id="mysteryOptions" class="hidden" style="display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.5rem;">
+              <!-- Option buttons added dynamically -->
+            </div>
+            <div id="mysteryFeedback" style="font-size: 0.8rem; font-weight: 600; min-height: 1.2rem;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 4: TRACK & PAW IDENTIFICATION LAB
+         ========================================================================== -->
+    <section id="pawLabSection">
+      <div class="section-header">
+        <div class="section-header-title">
+          <span class="section-tag">🐾 Field Biology & Morphology</span>
+          <h3 class="section-title">Pugmark & Track Identification Lab</h3>
+          <p class="section-subtitle">
+            Inspect real-scale pugmarks, claw sheath retraction mechanisms, and compare track dimensions against a human hand.
+          </p>
+        </div>
+      </div>
+
+      <div class="track-lab-container">
+        <div class="track-selector-list" id="trackSelectorList">
+          <!-- Button list populated dynamically -->
+        </div>
+
+        <div class="track-inspection-view">
+          <div style="position: absolute; top: 1rem; right: 1rem; display: flex; gap: 0.5rem; z-index: 5;">
+            <button class="pill-btn" id="toggleHandOverlayBtn">
+              <span>✋ Overlay Human Hand</span>
+            </button>
+            <button class="pill-btn" id="toggleClawRetractBtn">
+              <span>🐾 Toggle Claws</span>
+            </button>
+          </div>
+
+          <div class="track-canvas-container">
+            <svg id="trackSvgStage" viewBox="0 0 200 200" class="track-svg">
+              <!-- Dynamically updated track shapes -->
+            </svg>
+
+            <!-- Human Hand Reference Graphic -->
+            <svg id="humanHandOverlay" viewBox="0 0 200 200" class="scale-guide-hand" width="220" height="220">
+              <path d="M 60,180 C 50,150 40,110 40,80 C 40,65 52,65 55,80 L 60,110 C 60,80 65,40 75,40 C 85,40 85,70 85,100 C 88,70 95,30 105,30 C 115,30 115,65 115,95 C 120,70 128,45 138,48 C 145,50 142,80 140,110 C 145,115 160,130 160,150 C 160,175 140,195 110,195 Z" 
+                    fill="none" stroke="#e5b53b" stroke-width="2" stroke-dasharray="3,3" opacity="0.6"/>
+              <text x="75" y="185" fill="#e5b53b" font-size="10" font-family="'Space Mono', monospace">Human Hand (18 cm)</text>
+            </svg>
+          </div>
+
+          <div class="track-details-box" id="trackMetricsBox">
+            <div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Track Dimensions</div>
+              <div style="font-weight: 700; color: #fff;" id="trackMetricDim">12 cm x 11 cm</div>
+            </div>
+            <div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Claw Type</div>
+              <div style="font-weight: 700; color: var(--accent-emerald);" id="trackMetricClaws">Fully Retractile (Sheathed)</div>
+            </div>
+            <div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Substrate Habitat</div>
+              <div style="font-weight: 700; color: var(--accent-gold);" id="trackMetricSubstrate">Amazon River Mud & Sandbars</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 5: BUILD-YOUR-OWN WILD CAT (MORPH LAB)
+         ========================================================================== -->
+    <section id="morphLabSection">
+      <div class="section-header">
+        <div class="section-header-title">
+          <span class="section-tag">🧬 Evolutionary Genetics Lab</span>
+          <h3 class="section-title">Build-Your-Own Ecuadorian Felid</h3>
+          <p class="section-subtitle">
+            Configure anatomical traits to see how your customized felid survives across Ecuador's cloud forest, páramo, or canopy niches.
+          </p>
+        </div>
+      </div>
+
+      <div class="morph-lab-container">
+        <div class="morph-preview-stage">
+          <div class="cat-avatar-frame" id="catAvatarFrame">
+            <!-- Custom Dynamic SVG Avatar -->
+            <svg id="morphCatSvg" viewBox="0 0 300 300" width="100%" height="100%">
+              <!-- Tail -->
+              <path id="morphTail" d="M 120,240 Q 70,270 40,240 Q 20,210 50,180" fill="none" stroke="#d97706" stroke-width="24" stroke-linecap="round"/>
+              <!-- Body -->
+              <ellipse id="morphBody" cx="160" cy="180" rx="70" ry="55" fill="#f59e0b"/>
+              <!-- Rosettes/Pattern Overlay on body -->
+              <g id="morphPatternGroup">
+                <!-- Rosette dots injected dynamically -->
+              </g>
+              <!-- Head -->
+              <circle id="morphHead" cx="210" cy="120" r="46" fill="#f59e0b"/>
+              <!-- Ears -->
+              <polygon id="morphEarL" points="180,95 190,60 210,85" fill="#d97706"/>
+              <polygon id="morphEarR" points="220,85 240,60 248,95" fill="#d97706"/>
+              <polygon points="188,90 193,68 205,85" fill="#fbcfe8"/>
+              <polygon points="224,85 235,68 240,90" fill="#fbcfe8"/>
+              <!-- Eyes -->
+              <ellipse id="morphEyeL" cx="198" cy="115" rx="7" ry="10" fill="#22c55e"/>
+              <ellipse id="morphEyeR" cx="225" cy="115" rx="7" ry="10" fill="#22c55e"/>
+              <ellipse id="morphPupilL" cx="198" cy="115" rx="2" ry="8" fill="#000"/>
+              <ellipse id="morphPupilR" cx="225" cy="115" rx="2" ry="8" fill="#000"/>
+              <!-- Muzzle & Nose -->
+              <ellipse cx="212" cy="132" rx="14" ry="10" fill="#fef3c7"/>
+              <polygon points="208,128 216,128 212,134" fill="#f43f5e"/>
+              <!-- Whiskers -->
+              <line x1="180" y1="130" x2="200" y2="132" stroke="#fff" stroke-width="1.5"/>
+              <line x1="180" y1="135" x2="200" y2="135" stroke="#fff" stroke-width="1.5"/>
+              <line x1="225" y1="132" x2="245" y2="130" stroke="#fff" stroke-width="1.5"/>
+              <line x1="225" y1="135" x2="245" y2="135" stroke="#fff" stroke-width="1.5"/>
+              <!-- Legs & Paws -->
+              <rect x="135" y="210" width="18" height="45" rx="8" fill="#d97706"/>
+              <rect x="175" y="210" width="18" height="45" rx="8" fill="#d97706"/>
+              <!-- Ankle Rotation Indicator -->
+              <path id="morphAnkleArc" d="M 125,245 A 15,15 0 0,1 155,245" fill="none" stroke="#3b82f6" stroke-width="3" stroke-dasharray="3,3" opacity="0"/>
+            </svg>
+          </div>
+
+          <div class="survival-rating-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <strong style="color: #fff; font-family: var(--font-display);" id="morphEpithetTitle">The Canopy Acrobat</strong>
+              <span style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--accent-gold);" id="morphSurvivalScore">FITNESS: 88%</span>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-sub); margin-top: 0.35rem;" id="morphDescription">
+              Adapted for three-dimensional balance across high cloud forest mossy branches.
+            </p>
+
+            <div class="rating-meters">
+              <div class="meter-row">
+                <div style="display: flex; justify-content: space-between;">
+                  <span>Canopy Tree Agility</span>
+                  <span id="meterAgilityVal">92%</span>
+                </div>
+                <div class="meter-bar-outer"><div class="meter-bar-fill" id="meterAgilityBar" style="width: 92%;"></div></div>
+              </div>
+              <div class="meter-row">
+                <div style="display: flex; justify-content: space-between;">
+                  <span>Dense Understory Camouflage</span>
+                  <span id="meterCamoVal">85%</span>
+                </div>
+                <div class="meter-bar-outer"><div class="meter-bar-fill" id="meterCamoBar" style="width: 85%;"></div></div>
+              </div>
+              <div class="meter-row">
+                <div style="display: flex; justify-content: space-between;">
+                  <span>Apex Jaw Crushing Force</span>
+                  <span id="meterBiteVal">45%</span>
+                </div>
+                <div class="meter-bar-outer"><div class="meter-bar-fill" id="meterBiteBar" style="width: 45%;"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trait Customization Controls -->
+        <div class="morph-controls-form">
+          <!-- Trait 1: Coat Pattern -->
+          <div class="morph-group">
+            <div class="morph-group-title">
+              <span>1. Coat Camouflage Pattern</span>
+            </div>
+            <div class="morph-options-btn-group" id="optGroupCoat">
+              <button class="morph-option-btn active" data-trait="coat" data-val="rosettes">Rosettes (Jaguar/Ocelot)</button>
+              <button class="morph-option-btn" data-trait="coat" data-val="solid_tawny">Uniform Tawny (Puma)</button>
+              <button class="morph-option-btn" data-trait="coat" data-val="melanistic">Melanistic Shadow</button>
+              <button class="morph-option-btn" data-trait="coat" data-val="striped">Andean Fluff (Pampas)</button>
+            </div>
+          </div>
+
+          <!-- Trait 2: Tail Length & Balance -->
+          <div class="morph-group">
+            <div class="morph-group-title">
+              <span>2. Tail Proportion & Rudder</span>
+            </div>
+            <div class="morph-options-btn-group" id="optGroupTail">
+              <button class="morph-option-btn active" data-trait="tail" data-val="super_long">Super Long 70% Body (Margay)</button>
+              <button class="morph-option-btn" data-trait="tail" data-val="medium">Standard Long (Puma)</button>
+              <button class="morph-option-btn" data-trait="tail" data-val="compact">Stout Counterweight (Jaguar)</button>
+            </div>
+          </div>
+
+          <!-- Trait 3: Ankle Joint Articulation -->
+          <div class="morph-group">
+            <div class="morph-group-title">
+              <span>3. Hind Ankle Joint Flexibility</span>
+            </div>
+            <div class="morph-options-btn-group" id="optGroupAnkles">
+              <button class="morph-option-btn active" data-trait="ankles" data-val="rotatable">180° Rotatable (Headfirst Downclimbing)</button>
+              <button class="morph-option-btn" data-trait="ankles" data-val="rigid">Standard Rigid (High Sprint Speed)</button>
+            </div>
+          </div>
+
+          <!-- Trait 4: Pupil Geometry -->
+          <div class="morph-group">
+            <div class="morph-group-title">
+              <span>4. Ocular Pupil Mechanism</span>
+            </div>
+            <div class="morph-options-btn-group" id="optGroupPupils">
+              <button class="morph-option-btn active" data-trait="pupils" data-val="slit">Vertical Slits (Nocturnal Precision)</button>
+              <button class="morph-option-btn" data-trait="pupils" data-val="round">Broad Round (Daylight & Open Plains)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 6: CANOPY ACROBAT ARCADE MINI-GAME
+         ========================================================================== -->
+    <section id="gameSection">
+      <div class="section-header">
+        <div class="section-header-title">
+          <span class="section-tag">🎮 Arcade Survival Challenge</span>
+          <h3 class="section-title">Canopy Acrobat vs. The Forest Floor</h3>
+          <p class="section-subtitle">
+            Control the agile Margay or Jaguarundi through the cloud forest! Leap across mossy vines, grab treefrogs, and avoid falling to the forest floor.
+          </p>
+        </div>
+      </div>
+
+      <div class="game-section-container">
+        <div class="game-hud">
+          <div class="game-stat">
+            <span>🐾 SPECIES:</span>
+            <span class="game-stat-val" id="gameSpeciesDisplay">Margay</span>
+          </div>
+          <div class="game-stat">
+            <span>🏆 SCORE:</span>
+            <span class="game-stat-val" id="gameScoreDisplay">0</span>
+          </div>
+          <div class="game-stat">
+            <span>❤️ AGILITY LIVES:</span>
+            <span class="game-stat-val" id="gameLivesDisplay">3</span>
+          </div>
+          <div class="game-stat">
+            <span>🌿 ALTITUDE:</span>
+            <span class="game-stat-val" id="gameAltitudeDisplay">1,400m</span>
+          </div>
+        </div>
+
+        <canvas id="gameCanvas" width="1000" height="400"></canvas>
+
+        <div class="game-controls-bar">
+          <div style="font-size: 0.85rem; color: var(--text-muted);">
+            <strong>Controls:</strong> Press <kbd style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; color: #fff;">SPACE</kbd> or <kbd style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; color: #fff;">CLICK / TAP</kbd> to jump between branches. Double-jump for canopy acrobatics!
+          </div>
+
+          <div style="display: flex; gap: 0.75rem;">
+            <button class="pill-btn active" id="gameStartBtn">
+              <span>▶️ Start Adventure</span>
+            </button>
+            <button class="pill-btn" id="gameSwitchCatBtn">
+              <span>🔄 Switch to Jaguarundi</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 7: JUNIOR RANGER CERTIFICATION QUIZ
+         ========================================================================== -->
+    <section id="quizSection">
+      <div class="section-header" style="justify-content: center; text-align: center;">
+        <div class="section-header-title" style="align-items: center;">
+          <span class="section-tag">🏆 Educational Achievement</span>
+          <h3 class="section-title">Ecuadorian Wild Felid Ranger Certification</h3>
+          <p class="section-subtitle">
+            Test your knowledge of biological adaptations, habitats, and conservation ethics to earn your official Field Ranger digital credentials.
+          </p>
+        </div>
+      </div>
+
+      <div class="quiz-container">
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quizProgressBar"></div>
+        </div>
+
+        <!-- Active Question View -->
+        <div class="question-card" id="quizQuestionCard">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-gold);" id="quizQuestionNum">QUESTION 1 OF 5</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);" id="quizScoreTracker">Score: 0</span>
+          </div>
+
+          <h4 class="question-title" id="quizQuestionText">
+            Which Ecuadorian wild felid possesses hind ankles capable of rotating 180 degrees, allowing it to descend trees head-first?
+          </h4>
+
+          <div class="options-grid" id="quizOptionsGrid">
+            <!-- Populated dynamically via JS -->
+          </div>
+        </div>
+
+        <!-- Quiz Completion & Badge Presentation -->
+        <div class="quiz-result-view" id="quizResultView">
+          <div class="badge-award-card">
+            <div class="badge-icon-big" id="resultBadgeIcon">🏅</div>
+            <h3 style="font-family: var(--font-display); font-size: 1.8rem; color: #fff;" id="resultBadgeTitle">Gold Jaguar Ranger</h3>
+            <p style="color: var(--accent-gold); font-family: var(--font-mono); font-size: 0.85rem;" id="resultBadgeSubtitle">
+              Certified Wildlife Biologist of the Mitad del Mundo
+            </p>
+            <p style="font-size: 0.95rem; color: var(--text-sub); max-width: 480px; margin-top: 0.5rem;" id="resultBadgeDescription">
+              Outstanding work! You have mastered the identification, anatomy, and critical conservation challenges of Ecuador's 7 wild cats.
+            </p>
+            <div style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent-emerald); margin-top: 0.5rem;" id="resultScoreSummary">
+              Score: 5 / 5 (100%)
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+            <button class="pill-btn active" id="printBadgeBtn" onclick="window.print()">
+              <span>🖨️ Print / Save Official Certificate</span>
+            </button>
+            <button class="pill-btn" id="restartQuizBtn">
+              <span>🔄 Retake Quiz</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Deep Dive Species Modal -->
+    <div class="modal-overlay" id="speciesModalOverlay">
+      <div class="modal-container">
+        <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">&times;</button>
+        <div class="modal-body" id="modalBodyContent">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
     </div>
+
+    <!-- Main Footer -->
+    <footer class="main-footer">
+      <div style="font-size: 1.1rem; font-weight: 700; color: #fff; font-family: var(--font-display);">
+        🐾 Felinos del Ecuador: Wild Cats of the Mitad del Mundo
+      </div>
+      <p>
+        An open educational experience dedicated to Yasuní, the Chocó Andino Biosphere Reserve, and biodiversity conservation in Ecuador.
+      </p>
+      <div class="footer-links">
+        <a href="#mapSection">Territory Map</a>
+        <a href="#speciesSection">Wild Felids</a>
+        <a href="#bioacousticsSection">Bioacoustics</a>
+        <a href="#pawLabSection">Track Lab</a>
+        <a href="#morphLabSection">Morph Lab</a>
+        <a href="#gameSection">Acrobat Game</a>
+        <a href="#quizSection">Certification</a>
+      </div>
+      <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">
+        No external dependencies required • Native Web Audio & Canvas API • Zero Carbon Cloud Forest Inspired
+      </div>
+    </footer>
   </div>
 
+  <!-- ==========================================================================
+       MODULAR APPLICATION LOGIC & WEB AUDIO SYNTHESIZERS
+       ========================================================================== -->
   <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height, stars = [];
+    /* ==========================================================================
+       1. DATA DEFINITIONS (7 WILD FELIDS + DETAILS)
+       ========================================================================== */
+    const FELID_SPECIES = [
+      {
+        id: "jaguar",
+        commonName: "Jaguar",
+        latinName: "Panthera onca",
+        kichwaName: "Yawar Uturunku / Otorongo",
+        iucn: "Near Threatened (NT)",
+        iucnClass: "iucn-nt",
+        regions: ["oriente", "costa"],
+        elevationRange: "0 – 1,200 m",
+        weight: "56 – 100+ kg",
+        length: "1.2 – 1.8 m",
+        diet: "Peccaries, tapirs, caimans, anacondas, capybaras",
+        superpower: "Crushing Bite Force (1,500 PSI) capable of piercing turtle carapaces and apex swimming mastery.",
+        quoteKids: "The undisputed king of Yasuní who loves swimming in Amazon rivers!",
+        quoteBio: "Possesses the highest bite-force-to-body-mass ratio among big cats; utilizes direct temporal bone puncture rather than suffocation.",
+        bannerBg: "linear-gradient(135deg, #78350f, #14532d)",
+        soundType: "Deep resonant roar & guttural sawing chuff",
+        soundFreq: "60 - 240 Hz",
+        trackSize: "12 cm wide × 11 cm long",
+        trackClaws: "Retracted (never visible in soft mud)",
+        badgeIcon: "🐆",
+        morphProfile: {
+          coat: "rosettes",
+          tail: "compact",
+          ankles: "rigid",
+          pupils: "round",
+          agility: 55,
+          camo: 95,
+          bite: 98
+        }
+      },
+      {
+        id: "puma",
+        commonName: "Puma / Mountain Lion",
+        latinName: "Puma concolor",
+        kichwaName: "Puma / Urku Puma",
+        iucn: "Least Concern (LC)",
+        iucnClass: "iucn-lc",
+        regions: ["sierra", "oriente", "costa"],
+        elevationRange: "0 – 4,800 m",
+        weight: "40 – 75 kg",
+        length: "1.5 – 2.4 m",
+        diet: "White-tailed deer, Andean tapir, vicuñas, rabbits",
+        superpower: "Extreme Altitudinal Adaptability. Prowls the freezing slopes of volcanoes Cotopaxi and Chimborazo.",
+        quoteKids: "The silent Andean ghost who can leap 40 feet in a single bound!",
+        quoteBio: "Extreme phenotypic plasticity; classified biologically as a 'small cat' (Felinae) because it purrs and vocalizes with screams rather than true roars.",
+        bannerBg: "linear-gradient(135deg, #1e3a8a, #475569)",
+        soundType: "High-pitched territorial scream & purr",
+        soundFreq: "300 - 850 Hz",
+        trackSize: "9 cm wide × 8.5 cm long",
+        trackClaws: "Retracted (asymmetrical three-lobed heel pad)",
+        badgeIcon: "🦁",
+        morphProfile: {
+          coat: "solid_tawny",
+          tail: "medium",
+          ankles: "rigid",
+          pupils: "round",
+          agility: 88,
+          camo: 82,
+          bite: 78
+        }
+      },
+      {
+        id: "ocelot",
+        commonName: "Ocelot",
+        latinName: "Leopardus pardalis",
+        kichwaName: "Manchashka Misi / Tigrillo Grande",
+        iucn: "Least Concern (LC)",
+        iucnClass: "iucn-lc",
+        regions: ["costa", "oriente"],
+        elevationRange: "0 – 1,800 m",
+        weight: "8 – 16 kg",
+        length: "70 – 100 cm",
+        diet: "Agoutis, iguanas, armadillos, land crabs",
+        superpower: "Night-Vision Visionaries. Large binocular eyes with reflective tapetum lucidum for stalking dense Chocó rainforest floors.",
+        quoteKids: "A miniature leopard with gorgeous chain rosettes who hunts at midnight!",
+        quoteBio: "Apex mesopredator essential for regulating small mammal populations and seed disperser seed predators in coastal humid forest ecosystems.",
+        bannerBg: "linear-gradient(135deg, #065f46, #b45309)",
+        soundType: "Soft mews, growls, and nocturnal calling meows",
+        soundFreq: "220 - 650 Hz",
+        trackSize: "5.5 cm wide × 5 cm long",
+        trackClaws: "Retracted",
+        badgeIcon: "🐾",
+        morphProfile: {
+          coat: "rosettes",
+          tail: "medium",
+          ankles: "rigid",
+          pupils: "slit",
+          agility: 80,
+          camo: 90,
+          bite: 62
+        }
+      },
+      {
+        id: "margay",
+        commonName: "Margay",
+        latinName: "Leopardus wiedii",
+        kichwaName: "Sachamisi / Yaku Misi",
+        iucn: "Near Threatened (NT)",
+        iucnClass: "iucn-nt",
+        regions: ["costa", "oriente"],
+        elevationRange: "0 – 2,200 m",
+        weight: "2.6 – 4.5 kg",
+        length: "48 – 79 cm",
+        diet: "Tamarin monkeys, treefrogs, birds, arboreal rodents",
+        superpower: "180° Rotating Hind Ankles! Can hang from branches by one hind paw and scamper head-first down tree trunks like a squirrel.",
+        quoteKids: "The ultimate tree acrobat who mimics monkey calls to lure its prey!",
+        quoteBio: "Extreme arboreal morphology with broad paws, elongated tail acting as dynamic counterweight, and vocal mimicry capabilities.",
+        bannerBg: "linear-gradient(135deg, #3f6212, #15803d)",
+        soundType: "Mimicry distress calls, trills, and purrs",
+        soundFreq: "450 - 1,200 Hz",
+        trackSize: "3.5 cm wide × 3.2 cm long",
+        trackClaws: "Sharp, curved claws adapted for bark purchase",
+        badgeIcon: "🌿",
+        morphProfile: {
+          coat: "rosettes",
+          tail: "super_long",
+          ankles: "rotatable",
+          pupils: "slit",
+          agility: 98,
+          camo: 88,
+          bite: 40
+        }
+      },
+      {
+        id: "oncilla",
+        commonName: "Northern Tiger Cat / Oncilla",
+        latinName: "Leopardus tigrinus",
+        kichwaName: "Uchilla Tigrillo",
+        iucn: "Vulnerable (VU)",
+        iucnClass: "iucn-vu",
+        regions: ["sierra", "oriente"],
+        elevationRange: "1,500 – 3,500 m",
+        weight: "1.5 – 3 kg",
+        length: "38 – 59 cm",
+        diet: "Montane rodents, Andean lizards, hummingbirds",
+        superpower: "Cloud Forest Ghost. Weighs less than a domestic house cat while surviving extreme mountain cloud cover and humidity.",
+        quoteKids: "Tinier than a house cat, this mysterious spotted ninja roams high misty forests!",
+        quoteBio: "High vulnerability to montane cloud forest fragmentation; distinct genetic divergence from lowland relatives with specialized high-elevation thermoregulation.",
+        bannerBg: "linear-gradient(135deg, #0f766e, #334155)",
+        soundType: "Subtle chirps and soft vocal pulses",
+        soundFreq: "600 - 1,400 Hz",
+        trackSize: "2.8 cm wide × 2.6 cm long",
+        trackClaws: "Retracted",
+        badgeIcon: "✨",
+        morphProfile: {
+          coat: "rosettes",
+          tail: "medium",
+          ankles: "rigid",
+          pupils: "slit",
+          agility: 90,
+          camo: 94,
+          bite: 35
+        }
+      },
+      {
+        id: "jaguarundi",
+        commonName: "Jaguarundi",
+        latinName: "Herpailurus yagouaroundi",
+        kichwaName: "Waywashi Misi (Otter-Cat)",
+        iucn: "Least Concern (LC)",
+        iucnClass: "iucn-lc",
+        regions: ["costa", "oriente"],
+        elevationRange: "0 – 2,000 m",
+        weight: "3.5 – 7 kg",
+        length: "50 – 77 cm",
+        diet: "Ground-nesting quail, small snakes, insects, rodents",
+        superpower: "Bird-like Whistle Chirps & Otter Body. Diurnal hunter that looks like a weasel or otter and whistles like a tropical bird.",
+        quoteKids: "The funny otter-cat with a long body that chirps and whistles to communicate!",
+        quoteBio: "Uniquely diurnal predator with 38 chromosomes (differing from other neotropical felids); possesses at least 13 distinct acoustic vocalizations.",
+        bannerBg: "linear-gradient(135deg, #991b1b, #713f12)",
+        soundType: "Bird-like whistling chirp & purr",
+        soundFreq: "1,200 - 2,800 Hz",
+        trackSize: "4 cm wide × 3.8 cm long",
+        trackClaws: "Semi-retractile (slight claw indents in soft soil)",
+        badgeIcon: "🦦",
+        morphProfile: {
+          coat: "solid_tawny",
+          tail: "medium",
+          ankles: "rigid",
+          pupils: "round",
+          agility: 82,
+          camo: 75,
+          bite: 52
+        }
+      },
+      {
+        id: "pampas",
+        commonName: "Pampas Cat / Colocolo",
+        latinName: "Leopardus garleppi",
+        kichwaName: "Pajonal Misi / Pampa Misi",
+        iucn: "Near Threatened (NT)",
+        iucnClass: "iucn-nt",
+        regions: ["sierra"],
+        elevationRange: "2,000 – 4,800 m",
+        weight: "3 – 5 kg",
+        length: "45 – 70 cm",
+        diet: "Tuco-tucos, mountain viscachas, ground birds",
+        superpower: "Páramo Straw Camouflage & Bristle Defense. Fluffs dorsal mane to double its apparent size when facing freezing Andean winds.",
+        quoteKids: "High-mountain specialist with thick fuzzy coats matching dry golden grasses!",
+        quoteBio: "Specialist of extreme altitude ecosystems; morphologically distinct with thick underfur adapted to sub-zero temperatures and high UV exposure.",
+        bannerBg: "linear-gradient(135deg, #ca8a04, #475569)",
+        soundType: "Throaty growls and short hisses",
+        soundFreq: "350 - 900 Hz",
+        trackSize: "3.8 cm wide × 3.5 cm long",
+        trackClaws: "Retracted",
+        badgeIcon: "🌾",
+        morphProfile: {
+          coat: "striped",
+          tail: "compact",
+          ankles: "rigid",
+          pupils: "slit",
+          agility: 75,
+          camo: 95,
+          bite: 48
+        }
+      }
+    ];
 
-    function resize() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-      stars = Array.from({ length: 90 }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        radius: Math.random() * 1.5 + 0.3,
-        alpha: Math.random() * 0.7 + 0.3,
-        speed: Math.random() * 0.015 + 0.005,
-        twinkleSpeed: Math.random() * 0.03 + 0.01
-      }));
+    /* ==========================================================================
+       2. REGIONAL ECOREGIONS DATA
+       ========================================================================== */
+    const REGIONS_DATA = {
+      all: {
+        title: "All Ecuador Ecosystems",
+        badge: "0° Latitude Sanctuary",
+        badgeBg: "rgba(16, 185, 129, 0.2)",
+        badgeColor: "#34d399",
+        desc: "Ecuador contains 4 distinct geographic worlds spanning coastal dry forests and mangroves, snow-capped Andes volcanoes, the megadiverse Amazon basin, and the protected Galápagos Marine Reserve.",
+        cats: ["jaguar", "puma", "ocelot", "margay", "oncilla", "jaguarundi", "pampas"]
+      },
+      costa: {
+        title: "La Costa (Coast & Chocó Wet Forest)",
+        badge: "Pacific & Chocó Forest",
+        badgeBg: "rgba(16, 185, 129, 0.2)",
+        badgeColor: "#10b981",
+        desc: "Stretching along the Pacific coastline and north through the ultra-humid Chocó rain forest, one of the top biodiversity hotspots on Earth. Home to mangroves and dense secondary growth.",
+        cats: ["jaguar", "puma", "ocelot", "margay", "jaguarundi"]
+      },
+      sierra: {
+        title: "La Sierra (The Andes & High Páramo)",
+        badge: "High Altitude Backbone",
+        badgeBg: "rgba(59, 130, 246, 0.2)",
+        badgeColor: "#60a5fa",
+        desc: "The spine of Ecuador formed by the Western and Eastern Cordilleras. Encompasses cloud forests, interandean valleys, and the windswept grasslands of the páramo reaching up to 4,800m.",
+        cats: ["puma", "oncilla", "pampas"]
+      },
+      oriente: {
+        title: "El Oriente (Amazon Lowlands & Yasuní)",
+        badge: "Amazon Rainforest",
+        badgeBg: "rgba(5, 150, 105, 0.2)",
+        badgeColor: "#34d399",
+        desc: "Home to the legendary Yasuní National Park and Cuyabeno Reserve. Dense terra firme forests, igapó blackwater swamps, and deep river systems sheltering the densest concentration of apex predators.",
+        cats: ["jaguar", "puma", "ocelot", "margay", "oncilla", "jaguarundi"]
+      },
+      galapagos: {
+        title: "Galápagos (Biosecurity & Island Ecology)",
+        badge: "Strict Conservation Zone",
+        badgeBg: "rgba(234, 179, 8, 0.2)",
+        badgeColor: "#eab308",
+        desc: "There are NO native wild felids on the Galápagos Islands! Maintaining strict biosecurity to prevent invasive feral domestic cats from endangering blue-footed boobies and marine iguanas is Ecuador's premier conservation mission.",
+        cats: []
+      }
+    };
+
+    /* ==========================================================================
+       3. BIOACOUSTICS SOUND DEFINITIONS
+       ========================================================================== */
+    const SOUNDBOARD_ITEMS = [
+      {
+        id: "jaguar_roar",
+        species: "Jaguar (Panthera onca)",
+        type: "Sawing Roar & Chuff",
+        icon: "🐆",
+        desc: "Guttural rhythmic coughing roar that echoes through the Yasuní canopy for 2 km.",
+        soundKey: "jaguar_roar"
+      },
+      {
+        id: "puma_scream",
+        species: "Puma (Puma concolor)",
+        type: "High-Pitched Scream",
+        icon: "🦁",
+        desc: "Haunting vocalization echoing across high Andean ravines and volcano rims.",
+        soundKey: "puma_scream"
+      },
+      {
+        id: "jaguarundi_chirp",
+        species: "Jaguarundi (Herpailurus yagouaroundi)",
+        type: "Bird-like Whistle Trill",
+        icon: "🦦",
+        desc: "Remarkable avian-like acoustic chirp used to communicate across dense brush.",
+        soundKey: "jaguarundi_chirp"
+      },
+      {
+        id: "margay_mimicry",
+        species: "Margay (Leopardus wiedii)",
+        type: "Tamarin Monkey Mimicry",
+        icon: "🌿",
+        desc: "Vocal camouflage mimicking baby tamarin cries to draw curious prey into reach.",
+        soundKey: "margay_mimicry"
+      },
+      {
+        id: "ocelot_growl",
+        species: "Ocelot (Leopardus pardalis)",
+        type: "Territorial Low Growl",
+        icon: "🐾",
+        desc: "Resonant, vibrating frequency marking midnight boundaries along Chocó trails.",
+        soundKey: "ocelot_growl"
+      },
+      {
+        id: "domestic_purr",
+        species: "Domestic Cat (Felis catus)",
+        type: "Vibrational Healing Purr",
+        icon: "🐈",
+        desc: "Continuous low-frequency (25-50 Hz) purr promoting bone density and tissue repair.",
+        soundKey: "domestic_purr"
+      }
+    ];
+
+    /* ==========================================================================
+       4. QUIZ QUESTIONS REPOSITORY
+       ========================================================================== */
+    const QUIZ_QUESTIONS = [
+      {
+        question: "Which Ecuadorian wild cat has hind ankles that can rotate 180 degrees, allowing it to climb down trees head-first?",
+        options: [
+          "The Puma (Puma concolor)",
+          "The Margay (Leopardus wiedii)",
+          "The Jaguarundi (Herpailurus yagouaroundi)",
+          "The Ocelot (Leopardus pardalis)"
+        ],
+        correctIndex: 1,
+        explanation: "The Margay possesses uniquely flexible hind ankles that rotate 180°, allowing it to grip tree trunks headfirst and hang from branches by one hind foot!"
+      },
+      {
+        question: "Why do native wild cats NOT inhabit the Galápagos Islands?",
+        options: [
+          "The islands are too cold for felids",
+          "Felids never naturally crossed the 1,000 km of open Pacific Ocean",
+          "They were displaced by giant tortoises",
+          "The volcanic rocks are too sharp for cat paws"
+        ],
+        correctIndex: 1,
+        explanation: "The Galápagos volcanic archipelago formed isolated in the ocean over 1,000 km from the mainland. Only volant (flying), swimming, or rafting species colonized the islands; domestic cats were only introduced later by humans."
+      },
+      {
+        question: "Which Ecuadorian cat produces high-frequency, bird-like whistling chirps instead of typical feline sounds?",
+        options: [
+          "The Jaguar (Panthera onca)",
+          "The Oncilla (Leopardus tigrinus)",
+          "The Jaguarundi (Herpailurus yagouaroundi)",
+          "The Colocolo / Pampas Cat"
+        ],
+        correctIndex: 2,
+        explanation: "The Jaguarundi has at least 13 distinct vocalizations, prominently featuring clear, bird-like whistles and chirps used during diurnal foraging."
+      },
+      {
+        question: "What distinct hunting technique sets the Jaguar apart from other big cats like lions and tigers?",
+        options: [
+          "It suffocates prey by biting the throat",
+          "It chases prey over 5 miles across open plains",
+          "It crushes temporal skull bones with its piercing jaw force (1,500 PSI)",
+          "It exclusively traps fish in mud nests"
+        ],
+        correctIndex: 2,
+        explanation: "The Jaguar has an extraordinary bite force relative to size; it delivers a fatal piercing bite directly through the temporal bones of the skull into the brain."
+      },
+      {
+        question: "In the high-altitude Andean páramo (above 3,500 meters), which wild felid acts as the apex predator?",
+        options: [
+          "Puma (Puma concolor)",
+          "Margay (Leopardus wiedii)",
+          "Ocelot (Leopardus pardalis)",
+          "Cheetah (Acinonyx jubatus)"
+        ],
+        correctIndex: 0,
+        explanation: "The Puma is Ecuador's ultimate high-altitude felid, comfortably navigating páramo grasslands, sub-zero nights, and volcano scree slopes up to 4,800m."
+      }
+    ];
+
+    /* ==========================================================================
+       5. WEB AUDIO API SYNTHESIZER ENGINE
+       ========================================================================== */
+    class BioacousticAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.analyser = null;
+        this.ambientGain = null;
+        this.ambientNodes = [];
+        this.isAmbientPlaying = false;
+        this.canvas = document.getElementById('spectrogramCanvas');
+        this.canvasCtx = this.canvas ? this.canvas.getContext('2d') : null;
+        this.animationId = null;
+      }
+
+      initContext() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+          this.analyser = this.ctx.createAnalyser();
+          this.analyser.fftSize = 256;
+          this.startVisualizer();
+        }
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      startVisualizer() {
+        if (!this.canvasCtx || !this.analyser) return;
+        const bufferLength = this.analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        const width = this.canvas.width = this.canvas.offsetWidth;
+        const height = this.canvas.height = this.canvas.offsetHeight;
+
+        const draw = () => {
+          this.animationId = requestAnimationFrame(draw);
+          this.analyser.getByteFrequencyData(dataArray);
+
+          this.canvasCtx.fillStyle = '#020503';
+          this.canvasCtx.fillRect(0, 0, width, height);
+
+          // Grid lines
+          this.canvasCtx.strokeStyle = 'rgba(16, 185, 129, 0.1)';
+          this.canvasCtx.lineWidth = 1;
+          for (let y = 0; y < height; y += 30) {
+            this.canvasCtx.beginPath();
+            this.canvasCtx.moveTo(0, y);
+            this.canvasCtx.lineTo(width, y);
+            this.canvasCtx.stroke();
+          }
+
+          const barWidth = (width / bufferLength) * 2.2;
+          let barHeight;
+          let x = 0;
+
+          for (let i = 0; i < bufferLength; i++) {
+            barHeight = (dataArray[i] / 255) * height * 0.9;
+
+            const grad = this.canvasCtx.createLinearGradient(0, height - barHeight, 0, height);
+            grad.addColorStop(0, '#e5b53b');
+            grad.addColorStop(0.5, '#10b981');
+            grad.addColorStop(1, '#059669');
+
+            this.canvasCtx.fillStyle = grad;
+            this.canvasCtx.fillRect(x, height - barHeight, barWidth - 1, barHeight);
+
+            x += barWidth;
+          }
+        };
+
+        draw();
+      }
+
+      // Ambient Forest Audio Generator (Mist, Insects & Gentle Rain)
+      toggleAmbientRainforest() {
+        this.initContext();
+        if (this.isAmbientPlaying) {
+          this.stopAmbient();
+          return false;
+        } else {
+          this.playAmbient();
+          return true;
+        }
+      }
+
+      playAmbient() {
+        if (!this.ctx) return;
+        this.ambientGain = this.ctx.createGain();
+        this.ambientGain.gain.setValueAtTime(0.01, this.ctx.currentTime);
+        this.ambientGain.gain.linearRampToValueAtTime(0.25, this.ctx.currentTime + 2);
+        this.ambientGain.connect(this.analyser);
+        this.analyser.connect(this.ctx.destination);
+
+        // 1. Pink Noise buffer for rainforest mist
+        const bufferSize = 2 * this.ctx.sampleRate;
+        const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99886 * b0 + white * 0.0555179;
+          b1 = 0.99332 * b1 + white * 0.0750759;
+          b2 = 0.96900 * b2 + white * 0.1538520;
+          b3 = 0.86650 * b3 + white * 0.3104856;
+          b4 = 0.55000 * b4 + white * 0.5329522;
+          b5 = -0.7616 * b5 - white * 0.0168980;
+          output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.04;
+          b6 = white * 0.115926;
+        }
+
+        const whiteNoise = this.ctx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+        whiteNoise.loop = true;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(800, this.ctx.currentTime);
+
+        whiteNoise.connect(filter);
+        filter.connect(this.ambientGain);
+        whiteNoise.start();
+        this.ambientNodes.push(whiteNoise);
+
+        // 2. Chirping cicada & frog oscillator
+        const chirpOsc = this.ctx.createOscillator();
+        chirpOsc.type = 'sine';
+        chirpOsc.frequency.setValueAtTime(3200, this.ctx.currentTime);
+
+        const chirpLfo = this.ctx.createOscillator();
+        chirpLfo.type = 'sawtooth';
+        chirpLfo.frequency.setValueAtTime(4, this.ctx.currentTime);
+
+        const chirpGain = this.ctx.createGain();
+        chirpGain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+
+        chirpLfo.connect(chirpOsc.frequency);
+        chirpOsc.connect(chirpGain);
+        chirpGain.connect(this.ambientGain);
+
+        chirpOsc.start();
+        chirpLfo.start();
+        this.ambientNodes.push(chirpOsc, chirpLfo);
+
+        this.isAmbientPlaying = true;
+      }
+
+      stopAmbient() {
+        if (this.ambientGain) {
+          this.ambientGain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.8);
+          setTimeout(() => {
+            this.ambientNodes.forEach(node => {
+              try { node.stop(); } catch (e) {}
+            });
+            this.ambientNodes = [];
+            this.isAmbientPlaying = false;
+          }, 850);
+        }
+      }
+
+      // Synthesize specific wild cat vocalizations
+      playSound(key) {
+        this.initContext();
+        const now = this.ctx.currentTime;
+        const statusElem = document.getElementById('audioStatusText');
+        if (statusElem) statusElem.textContent = `PLAYING: ${key.toUpperCase()}`;
+
+        const masterVoiceGain = this.ctx.createGain();
+        masterVoiceGain.gain.setValueAtTime(0.35, now);
+        masterVoiceGain.connect(this.analyser);
+        this.analyser.connect(this.ctx.destination);
+
+        switch (key) {
+          case 'jaguar_roar': {
+            // Sawing low-frequency guttural pulses
+            const osc = this.ctx.createOscillator();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(95, now);
+            osc.frequency.exponentialRampToValueAtTime(65, now + 1.2);
+
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(140, now);
+            filter.Q.setValueAtTime(3.5, now);
+
+            // Modulating tremor
+            const lfo = this.ctx.createOscillator();
+            lfo.type = 'sine';
+            lfo.frequency.setValueAtTime(6, now);
+
+            const lfoGain = this.ctx.createGain();
+            lfoGain.gain.setValueAtTime(25, now);
+            lfo.connect(lfoGain);
+            lfoGain.connect(osc.frequency);
+
+            const vGain = this.ctx.createGain();
+            vGain.gain.setValueAtTime(0.01, now);
+            vGain.gain.linearRampToValueAtTime(0.6, now + 0.2);
+            vGain.gain.exponentialRampToValueAtTime(0.01, now + 1.4);
+
+            osc.connect(filter);
+            filter.connect(vGain);
+            vGain.connect(masterVoiceGain);
+
+            osc.start(now);
+            lfo.start(now);
+            osc.stop(now + 1.5);
+            lfo.stop(now + 1.5);
+            break;
+          }
+
+          case 'puma_scream': {
+            // High screaming shrieks
+            const osc = this.ctx.createOscillator();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(520, now);
+            osc.frequency.linearRampToValueAtTime(840, now + 0.4);
+            osc.frequency.exponentialRampToValueAtTime(340, now + 1.3);
+
+            const vGain = this.ctx.createGain();
+            vGain.gain.setValueAtTime(0.01, now);
+            vGain.gain.linearRampToValueAtTime(0.5, now + 0.2);
+            vGain.gain.exponentialRampToValueAtTime(0.01, now + 1.3);
+
+            osc.connect(vGain);
+            vGain.connect(masterVoiceGain);
+
+            osc.start(now);
+            osc.stop(now + 1.4);
+            break;
+          }
+
+          case 'jaguarundi_chirp': {
+            // Bird-like whistling trill
+            for (let i = 0; i < 3; i++) {
+              const chirpStart = now + i * 0.22;
+              const osc = this.ctx.createOscillator();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(1400, chirpStart);
+              osc.frequency.exponentialRampToValueAtTime(2600, chirpStart + 0.08);
+              osc.frequency.exponentialRampToValueAtTime(1600, chirpStart + 0.16);
+
+              const vGain = this.ctx.createGain();
+              vGain.gain.setValueAtTime(0.01, chirpStart);
+              vGain.gain.linearRampToValueAtTime(0.4, chirpStart + 0.04);
+              vGain.gain.exponentialRampToValueAtTime(0.01, chirpStart + 0.18);
+
+              osc.connect(vGain);
+              vGain.connect(masterVoiceGain);
+
+              osc.start(chirpStart);
+              osc.stop(chirpStart + 0.2);
+            }
+            break;
+          }
+
+          case 'margay_mimicry': {
+            // Whining trill
+            const osc = this.ctx.createOscillator();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(750, now);
+            osc.frequency.linearRampToValueAtTime(1250, now + 0.35);
+            osc.frequency.linearRampToValueAtTime(600, now + 0.9);
+
+            const vGain = this.ctx.createGain();
+            vGain.gain.setValueAtTime(0.01, now);
+            vGain.gain.linearRampToValueAtTime(0.35, now + 0.15);
+            vGain.gain.exponentialRampToValueAtTime(0.01, now + 1.0);
+
+            osc.connect(vGain);
+            vGain.connect(masterVoiceGain);
+
+            osc.start(now);
+            osc.stop(now + 1.1);
+            break;
+          }
+
+          case 'ocelot_growl': {
+            // Low throaty growl
+            const osc = this.ctx.createOscillator();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(160, now);
+            osc.frequency.linearRampToValueAtTime(120, now + 0.8);
+
+            const vGain = this.ctx.createGain();
+            vGain.gain.setValueAtTime(0.01, now);
+            vGain.gain.linearRampToValueAtTime(0.35, now + 0.2);
+            vGain.gain.exponentialRampToValueAtTime(0.01, now + 0.9);
+
+            osc.connect(vGain);
+            vGain.connect(masterVoiceGain);
+
+            osc.start(now);
+            osc.stop(now + 1.0);
+            break;
+          }
+
+          case 'domestic_purr': {
+            // Rapid low-frequency 30Hz flutter
+            const osc = this.ctx.createOscillator();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(32, now);
+
+            const lfo = this.ctx.createOscillator();
+            lfo.type = 'sawtooth';
+            lfo.frequency.setValueAtTime(24, now);
+
+            const lfoGain = this.ctx.createGain();
+            lfoGain.gain.setValueAtTime(18, now);
+            lfo.connect(lfoGain);
+            lfoGain.connect(osc.frequency);
+
+            const vGain = this.ctx.createGain();
+            vGain.gain.setValueAtTime(0.01, now);
+            vGain.gain.linearRampToValueAtTime(0.45, now + 0.3);
+            vGain.gain.exponentialRampToValueAtTime(0.01, now + 2.0);
+
+            osc.connect(vGain);
+            vGain.connect(masterVoiceGain);
+
+            osc.start(now);
+            lfo.start(now);
+            osc.stop(now + 2.2);
+            lfo.stop(now + 2.2);
+            break;
+          }
+        }
+
+        setTimeout(() => {
+          if (statusElem) statusElem.textContent = 'READY (IDLE)';
+        }, 1600);
+      }
     }
 
-    function animate() {
-      ctx.clearRect(0, 0, width, height);
-      stars.forEach(star => {
-        star.alpha += Math.sin(Date.now() * star.twinkleSpeed) * 0.008;
-        star.y -= star.speed * 8;
-        if (star.y < 0) star.y = height;
+    const audioSys = new BioacousticAudioEngine();
 
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(212, 175, 55, ${Math.max(0.1, Math.min(1, star.alpha))})`;
-        ctx.shadowBlur = 4;
-        ctx.shadowColor = '#d4af37';
-        ctx.fill();
+    function playSynthesizedSound(key) {
+      audioSys.playSound(key);
+    }
+
+    /* ==========================================================================
+       6. UI CONTROLLER & APP STATE
+       ========================================================================== */
+    let currentMode = 'field'; // 'field' or 'kids'
+    let currentQuizIndex = 0;
+    let quizScore = 0;
+    let mysteryTargetSound = null;
+
+    // Track Lab Selected State
+    let selectedTrackCat = 'jaguar';
+    let isHandOverlayVisible = false;
+    let areClawsExtended = false;
+
+    // Morph Lab Active State
+    const morphState = {
+      coat: 'rosettes',
+      tail: 'super_long',
+      ankles: 'rotatable',
+      pupils: 'slit'
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initHeaderControls();
+      renderSpeciesCards();
+      renderSoundboard();
+      renderTrackLab();
+      initMorphLab();
+      initCanopyMiniGame();
+      initQuiz();
+      initInteractiveMap();
+      initAmbientCanvasParticles();
+    });
+
+    /* Mode Switching (Explorer/Kids vs. Field Biologist) */
+    function initHeaderControls() {
+      const modeBtn = document.getElementById('modeToggleBtn');
+      const modeIcon = document.getElementById('modeIcon');
+      const modeText = document.getElementById('modeText');
+      const modeNotice = document.getElementById('modeNoticeBanner');
+
+      modeBtn.addEventListener('click', () => {
+        if (currentMode === 'field') {
+          currentMode = 'kids';
+          document.body.classList.add('kids-mode');
+          modeIcon.textContent = '🎒';
+          modeText.textContent = 'Kids Explorer Mode';
+          modeBtn.classList.add('active');
+          modeNotice.innerHTML = '🎒 Currently viewing in <strong>Kids Explorer Mode</strong>: Playful descriptions, simplified trivia, and interactive badges!';
+        } else {
+          currentMode = 'field';
+          document.body.classList.remove('kids-mode');
+          modeIcon.textContent = '🔬';
+          modeText.textContent = 'Field Biologist Mode';
+          modeBtn.classList.remove('active');
+          modeNotice.innerHTML = '🔬 Currently viewing in <strong>Field Biologist Mode</strong>: Comprehensive anatomical metrics, IUCN data & acoustic spectrograms enabled.';
+        }
+        renderSpeciesCards();
       });
-      requestAnimationFrame(animate);
+
+      // Ambient rainforest sound button
+      const ambientBtn = document.getElementById('ambientAudioBtn');
+      const soundBars = document.getElementById('ambientSoundBars');
+
+      ambientBtn.addEventListener('click', () => {
+        const isPlaying = audioSys.toggleAmbientRainforest();
+        if (isPlaying) {
+          ambientBtn.classList.add('playing');
+          soundBars.classList.remove('hidden');
+          ambientBtn.querySelector('span').textContent = '🔊 Forest Ambience ON';
+        } else {
+          ambientBtn.classList.remove('playing');
+          soundBars.classList.add('hidden');
+          ambientBtn.querySelector('span').textContent = '🌿 Ambient Sound';
+        }
+      });
     }
 
-    window.addEventListener('resize', resize);
-    resize();
-    animate();
+    /* Ambient Mist Background Canvas */
+    function initAmbientCanvasParticles() {
+      const canvas = document.getElementById('ambientCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = window.innerWidth;
+      let h = canvas.height = window.innerHeight;
 
-    function openModal(title) {
-      document.getElementById('modalItemTitle').innerText = title;
-      document.getElementById('inquiryModal').style.display = 'flex';
+      window.addEventListener('resize', () => {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      });
+
+      const particles = [];
+      for (let i = 0; i < 45; i++) {
+        particles.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          radius: Math.random() * 80 + 40,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: -Math.random() * 0.4 - 0.1,
+          alpha: Math.random() * 0.08 + 0.02
+        });
+      }
+
+      function loop() {
+        ctx.clearRect(0, 0, w, h);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.y < -p.radius) p.y = h + p.radius;
+          if (p.x < -p.radius) p.x = w + p.radius;
+          if (p.x > w + p.radius) p.x = -p.radius;
+
+          const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+          grad.addColorStop(0, `rgba(16, 185, 129, ${p.alpha})`);
+          grad.addColorStop(1, 'rgba(16, 185, 129, 0)');
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        requestAnimationFrame(loop);
+      }
+      loop();
     }
 
-    function closeModal() {
-      document.getElementById('inquiryModal').style.display = 'none';
+    /* ==========================================================================
+       7. SPECIES SHOWCASE RENDERING
+       ========================================================================== */
+    function renderSpeciesCards() {
+      const container = document.getElementById('speciesGridContainer');
+      if (!container) return;
+
+      container.innerHTML = FELID_SPECIES.map(cat => {
+        const quote = currentMode === 'kids' ? cat.quoteKids : cat.quoteBio;
+
+        return `
+          <div class="species-card" data-cat-id="${cat.id}">
+            <div class="card-banner" style="background: ${cat.bannerBg};">
+              <div class="card-badges">
+                <span class="iucn-badge ${cat.iucnClass}">${cat.iucn}</span>
+                <span class="kichwa-name">Kichwa: ${cat.kichwaName}</span>
+              </div>
+            </div>
+
+            <div class="card-content">
+              <div class="cat-names">
+                <h4 class="common-name">${cat.commonName}</h4>
+                <span class="latin-name">${cat.latinName}</span>
+              </div>
+
+              <div class="superpower-box">
+                <strong>Superpower:</strong> ${cat.superpower}
+              </div>
+
+              <p style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.45;">
+                "${quote}"
+              </p>
+
+              <div class="card-stats-table">
+                <div class="card-stat-item">
+                  <span class="lbl">Elevation</span>
+                  <span class="val">${cat.elevationRange}</span>
+                </div>
+                <div class="card-stat-item">
+                  <span class="lbl">Weight</span>
+                  <span class="val">${cat.weight}</span>
+                </div>
+                <div class="card-stat-item">
+                  <span class="lbl">Vocal Feature</span>
+                  <span class="val" style="color: var(--accent-gold);">${cat.soundType.split('&')[0]}</span>
+                </div>
+                <div class="card-stat-item">
+                  <span class="lbl">Regions</span>
+                  <span class="val">${cat.regions.join(', ').toUpperCase()}</span>
+                </div>
+              </div>
+
+              <div class="card-actions">
+                <button class="card-btn" onclick="openCatDeepDive('${cat.id}')">
+                  <span>🔬 Deep Dive</span>
+                </button>
+                <button class="card-btn sound-play-btn" onclick="playSynthesizedSound('${cat.id === 'jaguar' ? 'jaguar_roar' : cat.id === 'puma' ? 'puma_scream' : cat.id === 'jaguarundi' ? 'jaguarundi_chirp' : cat.id === 'margay' ? 'margay_mimicry' : 'ocelot_growl'}')">
+                  <span>🔊 Voice</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Modal Deep Dive Dialog
+    function openCatDeepDive(catId) {
+      const cat = FELID_SPECIES.find(c => c.id === catId);
+      if (!cat) return;
+
+      const modal = document.getElementById('speciesModalOverlay');
+      const body = document.getElementById('modalBodyContent');
+
+      body.innerHTML = `
+        <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap;">
+          <div style="font-size: 3rem; background: rgba(229,181,59,0.15); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--accent-gold);">
+            ${cat.badgeIcon}
+          </div>
+          <div>
+            <span class="kichwa-name" style="margin-bottom: 0.3rem; display: inline-block;">Kichwa: ${cat.kichwaName}</span>
+            <h2 style="font-family: var(--font-display); font-size: 2rem; color: #fff; line-height: 1.1;">${cat.commonName}</h2>
+            <div style="font-style: italic; color: var(--accent-emerald); font-size: 1rem;">${cat.latinName}</div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-subtle);">
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Conservation Status</div>
+            <div style="font-weight: 700; color: #fff;">${cat.iucn}</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Elevation Distribution</div>
+            <div style="font-weight: 700; color: var(--accent-gold);">${cat.elevationRange}</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Adult Body Weight</div>
+            <div style="font-weight: 700; color: #fff;">${cat.weight}</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Pugmark Dimensions</div>
+            <div style="font-weight: 700; color: var(--accent-emerald);">${cat.trackSize}</div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.95rem; line-height: 1.6; color: var(--text-sub);">
+          <div>
+            <h4 style="color: #fff; margin-bottom: 0.3rem;">🌿 Ecological Role & Prey Dynamics</h4>
+            <p>${cat.diet}. Serves as an umbrella indicator species whose territorial integrity protects entire watershed networks across Ecuador.</p>
+          </div>
+
+          <div>
+            <h4 style="color: #fff; margin-bottom: 0.3rem;">⚡ Anatomical Superpower</h4>
+            <p>${cat.superpower}</p>
+          </div>
+
+          <div>
+            <h4 style="color: #fff; margin-bottom: 0.3rem;">🛡️ Primary Threats in Ecuador</h4>
+            <p>Highland and Amazonian road fragmentation, illegal cattle ranching deforestation, retaliatory hunting, and agricultural encroachment along protected corridor borders.</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: flex-end;">
+          <button class="pill-btn" onclick="document.getElementById('speciesModalOverlay').classList.remove('active')">
+            Close Overview
+          </button>
+        </div>
+      `;
+
+      modal.classList.add('active');
+    }
+
+    document.getElementById('modalCloseBtn')?.addEventListener('click', () => {
+      document.getElementById('speciesModalOverlay').classList.remove('active');
+    });
+
+    /* ==========================================================================
+       8. BIOACOUSTICS SOUNDBOARD LAB
+       ========================================================================== */
+    function renderSoundboard() {
+      const grid = document.getElementById('soundboardGrid');
+      if (!grid) return;
+
+      grid.innerHTML = SOUNDBOARD_ITEMS.map(item => `
+        <div class="sound-pad" onclick="handleSoundPadClick('${item.soundKey}', this)">
+          <div class="sound-pad-icon">${item.icon}</div>
+          <div class="sound-pad-title">${item.type}</div>
+          <div class="sound-pad-species">${item.species.split('(')[0]}</div>
+          <div class="sound-pad-type">${item.desc}</div>
+        </div>
+      `).join('');
+
+      initMysterySoundChallenge();
+    }
+
+    function handleSoundPadClick(key, element) {
+      document.querySelectorAll('.sound-pad').forEach(p => p.classList.remove('playing'));
+      element.classList.add('playing');
+      playSynthesizedSound(key);
+      setTimeout(() => {
+        element.classList.remove('playing');
+      }, 1500);
+    }
+
+    function initMysterySoundChallenge() {
+      const playBtn = document.getElementById('playMysterySoundBtn');
+      const optContainer = document.getElementById('mysteryOptions');
+      const feedback = document.getElementById('mysteryFeedback');
+      if (!playBtn) return;
+
+      const pool = ['jaguar_roar', 'puma_scream', 'jaguarundi_chirp', 'margay_mimicry'];
+
+      playBtn.addEventListener('click', () => {
+        mysteryTargetSound = pool[Math.floor(Math.random() * pool.length)];
+        playSynthesizedSound(mysteryTargetSound);
+
+        optContainer.classList.remove('hidden');
+        feedback.textContent = 'Listen closely! Pick which cat produced that sound:';
+        feedback.style.color = 'var(--text-sub)';
+
+        optContainer.innerHTML = pool.map(key => {
+          let label = "Jaguar (Roar)";
+          if (key === 'puma_scream') label = "Puma (Territorial Scream)";
+          if (key === 'jaguarundi_chirp') label = "Jaguarundi (Bird Whistle)";
+          if (key === 'margay_mimicry') label = "Margay (Monkey Mimicry)";
+
+          return `<button class="pill-btn" style="width: 100%; justify-content: flex-start;" onclick="checkMysteryGuess('${key}')">${label}</button>`;
+        }).join('');
+      });
+    }
+
+    window.checkMysteryGuess = function(guessedKey) {
+      const feedback = document.getElementById('mysteryFeedback');
+      if (guessedKey === mysteryTargetSound) {
+        feedback.textContent = "🎯 Correct! Excellent field ear, Ranger!";
+        feedback.style.color = "var(--accent-emerald)";
+      } else {
+        feedback.textContent = "❌ Not quite! Play it again and inspect frequency pitch.";
+        feedback.style.color = "#ef4444";
+      }
+    };
+
+    /* ==========================================================================
+       9. TRACK & PAW IDENTIFICATION LAB
+       ========================================================================== */
+    function renderTrackLab() {
+      const list = document.getElementById('trackSelectorList');
+      if (!list) return;
+
+      list.innerHTML = FELID_SPECIES.map(cat => `
+        <button class="track-btn ${cat.id === selectedTrackCat ? 'active' : ''}" onclick="selectTrackCat('${cat.id}')">
+          <div class="track-btn-thumb">${cat.badgeIcon}</div>
+          <div>
+            <div style="font-weight: 700;">${cat.commonName}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">${cat.trackSize}</div>
+          </div>
+        </button>
+      `).join('');
+
+      drawTrackSvg();
+
+      document.getElementById('toggleHandOverlayBtn')?.addEventListener('click', () => {
+        isHandOverlayVisible = !isHandOverlayVisible;
+        const hand = document.getElementById('humanHandOverlay');
+        const btn = document.getElementById('toggleHandOverlayBtn');
+        if (isHandOverlayVisible) {
+          hand.classList.add('visible');
+          btn.classList.add('active');
+        } else {
+          hand.classList.remove('visible');
+          btn.classList.remove('active');
+        }
+      });
+
+      document.getElementById('toggleClawRetractBtn')?.addEventListener('click', () => {
+        areClawsExtended = !areClawsExtended;
+        const btn = document.getElementById('toggleClawRetractBtn');
+        if (areClawsExtended) {
+          btn.classList.add('active');
+          btn.querySelector('span').textContent = '🐾 Claws: Extended';
+        } else {
+          btn.classList.remove('active');
+          btn.querySelector('span').textContent = '🐾 Claws: Retracted';
+        }
+        drawTrackSvg();
+      });
+    }
+
+    function selectTrackCat(catId) {
+      selectedTrackCat = catId;
+      document.querySelectorAll('.track-btn').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      const cat = FELID_SPECIES.find(c => c.id === catId);
+      if (cat) {
+        document.getElementById('trackMetricDim').textContent = cat.trackSize;
+        document.getElementById('trackMetricClaws').textContent = cat.trackClaws;
+        document.getElementById('trackMetricSubstrate').textContent = cat.regions.join(' & ').toUpperCase() + " Substrate Soils";
+      }
+
+      drawTrackSvg();
+    }
+
+    function drawTrackSvg() {
+      const svg = document.getElementById('trackSvgStage');
+      if (!svg) return;
+
+      const cat = FELID_SPECIES.find(c => c.id === selectedTrackCat);
+      let scale = 1.0;
+      if (cat.id === 'jaguar') scale = 1.25;
+      if (cat.id === 'puma') scale = 1.05;
+      if (cat.id === 'ocelot') scale = 0.75;
+      if (cat.id === 'margay' || cat.id === 'jaguarundi') scale = 0.58;
+      if (cat.id === 'oncilla') scale = 0.45;
+      if (cat.id === 'pampas') scale = 0.62;
+
+      const clawSvg = areClawsExtended ? `
+        <!-- Claws on four toe tips -->
+        <polygon points="60,40 66,20 72,40" fill="#f59e0b" />
+        <polygon points="85,30 92,10 99,30" fill="#f59e0b" />
+        <polygon points="115,30 122,10 129,30" fill="#f59e0b" />
+        <polygon points="140,40 146,20 152,40" fill="#f59e0b" />
+      ` : '';
+
+      svg.innerHTML = `
+        <g transform="translate(100, 100) scale(${scale}) translate(-100, -100)">
+          <!-- Three-lobed plantar heel pad -->
+          <path d="M 70,125 C 60,110 65,95 80,95 C 95,95 95,105 105,105 C 115,105 115,95 130,95 C 145,95 150,110 140,125 C 130,140 80,140 70,125 Z" 
+                fill="#e5b53b" opacity="0.85" filter="drop-shadow(0 2px 8px rgba(0,0,0,0.8))"/>
+
+          <!-- 4 Digital Toe Pads -->
+          <ellipse cx="66" cy="65" rx="14" ry="18" fill="#e5b53b" opacity="0.85" transform="rotate(-18 66 65)"/>
+          <ellipse cx="92" cy="55" rx="15" ry="20" fill="#e5b53b" opacity="0.85" transform="rotate(-5 92 55)"/>
+          <ellipse cx="122" cy="55" rx="15" ry="20" fill="#e5b53b" opacity="0.85" transform="rotate(5 122 55)"/>
+          <ellipse cx="146" cy="65" rx="14" ry="18" fill="#e5b53b" opacity="0.85" transform="rotate(18 146 65)"/>
+
+          ${clawSvg}
+        </g>
+      `;
+    }
+
+    /* ==========================================================================
+       10. BUILD-YOUR-OWN WILD CAT (MORPH LAB)
+       ========================================================================== */
+    function initMorphLab() {
+      const buttons = document.querySelectorAll('.morph-option-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const trait = btn.dataset.trait;
+          const val = btn.dataset.val;
+
+          btn.parentElement.querySelectorAll('.morph-option-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          morphState[trait] = val;
+          updateMorphCatVisuals();
+        });
+      });
+
+      updateMorphCatVisuals();
+    }
+
+    function updateMorphCatVisuals() {
+      const head = document.getElementById('morphHead');
+      const body = document.getElementById('morphBody');
+      const tail = document.getElementById('morphTail');
+      const pGroup = document.getElementById('morphPatternGroup');
+      const pupilL = document.getElementById('morphPupilL');
+      const pupilR = document.getElementById('morphPupilR');
+      const ankleArc = document.getElementById('morphAnkleArc');
+
+      if (!head || !body || !tail) return;
+
+      // Coat Color & Pattern
+      if (morphState.coat === 'rosettes') {
+        body.setAttribute('fill', '#f59e0b');
+        head.setAttribute('fill', '#f59e0b');
+        pGroup.innerHTML = `
+          <circle cx="140" cy="165" r="7" fill="none" stroke="#78350f" stroke-width="4"/>
+          <circle cx="175" cy="160" r="8" fill="none" stroke="#78350f" stroke-width="4"/>
+          <circle cx="160" cy="195" r="9" fill="none" stroke="#78350f" stroke-width="4"/>
+          <circle cx="185" cy="190" r="7" fill="none" stroke="#78350f" stroke-width="4"/>
+        `;
+      } else if (morphState.coat === 'solid_tawny') {
+        body.setAttribute('fill', '#d97706');
+        head.setAttribute('fill', '#d97706');
+        pGroup.innerHTML = '';
+      } else if (morphState.coat === 'melanistic') {
+        body.setAttribute('fill', '#1e293b');
+        head.setAttribute('fill', '#1e293b');
+        pGroup.innerHTML = `
+          <circle cx="140" cy="165" r="6" fill="#0f172a"/>
+          <circle cx="175" cy="160" r="7" fill="#0f172a"/>
+        `;
+      } else if (morphState.coat === 'striped') {
+        body.setAttribute('fill', '#ca8a04');
+        head.setAttribute('fill', '#ca8a04');
+        pGroup.innerHTML = `
+          <line x1="130" y1="160" x2="150" y2="185" stroke="#78350f" stroke-width="4"/>
+          <line x1="165" y1="155" x2="185" y2="185" stroke="#78350f" stroke-width="4"/>
+        `;
+      }
+
+      // Tail Rudder
+      if (morphState.tail === 'super_long') {
+        tail.setAttribute('d', 'M 120,240 Q 50,300 20,230 Q 5,160 50,130');
+        tail.setAttribute('stroke-width', '24');
+      } else if (morphState.tail === 'medium') {
+        tail.setAttribute('d', 'M 120,240 Q 70,270 50,220');
+        tail.setAttribute('stroke-width', '22');
+      } else {
+        tail.setAttribute('d', 'M 120,240 Q 85,255 70,230');
+        tail.setAttribute('stroke-width', '26');
+      }
+
+      // Pupils
+      if (morphState.pupils === 'slit') {
+        pupilL.setAttribute('rx', '2');
+        pupilL.setAttribute('ry', '8');
+        pupilR.setAttribute('rx', '2');
+        pupilR.setAttribute('ry', '8');
+      } else {
+        pupilL.setAttribute('rx', '5');
+        pupilL.setAttribute('ry', '5');
+        pupilR.setAttribute('rx', '5');
+        pupilR.setAttribute('ry', '5');
+      }
+
+      // Ankles Indicator
+      if (morphState.ankles === 'rotatable') {
+        ankleArc.setAttribute('opacity', '1');
+      } else {
+        ankleArc.setAttribute('opacity', '0');
+      }
+
+      // Dynamic Scores & Profile Calculation
+      calculateMorphSurvivalScore();
+    }
+
+    function calculateMorphSurvivalScore() {
+      let agility = 50;
+      let camo = 50;
+      let bite = 50;
+      let title = "The Cloud Forest Prowler";
+      let desc = "Balanced for general stalking along Ecuadorian foothills.";
+
+      if (morphState.ankles === 'rotatable') agility += 25;
+      if (morphState.tail === 'super_long') agility += 20;
+      if (morphState.coat === 'rosettes') camo += 30;
+      if (morphState.coat === 'melanistic') camo += 20;
+      if (morphState.coat === 'striped') camo += 25;
+      if (morphState.tail === 'compact') bite += 35;
+      if (morphState.pupils === 'slit') camo += 10;
+
+      if (agility >= 90) {
+        title = "The Canopy Acrobat (Margay Morph)";
+        desc = "Excels at headfirst branch downclimbing and catching treefrogs in dense montane cloud forests.";
+      } else if (bite >= 75) {
+        title = "The Lowland Apex Crusher (Jaguar Morph)";
+        desc = "Dominates terra firme Yasuní riversides with formidable jaw mechanics.";
+      } else if (camo >= 85) {
+        title = "The Andean Paramó Shadow (Pampas / Puma Morph)";
+        desc = "Seamlessly blends into straw-colored tussock grass and cold volcano rocks.";
+      }
+
+      document.getElementById('morphEpithetTitle').textContent = title;
+      document.getElementById('morphDescription').textContent = desc;
+
+      const overallFitness = Math.min(99, Math.round((agility + camo + bite) / 3));
+      document.getElementById('morphSurvivalScore').textContent = `FITNESS: ${overallFitness}%`;
+
+      document.getElementById('meterAgilityVal').textContent = `${Math.min(98, agility)}%`;
+      document.getElementById('meterAgilityBar').style.width = `${Math.min(98, agility)}%`;
+
+      document.getElementById('meterCamoVal').textContent = `${Math.min(98, camo)}%`;
+      document.getElementById('meterCamoBar').style.width = `${Math.min(98, camo)}%`;
+
+      document.getElementById('meterBiteVal').textContent = `${Math.min(98, bite)}%`;
+      document.getElementById('meterBiteBar').style.width = `${Math.min(98, bite)}%`;
+    }
+
+    /* ==========================================================================
+       11. CANOPY ACROBAT MINI-GAME
+       ========================================================================== */
+    function initCanopyMiniGame() {
+      const canvas = document.getElementById('gameCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      let isRunning = false;
+      let score = 0;
+      let lives = 3;
+      let catType = 'Margay';
+
+      const player = {
+        x: 120,
+        y: 200,
+        width: 38,
+        height: 24,
+        vy: 0,
+        gravity: 0.55,
+        jumpPower: -11,
+        isGrounded: false,
+        jumpCount: 0
+      };
+
+      let branches = [];
+      let items = [];
+      let frameCount = 0;
+
+      function resetGame() {
+        score = 0;
+        lives = 3;
+        player.y = 180;
+        player.vy = 0;
+        branches = [
+          { x: 80, y: 260, width: 220, height: 16 },
+          { x: 360, y: 220, width: 180, height: 16 },
+          { x: 600, y: 280, width: 200, height: 16 },
+          { x: 860, y: 200, width: 190, height: 16 }
+        ];
+        items = [];
+        updateHud();
+      }
+
+      function updateHud() {
+        document.getElementById('gameScoreDisplay').textContent = score;
+        document.getElementById('gameLivesDisplay').textContent = lives;
+        document.getElementById('gameSpeciesDisplay').textContent = catType;
+      }
+
+      function jump() {
+        if (!isRunning) {
+          isRunning = true;
+          resetGame();
+          gameLoop();
+        }
+
+        // Double jump enabled for Margay
+        const maxJumps = catType === 'Margay' ? 2 : 1;
+        if (player.jumpCount < maxJumps) {
+          player.vy = player.jumpPower;
+          player.jumpCount++;
+          playSynthesizedSound('margay_mimicry');
+        }
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          jump();
+        }
+      });
+
+      canvas.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        jump();
+      });
+
+      document.getElementById('gameStartBtn')?.addEventListener('click', () => {
+        isRunning = true;
+        resetGame();
+        gameLoop();
+      });
+
+      document.getElementById('gameSwitchCatBtn')?.addEventListener('click', () => {
+        if (catType === 'Margay') {
+          catType = 'Jaguarundi';
+          player.jumpPower = -12.5;
+        } else {
+          catType = 'Margay';
+          player.jumpPower = -11;
+        }
+        updateHud();
+      });
+
+      function gameLoop() {
+        if (!isRunning) return;
+        frameCount++;
+
+        // Physics
+        player.vy += player.gravity;
+        player.y += player.vy;
+        player.isGrounded = false;
+
+        // Scroll world left
+        const scrollSpeed = 3.5 + Math.min(4, score * 0.1);
+        branches.forEach(b => {
+          b.x -= scrollSpeed;
+
+          // Collision detection with branches
+          if (
+            player.x + player.width > b.x &&
+            player.x < b.x + b.width &&
+            player.y + player.height >= b.y &&
+            player.y + player.height <= b.y + 18 &&
+            player.vy >= 0
+          ) {
+            player.y = b.y - player.height;
+            player.vy = 0;
+            player.isGrounded = true;
+            player.jumpCount = 0;
+          }
+        });
+
+        // Spawn new branches
+        if (branches.length && branches[branches.length - 1].x < canvas.width - 200) {
+          const nextY = 160 + Math.random() * 160;
+          branches.push({
+            x: canvas.width + 40,
+            y: nextY,
+            width: 140 + Math.random() * 140,
+            height: 16
+          });
+
+          // 50% chance of collectible treefrog or moth
+          if (Math.random() > 0.4) {
+            items.push({
+              x: canvas.width + 80 + Math.random() * 60,
+              y: nextY - 35,
+              collected: false
+            });
+          }
+        }
+
+        // Filter out of screen branches
+        branches = branches.filter(b => b.x + b.width > -50);
+
+        // Update collectibles
+        items.forEach(it => {
+          it.x -= scrollSpeed;
+          if (
+            !it.collected &&
+            Math.abs(player.x - it.x) < 30 &&
+            Math.abs(player.y - it.y) < 30
+          ) {
+            it.collected = true;
+            score += 15;
+            updateHud();
+            playSynthesizedSound('jaguarundi_chirp');
+          }
+        });
+        items = items.filter(it => it.x > -30);
+
+        // Bottom boundary (fall off canopy)
+        if (player.y > canvas.height) {
+          lives--;
+          updateHud();
+          if (lives <= 0) {
+            isRunning = false;
+            drawGameOver();
+            return;
+          } else {
+            // Respawn on highest current branch
+            player.y = 100;
+            player.vy = 0;
+          }
+        }
+
+        score += 0.05;
+        document.getElementById('gameScoreDisplay').textContent = Math.floor(score);
+
+        // Drawing
+        drawGameScene();
+        requestAnimationFrame(gameLoop);
+      }
+
+      function drawGameScene() {
+        ctx.fillStyle = '#020b06';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Cloud forest background trees
+        ctx.fillStyle = 'rgba(5, 150, 105, 0.15)';
+        for (let i = 0; i < canvas.width; i += 120) {
+          ctx.fillRect(i, 80, 24, canvas.height);
+        }
+
+        // Draw branches with moss styling
+        branches.forEach(b => {
+          ctx.fillStyle = '#422006';
+          ctx.beginPath();
+          ctx.roundRect(b.x, b.y, b.width, b.height, 8);
+          ctx.fill();
+
+          // Green moss layer on top
+          ctx.fillStyle = '#10b981';
+          ctx.fillRect(b.x + 4, b.y - 2, b.width - 8, 4);
+        });
+
+        // Draw items (Green treefrogs)
+        items.forEach(it => {
+          if (!it.collected) {
+            ctx.fillStyle = '#eab308';
+            ctx.beginPath();
+            ctx.arc(it.x, it.y, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillText('🐸', it.x - 7, it.y + 4);
+          }
+        });
+
+        // Draw player cat avatar
+        ctx.save();
+        ctx.translate(player.x, player.y);
+        ctx.fillStyle = catType === 'Margay' ? '#f59e0b' : '#b45309';
+
+        // Body
+        ctx.beginPath();
+        ctx.ellipse(20, 12, 18, 10, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Head & ears
+        ctx.beginPath();
+        ctx.arc(32, 8, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(34, 6, 2, 2); // eye
+
+        // Long tail trailing behind
+        ctx.strokeStyle = catType === 'Margay' ? '#f59e0b' : '#b45309';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(4, 12);
+        ctx.quadraticCurveTo(-10, -5, -15, 10);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      function drawGameOver() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#fde68a';
+        ctx.font = "bold 28px 'Cinzel', serif";
+        ctx.textAlign = 'center';
+        ctx.fillText("Canopy Sprint Complete!", canvas.width / 2, canvas.height / 2 - 20);
+
+        ctx.font = "16px 'Outfit', sans-serif";
+        ctx.fillStyle = '#fff';
+        ctx.fillText(`Final Rainforest Score: ${Math.floor(score)} Points`, canvas.width / 2, canvas.height / 2 + 15);
+        ctx.fillText("Click anywhere to leap back into the branches!", canvas.width / 2, canvas.height / 2 + 45);
+      }
+
+      // Initial static frame
+      drawGameScene();
+    }
+
+    /* ==========================================================================
+       12. JUNIOR RANGER CERTIFICATION QUIZ
+       ========================================================================== */
+    function initQuiz() {
+      currentQuizIndex = 0;
+      quizScore = 0;
+      renderQuizQuestion();
+
+      document.getElementById('restartQuizBtn')?.addEventListener('click', () => {
+        currentQuizIndex = 0;
+        quizScore = 0;
+        document.getElementById('quizResultView').style.display = 'none';
+        document.getElementById('quizQuestionCard').style.display = 'flex';
+        renderQuizQuestion();
+      });
+    }
+
+    function renderQuizQuestion() {
+      const q = QUIZ_QUESTIONS[currentQuizIndex];
+      const qNum = document.getElementById('quizQuestionNum');
+      const qText = document.getElementById('quizQuestionText');
+      const optGrid = document.getElementById('quizOptionsGrid');
+      const scoreTracker = document.getElementById('quizScoreTracker');
+      const bar = document.getElementById('quizProgressBar');
+
+      if (!q || !qText) return;
+
+      qNum.textContent = `QUESTION ${currentQuizIndex + 1} OF ${QUIZ_QUESTIONS.length}`;
+      qText.textContent = q.question;
+      scoreTracker.textContent = `Score: ${quizScore}`;
+      bar.style.width = `${((currentQuizIndex) / QUIZ_QUESTIONS.length) * 100}%`;
+
+      optGrid.innerHTML = q.options.map((opt, idx) => `
+        <button class="option-btn" onclick="handleQuizAnswer(${idx})">
+          <span style="font-family: var(--font-mono); color: var(--accent-gold);">${String.fromCharCode(65 + idx)}.</span>
+          <span>${opt}</span>
+        </button>
+      `).join('');
+    }
+
+    window.handleQuizAnswer = function(chosenIndex) {
+      const q = QUIZ_QUESTIONS[currentQuizIndex];
+      const buttons = document.querySelectorAll('.option-btn');
+      buttons.forEach(b => b.style.pointerEvents = 'none');
+
+      if (chosenIndex === q.correctIndex) {
+        buttons[chosenIndex].classList.add('selected-correct');
+        quizScore++;
+        playSynthesizedSound('jaguarundi_chirp');
+      } else {
+        buttons[chosenIndex].classList.add('selected-wrong');
+        buttons[q.correctIndex].classList.add('selected-correct');
+      }
+
+      setTimeout(() => {
+        currentQuizIndex++;
+        if (currentQuizIndex < QUIZ_QUESTIONS.length) {
+          renderQuizQuestion();
+        } else {
+          showQuizResults();
+        }
+      }, 1300);
+    };
+
+    function showQuizResults() {
+      document.getElementById('quizQuestionCard').style.display = 'none';
+      const resultView = document.getElementById('quizResultView');
+      resultView.style.display = 'flex';
+      document.getElementById('quizProgressBar').style.width = '100%';
+
+      const badgeIcon = document.getElementById('resultBadgeIcon');
+      const badgeTitle = document.getElementById('resultBadgeTitle');
+      const badgeDesc = document.getElementById('resultBadgeDescription');
+      const scoreSummary = document.getElementById('resultScoreSummary');
+
+      scoreSummary.textContent = `Official Score: ${quizScore} / ${QUIZ_QUESTIONS.length} (${Math.round((quizScore / QUIZ_QUESTIONS.length) * 100)}%)`;
+
+      if (quizScore >= 5) {
+        badgeIcon.textContent = '🐆';
+        badgeTitle.textContent = 'Gold Jaguar Field Ranger';
+        badgeDesc.textContent = 'Master Level: You possess encyclopedic knowledge of Ecuador’s 7 felids, biome elevations, and conservation ethics.';
+      } else if (quizScore >= 3) {
+        badgeIcon.textContent = '🦁';
+        badgeTitle.textContent = 'Silver Puma Explorer';
+        badgeDesc.textContent = 'Senior Level: You have a solid grasp of Andean wildlife biology and feline ecological adaptations.';
+      } else {
+        badgeIcon.textContent = '🐾';
+        badgeTitle.textContent = 'Bronze Ocelot Junior Ranger';
+        badgeDesc.textContent = 'Junior Level: You are on your journey to becoming a certified protector of the Ecuadorian tropics!';
+      }
+    }
+
+    /* ==========================================================================
+       13. INTERACTIVE MAP & ELEVATION FILTERING
+       ========================================================================== */
+    function initInteractiveMap() {
+      const biomeBtns = document.querySelectorAll('.biome-btn');
+      biomeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          biomeBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const region = btn.dataset.region;
+          updateBiomeInfo(region);
+        });
+      });
+
+      // SVG region clicks
+      document.querySelectorAll('.map-region-path').forEach(path => {
+        path.addEventListener('click', (e) => {
+          const id = e.target.id;
+          if (id.includes('costa')) updateBiomeInfo('costa');
+          if (id.includes('sierra')) updateBiomeInfo('sierra');
+          if (id.includes('oriente')) updateBiomeInfo('oriente');
+          if (id.includes('galapagos')) updateBiomeInfo('galapagos');
+        });
+      });
+
+      // Map pin clicks
+      document.querySelectorAll('.map-pin').forEach(pin => {
+        pin.addEventListener('click', () => {
+          const catId = pin.dataset.cat;
+          openCatDeepDive(catId);
+        });
+      });
+
+      // Elevation slider
+      const slider = document.getElementById('elevationSlider');
+      slider.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        const text = document.getElementById('elevationValueText');
+        const layer = document.getElementById('biomeLayerName');
+
+        text.textContent = `Up to ${val.toLocaleString()} m`;
+
+        if (val < 1000) {
+          layer.textContent = 'Lowland Rainforest & Coastal Mangroves';
+        } else if (val < 2500) {
+          layer.textContent = 'Subtropical Cloud Forest & Chocó Slope';
+        } else if (val < 3800) {
+          layer.textContent = 'Montane Cloud Forest & Interandean Valleys';
+        } else {
+          layer.textContent = 'High Andean Páramo & Volcanic Peaks (4,800m)';
+        }
+
+        filterCatsByElevation(val);
+      });
+    }
+
+    function updateBiomeInfo(regionKey) {
+      const data = REGIONS_DATA[regionKey];
+      if (!data) return;
+
+      document.getElementById('mapRegionTitle').textContent = data.title;
+      document.getElementById('mapRegionDesc').textContent = data.desc;
+
+      const badge = document.getElementById('mapRegionBadge');
+      badge.textContent = data.badge;
+      badge.style.background = data.badgeBg;
+      badge.style.color = data.badgeColor;
+
+      const chips = document.getElementById('catChipsContainer');
+      if (data.cats.length === 0) {
+        chips.innerHTML = `<span style="font-size: 0.8rem; color: #eab308;">⚠️ Strict Zero-Invasive Cat Protection Zone (Biosecurity Focus)</span>`;
+      } else {
+        chips.innerHTML = data.cats.map(cid => {
+          const c = FELID_SPECIES.find(x => x.id === cid);
+          return `<span class="cat-chip" onclick="openCatDeepDive('${c.id}')">${c.badgeIcon} ${c.commonName}</span>`;
+        }).join('');
+      }
+    }
+
+    function filterCatsByElevation(maxAlt) {
+      document.querySelectorAll('.species-card').forEach(card => {
+        const cid = card.dataset.catId;
+        const cat = FELID_SPECIES.find(c => c.id === cid);
+        if (!cat) return;
+
+        // Simple check if cat survives below this altitude
+        const maxCatElevation = parseInt(cat.elevationRange.split('–')[1].replace(/[^\d]/g, '')) || 5000;
+        if (maxAlt === 0 || maxCatElevation >= maxAlt) {
+          card.style.opacity = '1';
+          card.style.filter = 'none';
+        } else {
+          card.style.opacity = '0.35';
+          card.style.filter = 'grayscale(0.8)';
+        }
+      });
     }
   </script>
 </body>
